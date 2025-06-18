@@ -80,3 +80,11 @@ def getIngredients(limit = 0):
 		db = get_db()
 		ingredients = db.execute('SELECT * FROM Ingredient').fetchall()
 		return [dict(row) for row in ingredients]
+
+def getIngredient(ingredient_id):
+		"""Fetch a single ingredient by ID."""
+		db = get_db()
+		ingredient = db.execute('SELECT * FROM Ingredient WHERE ingredient_id = ?', (ingredient_id,)).fetchone()
+		if ingredient is None:
+			return "Ingredient not found", 404
+		return dict(ingredient)
