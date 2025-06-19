@@ -88,3 +88,138 @@ def getIngredient(ingredient_id):
 		if ingredient is None:
 			return "Ingredient not found", 404
 		return dict(ingredient)
+
+def getUnits():
+    db = get_db()
+    rows = db.execute('SELECT * FROM Units').fetchall()
+    return [dict(row) for row in rows]
+
+def getUnit(unit_id):
+    db = get_db()
+    row = db.execute('SELECT * FROM Units WHERE unit_id = ?', (unit_id,)).fetchone()
+    return dict(row) if row else None
+
+def getComponents():
+    db = get_db()
+    rows = db.execute('SELECT * FROM Component').fetchall()
+    return [dict(row) for row in rows]
+
+def getComponent(component_id):
+    db = get_db()
+    row = db.execute('SELECT * FROM Component WHERE component_id = ?', (component_id,)).fetchone()
+    return dict(row) if row else None
+
+def getRecipes():
+    db = get_db()
+    rows = db.execute('SELECT * FROM Recipe').fetchall()
+    return [dict(row) for row in rows]
+
+def getRecipe(recipe_id):
+    db = get_db()
+    row = db.execute('SELECT * FROM Recipe WHERE recipe_id = ?', (recipe_id,)).fetchone()
+    return dict(row) if row else None
+
+def getMeals():
+    db = get_db()
+    rows = db.execute('SELECT * FROM Meal').fetchall()
+    return [dict(row) for row in rows]
+
+def getMeal(meal_id):
+    db = get_db()
+    row = db.execute('SELECT * FROM Meal WHERE meal_id = ?', (meal_id,)).fetchone()
+    return dict(row) if row else None
+
+def getRecipeComponents():
+    db = get_db()
+    rows = db.execute('SELECT * FROM RecipeComponent').fetchall()
+    return [dict(row) for row in rows]
+
+def getRecipeComponent(recipe_id, component_id):
+    db = get_db()
+    row = db.execute(
+        'SELECT * FROM RecipeComponent WHERE recipe_id = ? AND component_id = ?', 
+        (recipe_id, component_id)
+    ).fetchone()
+    return dict(row) if row else None
+
+def getComponentIngredients():
+    db = get_db()
+    rows = db.execute('SELECT * FROM ComponentIngredient').fetchall()
+    return [dict(row) for row in rows]
+
+def getComponentIngredient(component_id, ingredient_id):
+    db = get_db()
+    row = db.execute(
+        'SELECT * FROM ComponentIngredient WHERE component_id = ? AND ingredient_id = ?', 
+        (component_id, ingredient_id)
+    ).fetchone()
+    return dict(row) if row else None
+
+def getMealComponents():
+    db = get_db()
+    rows = db.execute('SELECT * FROM MealComponent').fetchall()
+    return [dict(row) for row in rows]
+
+def getMealComponent(meal_id, component_id):
+    db = get_db()
+    row = db.execute(
+        'SELECT * FROM MealComponent WHERE meal_id = ? AND component_id = ?', 
+        (meal_id, component_id)
+    ).fetchone()
+    return dict(row) if row else None
+
+def getPantries():
+    db = get_db()
+    rows = db.execute('SELECT * FROM Pantry').fetchall()
+    return [dict(row) for row in rows]
+
+def getPantry(pantry_id):
+    db = get_db()
+    row = db.execute('SELECT * FROM Pantry WHERE pantry_id = ?', (pantry_id,)).fetchone()
+    return dict(row) if row else None
+
+def getPantryComponents():
+    db = get_db()
+    rows = db.execute('SELECT * FROM PantryComponent').fetchall()
+    return [dict(row) for row in rows]
+
+def getPantryComponent(pantry_id, component_id):
+    db = get_db()
+    row = db.execute(
+        'SELECT * FROM PantryComponent WHERE pantry_id = ? AND component_id = ?', 
+        (pantry_id, component_id)
+    ).fetchone()
+    return dict(row) if row else None
+
+def getNutritions():
+    db = get_db()
+    rows = db.execute('SELECT * FROM Nutrition').fetchall()
+    return [dict(row) for row in rows]
+
+def getNutrition(nutrition_id):
+    db = get_db()
+    row = db.execute('SELECT * FROM Nutrition WHERE nutrition_id = ?', (nutrition_id,)).fetchone()
+    return dict(row) if row else None
+
+def getNutritionIngredients():
+    db = get_db()
+    rows = db.execute('SELECT * FROM NutritionIngredient').fetchall()
+    return [dict(row) for row in rows]
+
+def getNutritionIngredient(ni_id):
+    db = get_db()
+    row = db.execute('SELECT * FROM NutritionIngredient WHERE ni_id = ?', (ni_id,)).fetchone()
+    return dict(row) if row else None
+
+def getNutritionFields():
+    db = get_db()
+    rows = db.execute('SELECT * FROM NutritionFields').fetchall()
+    return [dict(row) for row in rows]
+
+def getNutritionField(nutritionfield_id):
+    db = get_db()
+    row = db.execute(
+        'SELECT * FROM NutritionFields WHERE nutritionfield_id = ?', 
+        (nutritionfield_id,)
+    ).fetchone()
+    return dict(row) if row else None
