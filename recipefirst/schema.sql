@@ -40,7 +40,6 @@ CREATE TABLE Ingredient (
     ingredient_description TEXT,
     ingredient_notes TEXT,
     ingredient_image TEXT,
-    ingredient_price REAL,
     unit_id INTEGER,
     FOREIGN KEY (unit_id) REFERENCES Units(unit_id)
 );
@@ -51,7 +50,6 @@ CREATE TABLE Component (
     component_description TEXT,
     component_notes TEXT,
     component_image TEXT,
-    component_price REAL,
     unit_id INTEGER,
     FOREIGN KEY (unit_id) REFERENCES Units(unit_id)
 );
@@ -166,14 +164,12 @@ BEGIN
         component_description,
         component_notes,
         component_image,
-        component_price,
         unit_id
     ) VALUES (
         NEW.recipe_name,
         NEW.recipe_description,
         NEW.recipe_notes,
         NEW.recipe_image,
-        NULL,  -- Component price starts as NULL
-        0      -- Default to 'piece' unit
+        0
     );
 END;
