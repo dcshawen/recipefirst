@@ -1,0 +1,8 @@
+{
+	"dev_api": {
+		"url": "http://localhost:5000"
+	},
+	"prod_api": {
+		"url": "https://api.recipefirst.com"
+	}
+}
