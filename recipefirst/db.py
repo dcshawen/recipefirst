@@ -223,3 +223,45 @@ def getNutritionField(nutritionfield_id):
         (nutritionfield_id,)
     ).fetchone()
     return dict(row) if row else None
+
+def addIngredient(ingredient_name, unit_id, ingredient_description=None, ingredient_notes=None, ingredient_image=None):
+    """Add a new ingredient. All fields except ingredient_id must be provided."""
+    db = get_db()
+    cursor = db.execute(
+        '''
+        INSERT INTO Ingredient (
+            ingredient_name, ingredient_description, ingredient_notes, ingredient_image, unit_id
+        ) VALUES (?, ?, ?, ?, ?)
+        ''',
+        (ingredient_name, ingredient_description, ingredient_notes, ingredient_image, unit_id)
+    )
+    db.commit()
+    return cursor.lastrowid
+
+def addRecipe(recipe_name, recipe_description=None, recipe_notes=None, recipe_instructions=None, recipe_image=None):
+    """Add a new recipe. All fields except recipe_id must be provided."""
+    db = get_db()
+    cursor = db.execute(
+        '''
+        INSERT INTO Recipe (
+            recipe_name, recipe_description, recipe_notes, recipe_instructions, recipe_image
+        ) VALUES (?, ?, ?, ?, ?)
+        ''',
+        (recipe_name, recipe_description, recipe_notes, recipe_instructions, recipe_image)
+    )
+    db.commit()
+    return cursor.lastrowid
+
+def addMeal(meal_name, meal_description=None, meal_notes=None, meal_image=None):
+    """Add a new meal. All fields except meal_id must be provided."""
+    db = get_db()
+    cursor = db.execute(
+        '''
+        INSERT INTO Meal (
+            meal_name, meal_description, meal_notes, meal_image
+        ) VALUES (?, ?, ?, ?)
+        ''',
+        (meal_name, meal_description, meal_notes, meal_image)
+    )
+    db.commit()
+    return cursor.lastrowid
