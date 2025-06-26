@@ -1,18 +1,12 @@
 <template>
-	<header class="bg-white shadow">
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="flex justify-between h-16">
-				<div class="flex">
-					<nav class="ml-10 flex items-baseline space-x-4">
-						<SideMenuLink label="Home" to="/" />
-						<SideMenuLink label="Recipes" to="/recipes" />
-						<SideMenuLink label="Ingredients" to="/ingredients" />
-					</nav>
-				</div>
+			<div class="flex bg-white w-60 pl-5 h-screen">
+				<nav class="mr-10 flex flex-col items-start space-y-4">
+					<SideMenuLink label="Home" to="/" />
+					<SideMenuLink label="Recipes" to="/recipes" class="hover:bg-orange-900"/>
+					<SideMenuLink label="Ingredients" to="/ingredients" />
+				</nav>
 			</div>
-		</div>
-	</header>
-</template>
+			</template>
 
 <script setup>
 import SideMenuLink from "./SideMenuLink.vue";
