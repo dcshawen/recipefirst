@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from "vue";
 import urls from "./assets/urls.json";
+import Header from "./components/Header.vue";
+import SideMenu from "./components/SideMenu.vue";
 
 const ingredients = ref([]);
 const apiURL = () => {
@@ -19,13 +21,8 @@ fetch(`${apiURL()}/ingredients`)
 </script>
 
 <template>
-	<div class="container">
-		<ul>
-			<li v-for="ingredient in ingredients" :key="ingredient.ingredient_id">
-				{{ ingredient.ingredient_name }}
-			</li>
-		</ul>
-	</div>
+	<Header />
+	<SideMenu />
 </template>
 
 <style scoped></style>

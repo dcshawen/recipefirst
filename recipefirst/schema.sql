@@ -60,6 +60,7 @@ CREATE TABLE Recipe (
     recipe_description TEXT,
     recipe_notes TEXT,
 		recipe_instructions TEXT,
+		recipe_servings INTEGER,
     recipe_image TEXT
 );
 
