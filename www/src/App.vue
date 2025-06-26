@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+import { RouterLink, createRouter } from "vue-router";
 import urls from "./assets/urls.json";
 import Header from "./components/Header.vue";
 import SideMenu from "./components/SideMenu.vue";
@@ -21,8 +22,12 @@ fetch(`${apiURL()}/ingredients`)
 </script>
 
 <template>
-	<Header />
+  <div>
+	<header>
+	  <Header />
+	</header>
 	<SideMenu />
+  </div>
 </template>
 
 <style scoped></style>
