@@ -4,6 +4,9 @@
 					<SideMenuLink label="Home" to="/" />
 					<SideMenuLink label="Recipes" to="/recipes" class="hover:bg-orange-900"/>
 					<SideMenuLink label="Ingredients" to="/ingredients" />
+					<SideMenuLink label="Components" to="/components" />
+					<SideMenuLink label="Meals" to="/meals" />
+					<SideMenuLink label="Units" to="/units" />
 				</nav>
 			</div>
 			</template>
