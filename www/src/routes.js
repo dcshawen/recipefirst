@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import ListView from './components/ListView.vue'
-import { createListResource } from './list-resource.js'
+import { createListResource } from './modules/list-resource.js'
 
 const routes = [
   {
