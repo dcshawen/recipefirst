@@ -75,11 +75,26 @@ def init_app(app):
     app.cli.add_command(patch_db_command)
     
 # Data Operations
-def getIngredients(limit = 0):
-		"""Fetch all ingredients."""
-		db = get_db()
-		ingredients = db.execute('SELECT * FROM Ingredient').fetchall()
-		return [dict(row) for row in ingredients]
+def getIngredients(limit=None, name=None, description=None):
+    """Fetch ingredients with optional filters."""
+    db = get_db()
+    query = 'SELECT * FROM Ingredient'
+    filters = []
+    params = []
+    if name:
+        filters.append('ingredient_name LIKE ?')
+        params.append(f'%{name}%')
+    if description:
+        filters.append('ingredient_description LIKE ?')
+        params.append(f'%{description}%')
+    if filters:
+        query += ' WHERE ' + ' AND '.join(filters)
+    query += ' ORDER BY ingredient_id'
+    if limit:
+        query += ' LIMIT ?'
+        params.append(limit)
+    ingredients = db.execute(query, params).fetchall()
+    return [dict(row) for row in ingredients]
 
 def getIngredient(ingredient_id):
 		"""Fetch a single ingredient by ID."""
@@ -99,9 +114,25 @@ def getUnit(unit_id):
     row = db.execute('SELECT * FROM Units WHERE unit_id = ?', (unit_id,)).fetchone()
     return dict(row) if row else None
 
-def getComponents():
+def getComponents(limit=None, name=None, description=None):
+    """Fetch components with optional filters."""
     db = get_db()
-    rows = db.execute('SELECT * FROM Component').fetchall()
+    query = 'SELECT * FROM Component'
+    filters = []
+    params = []
+    if name:
+        filters.append('component_name LIKE ?')
+        params.append(f'%{name}%')
+    if description:
+        filters.append('component_description LIKE ?')
+        params.append(f'%{description}%')
+    if filters:
+        query += ' WHERE ' + ' AND '.join(filters)
+    query += ' ORDER BY component_id'
+    if limit:
+        query += ' LIMIT ?'
+        params.append(limit)
+    rows = db.execute(query, params).fetchall()
     return [dict(row) for row in rows]
 
 def getComponent(component_id):
@@ -109,9 +140,25 @@ def getComponent(component_id):
     row = db.execute('SELECT * FROM Component WHERE component_id = ?', (component_id,)).fetchone()
     return dict(row) if row else None
 
-def getRecipes():
+def getRecipes(limit=None, name=None, description=None):
+    """Fetch recipes with optional filters."""
     db = get_db()
-    rows = db.execute('SELECT * FROM Recipe').fetchall()
+    query = 'SELECT * FROM Recipe'
+    filters = []
+    params = []
+    if name:
+        filters.append('recipe_name LIKE ?')
+        params.append(f'%{name}%')
+    if description:
+        filters.append('recipe_description LIKE ?')
+        params.append(f'%{description}%')
+    if filters:
+        query += ' WHERE ' + ' AND '.join(filters)
+    query += ' ORDER BY recipe_id'
+    if limit:
+        query += ' LIMIT ?'
+        params.append(limit)
+    rows = db.execute(query, params).fetchall()
     return [dict(row) for row in rows]
 
 def getRecipe(recipe_id):
@@ -119,9 +166,25 @@ def getRecipe(recipe_id):
     row = db.execute('SELECT * FROM Recipe WHERE recipe_id = ?', (recipe_id,)).fetchone()
     return dict(row) if row else None
 
-def getMeals():
+def getMeals(limit=None, name=None, description=None):
+    """Fetch meals with optional filters."""
     db = get_db()
-    rows = db.execute('SELECT * FROM Meal').fetchall()
+    query = 'SELECT * FROM Meal'
+    filters = []
+    params = []
+    if name:
+        filters.append('meal_name LIKE ?')
+        params.append(f'%{name}%')
+    if description:
+        filters.append('meal_description LIKE ?')
+        params.append(f'%{description}%')
+    if filters:
+        query += ' WHERE ' + ' AND '.join(filters)
+    query += ' ORDER BY meal_id'
+    if limit:
+        query += ' LIMIT ?'
+        params.append(limit)
+    rows = db.execute(query, params).fetchall()
     return [dict(row) for row in rows]
 
 def getMeal(meal_id):
@@ -318,3 +381,119 @@ def addUnit(data):
     )
     db.commit()
     return cursor.lastrowid
+
+def updateIngredient(ingredient_id, data):
+    db = get_db()
+    db.execute(
+        '''
+        UPDATE Ingredient
+        SET ingredient_name = ?, ingredient_description = ?, ingredient_notes = ?, ingredient_image = ?, unit_id = ?
+        WHERE ingredient_id = ?
+        ''',
+        (
+            data.get('ingredient_name'),
+            data.get('ingredient_description'),
+            data.get('ingredient_notes'),
+            data.get('ingredient_image'),
+            int(data.get('unit_id')) if data.get('unit_id') is not None else None,
+            ingredient_id
+        )
+    )
+    db.commit()
+
+def deleteIngredient(ingredient_id):
+    db = get_db()
+    db.execute('DELETE FROM Ingredient WHERE ingredient_id = ?', (ingredient_id,))
+    db.commit()
+
+def updateRecipe(recipe_id, data):
+    db = get_db()
+    db.execute(
+        '''
+        UPDATE Recipe
+        SET recipe_name = ?, recipe_description = ?, recipe_notes = ?, recipe_instructions = ?, recipe_servings = ?, recipe_image = ?
+        WHERE recipe_id = ?
+        ''',
+        (
+            data.get('recipe_name'),
+            data.get('recipe_description'),
+            data.get('recipe_notes'),
+            data.get('recipe_instructions'),
+            data.get('recipe_servings'),
+            data.get('recipe_image'),
+            recipe_id
+        )
+    )
+    db.commit()
+
+def deleteRecipe(recipe_id):
+    db = get_db()
+    db.execute('DELETE FROM Recipe WHERE recipe_id = ?', (recipe_id,))
+    db.commit()
+
+def updateComponent(component_id, data):
+    db = get_db()
+    db.execute(
+        '''
+        UPDATE Component
+        SET component_name = ?, component_description = ?, component_notes = ?, component_image = ?, unit_id = ?
+        WHERE component_id = ?
+        ''',
+        (
+            data.get('component_name'),
+            data.get('component_description'),
+            data.get('component_notes'),
+            data.get('component_image'),
+            int(data.get('unit_id')) if data.get('unit_id') is not None else None,
+            component_id
+        )
+    )
+    db.commit()
+
+def deleteComponent(component_id):
+    db = get_db()
+    db.execute('DELETE FROM Component WHERE component_id = ?', (component_id,))
+    db.commit()
+
+def updateMeal(meal_id, data):
+    db = get_db()
+    db.execute(
+        '''
+        UPDATE Meal
+        SET meal_name = ?, meal_description = ?, meal_notes = ?, meal_image = ?
+        WHERE meal_id = ?
+        ''',
+        (
+            data.get('meal_name'),
+            data.get('meal_description'),
+            data.get('meal_notes'),
+            data.get('meal_image'),
+            meal_id
+        )
+    )
+    db.commit()
+
+def deleteMeal(meal_id):
+    db = get_db()
+    db.execute('DELETE FROM Meal WHERE meal_id = ?', (meal_id,))
+    db.commit()
+
+def updateUnit(unit_id, data):
+    db = get_db()
+    db.execute(
+        '''
+        UPDATE Units
+        SET unit_name = ?
+        WHERE unit_id = ?
+        ''',
+        (
+            data.get('unit_name'),
+            unit_id
+        )
+    )
+    db.commit()
+
+def deleteUnit(unit_id):
+    db = get_db()
+    db.execute('DELETE FROM Units WHERE unit_id = ?', (unit_id,))
+    db.commit()
