@@ -12,5 +12,5 @@
 			</template>
 
 <script setup>
-import SideMenuLink from "./SideMenuLink.vue";
+	import SideMenuLink from "./SideMenuLink.vue";
 </script>
