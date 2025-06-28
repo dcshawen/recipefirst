@@ -1,5 +1,5 @@
 <template>
-	<div class="list-view-item flex w-full p-2 hover:bg-gray-800 cursor-pointer rounded">
+	<div class="list-view-item flex w-full py-2 hover:bg-gray-800 cursor-pointer rounded">
 		<!-- Title column -->
 		<div class="flex-1 flex items-center">
 			<h2 class="text-l font-semibold" v-if="title">{{ title }}</h2>

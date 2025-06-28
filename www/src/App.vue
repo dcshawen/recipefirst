@@ -14,7 +14,7 @@ import './routes.js';
 		</header>
 		<div class="flex">
 			<SideMenu />
-			<RouterView class="pl-25 pr-25"/>
+			<RouterView class="p-10"/>
 		</div>
   </div>
 </template>
