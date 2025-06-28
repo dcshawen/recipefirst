@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app
+from flask import Blueprint, current_app, request, jsonify
 from flask_cors import CORS, cross_origin
 from . import db
 
@@ -15,6 +15,12 @@ def getIngredient(ingredient_id):
     return db.getIngredient(ingredient_id)
 
 @cross_origin()
+@bp.route('/ingredients', methods=['POST'])
+def addIngredient():
+    ingredient_id = db.addIngredient(request.get_json())
+    return jsonify({"message": "Ingredient added successfully", "ingredient_id": ingredient_id}), 201
+
+@cross_origin()
 @bp.route('/units', methods=['GET'])
 def getUnits():
     return db.getUnits()
@@ -23,6 +29,12 @@ def getUnits():
 @bp.route('/units/<int:unit_id>', methods=['GET'])
 def getUnit(unit_id):
     return db.getUnit(unit_id)
+
+@cross_origin()
+@bp.route('/units', methods=['POST'])
+def addUnit():
+    unit_id = db.addUnit(request.get_json())
+    return jsonify({"message": "Unit added successfully", "unit_id": unit_id}), 201
 
 @cross_origin()
 @bp.route('/components', methods=['GET'])
@@ -133,3 +145,21 @@ def getNutritionFields():
 @bp.route('/nutritionfields/<int:nutritionfield_id>', methods=['GET'])
 def getNutritionField(nutritionfield_id):
     return db.getNutritionField(nutritionfield_id)
+
+@cross_origin()
+@bp.route('/recipes', methods=['POST'])
+def addRecipe():
+    recipe_id = db.addRecipe(request.get_json())
+    return jsonify({"message": "Recipe added successfully", "recipe_id": recipe_id}), 201
+
+@cross_origin()
+@bp.route('/components', methods=['POST'])
+def addComponent():
+    component_id = db.addComponent(request.get_json())
+    return jsonify({"message": "Component added successfully", "component_id": component_id}), 201
+
+@cross_origin()
+@bp.route('/meals', methods=['POST'])
+def addMeal():
+    meal_id = db.addMeal(request.get_json())
+    return jsonify({"message": "Meal added successfully", "meal_id": meal_id}), 201
