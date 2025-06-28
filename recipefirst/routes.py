@@ -7,7 +7,10 @@ bp = Blueprint('main', __name__)
 @cross_origin()
 @bp.route('/ingredients', methods=['GET'])
 def getIngredients():
-    return db.getIngredients()
+    limit = request.args.get('limit', type=int)
+    name = request.args.get('name')
+    description = request.args.get('description')
+    return db.getIngredients(limit=limit, name=name, description=description)
 
 @cross_origin()
 @bp.route('/ingredients/<int:ingredient_id>', methods=['GET'])
@@ -39,7 +42,10 @@ def addUnit():
 @cross_origin()
 @bp.route('/components', methods=['GET'])
 def getComponents():
-    return db.getComponents()
+    limit = request.args.get('limit', type=int)
+    name = request.args.get('name')
+    description = request.args.get('description')
+    return db.getComponents(limit=limit, name=name, description=description)
 
 @cross_origin()
 @bp.route('/components/<int:component_id>', methods=['GET'])
@@ -49,7 +55,10 @@ def getComponent(component_id):
 @cross_origin()
 @bp.route('/recipes', methods=['GET'])
 def getRecipes():
-    return db.getRecipes()
+    limit = request.args.get('limit', type=int)
+    name = request.args.get('name')
+    description = request.args.get('description')
+    return db.getRecipes(limit=limit, name=name, description=description)
 
 @cross_origin()
 @bp.route('/recipes/<int:recipe_id>', methods=['GET'])
@@ -59,7 +68,10 @@ def getRecipe(recipe_id):
 @cross_origin()
 @bp.route('/meals', methods=['GET'])
 def getMeals():
-    return db.getMeals()
+    limit = request.args.get('limit', type=int)
+    name = request.args.get('name')
+    description = request.args.get('description')
+    return db.getMeals(limit=limit, name=name, description=description)
 
 @cross_origin()
 @bp.route('/meals/<int:meal_id>', methods=['GET'])
@@ -163,3 +175,63 @@ def addComponent():
 def addMeal():
     meal_id = db.addMeal(request.get_json())
     return jsonify({"message": "Meal added successfully", "meal_id": meal_id}), 201
+
+@cross_origin()
+@bp.route('/ingredients/<int:ingredient_id>', methods=['PUT'])
+def updateIngredient(ingredient_id):
+    db.updateIngredient(ingredient_id, request.get_json())
+    return jsonify({"message": "Ingredient updated successfully"})
+
+@cross_origin()
+@bp.route('/ingredients/<int:ingredient_id>', methods=['DELETE'])
+def deleteIngredient(ingredient_id):
+    db.deleteIngredient(ingredient_id)
+    return jsonify({"message": "Ingredient deleted successfully"})
+
+@cross_origin()
+@bp.route('/recipes/<int:recipe_id>', methods=['PUT'])
+def updateRecipe(recipe_id):
+    db.updateRecipe(recipe_id, request.get_json())
+    return jsonify({"message": "Recipe updated successfully"})
+
+@cross_origin()
+@bp.route('/recipes/<int:recipe_id>', methods=['DELETE'])
+def deleteRecipe(recipe_id):
+    db.deleteRecipe(recipe_id)
+    return jsonify({"message": "Recipe deleted successfully"})
+
+@cross_origin()
+@bp.route('/components/<int:component_id>', methods=['PUT'])
+def updateComponent(component_id):
+    db.updateComponent(component_id, request.get_json())
+    return jsonify({"message": "Component updated successfully"})
+
+@cross_origin()
+@bp.route('/components/<int:component_id>', methods=['DELETE'])
+def deleteComponent(component_id):
+    db.deleteComponent(component_id)
+    return jsonify({"message": "Component deleted successfully"})
+
+@cross_origin()
+@bp.route('/meals/<int:meal_id>', methods=['PUT'])
+def updateMeal(meal_id):
+    db.updateMeal(meal_id, request.get_json())
+    return jsonify({"message": "Meal updated successfully"})
+
+@cross_origin()
+@bp.route('/meals/<int:meal_id>', methods=['DELETE'])
+def deleteMeal(meal_id):
+    db.deleteMeal(meal_id)
+    return jsonify({"message": "Meal deleted successfully"})
+
+@cross_origin()
+@bp.route('/units/<int:unit_id>', methods=['PUT'])
+def updateUnit(unit_id):
+    db.updateUnit(unit_id, request.get_json())
+    return jsonify({"message": "Unit updated successfully"})
+
+@cross_origin()
+@bp.route('/units/<int:unit_id>', methods=['DELETE'])
+def deleteUnit(unit_id):
+    db.deleteUnit(unit_id)
+    return jsonify({"message": "Unit deleted successfully"})
