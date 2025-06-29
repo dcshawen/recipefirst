@@ -1,8 +1,8 @@
 <template>
 	<div class="list-view w-full">
 		<h1 v-if="title" class="text-2xl font-bold mb-4">{{ title }}</h1>
-		<!-- Add column headers if titleField or descField is present -->
 		<div v-if="titleField || descField" class="flex font-semibold mb-2 px-15 bg-gray-700 rounded">
+			<!-- The following 2 lines would have to be refactored to use a v-for loop instead in order to accomodate a columns prop -->
 			<div v-if="titleField" class="px-2 flex-1 rounded">{{ title.slice(0, -1) }}</div>
 			<div v-if="descField" class="px-2 flex-1">Description</div>
 		</div>
