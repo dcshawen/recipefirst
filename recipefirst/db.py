@@ -115,7 +115,7 @@ def getUnit(unit_id):
     return dict(row) if row else None
 
 def getComponents(limit=None, name=None, description=None):
-    """Fetch components with optional filters."""
+    """Fetch components with optional filters, including their ingredients."""
     db = get_db()
     query = 'SELECT * FROM Component'
     filters = []
@@ -133,12 +133,41 @@ def getComponents(limit=None, name=None, description=None):
         query += ' LIMIT ?'
         params.append(limit)
     rows = db.execute(query, params).fetchall()
-    return [dict(row) for row in rows]
+    components = []
+    for row in rows:
+        component = dict(row)
+        # Fetch ingredients for this component
+        ingredients = db.execute(
+            '''
+            SELECT ci.*, i.ingredient_name, i.ingredient_description, i.ingredient_notes, i.ingredient_image
+            FROM ComponentIngredient ci
+            JOIN Ingredient i ON ci.ingredient_id = i.ingredient_id
+            WHERE ci.component_id = ?
+            ''',
+            (component['component_id'],)
+        ).fetchall()
+        component['ingredients'] = [dict(ing) for ing in ingredients]
+        components.append(component)
+    return components
 
 def getComponent(component_id):
     db = get_db()
     row = db.execute('SELECT * FROM Component WHERE component_id = ?', (component_id,)).fetchone()
-    return dict(row) if row else None
+    if not row:
+        return None
+    component = dict(row)
+    # Fetch ingredients for this component
+    ingredients = db.execute(
+        '''
+        SELECT ci.*, i.ingredient_name, i.ingredient_description, i.ingredient_notes, i.ingredient_image
+        FROM ComponentIngredient ci
+        JOIN Ingredient i ON ci.ingredient_id = i.ingredient_id
+        WHERE ci.component_id = ?
+        ''',
+        (component_id,)
+    ).fetchall()
+    component['ingredients'] = [dict(ing) for ing in ingredients]
+    return component
 
 def getRecipes(limit=None, name=None, description=None):
     """Fetch recipes with optional filters, including ingredients and components."""
@@ -176,7 +205,7 @@ def getRecipes(limit=None, name=None, description=None):
         # Fetch components for this recipe
         components = db.execute(
             '''
-            SELECT rc.*, c.component_name, c.component_description, c.component_notes, c.component_image, c.unit_id
+            SELECT rc.*, c.component_name, c.component_description, c.component_notes, c.component_image
             FROM RecipeComponent rc
             JOIN Component c ON rc.component_id = c.component_id
             WHERE rc.recipe_id = ?
@@ -193,7 +222,7 @@ def getRecipe(recipe_id):
     return dict(row) if row else None
 
 def getMeals(limit=None, name=None, description=None):
-    """Fetch meals with optional filters."""
+    """Fetch meals with optional filters, including their components."""
     db = get_db()
     query = 'SELECT * FROM Meal'
     filters = []
@@ -211,12 +240,42 @@ def getMeals(limit=None, name=None, description=None):
         query += ' LIMIT ?'
         params.append(limit)
     rows = db.execute(query, params).fetchall()
-    return [dict(row) for row in rows]
+    meals = []
+    for row in rows:
+        meal = dict(row)
+        # Fetch components for this meal
+        components = db.execute(
+            '''
+            SELECT mc.*, c.component_name, c.component_description, c.component_notes, c.component_image
+            FROM MealComponent mc
+            JOIN Component c ON mc.component_id = c.component_id
+            WHERE mc.meal_id = ?
+            ORDER BY mc.component_id
+            ''',
+            (meal['meal_id'],)
+        ).fetchall()
+        meal['components'] = [dict(comp) for comp in components]
+        meals.append(meal)
+    return meals
 
 def getMeal(meal_id):
     db = get_db()
     row = db.execute('SELECT * FROM Meal WHERE meal_id = ?', (meal_id,)).fetchone()
-    return dict(row) if row else None
+    if not row:
+        return None
+    meal = dict(row)
+    # Fetch components for this meal
+    components = db.execute(
+        '''
+        SELECT mc.*, c.component_name, c.component_description, c.component_notes, c.component_image, c.unit_id
+        FROM MealComponent mc
+        JOIN Component c ON mc.component_id = c.component_id
+        WHERE mc.meal_id = ?
+        ''',
+        (meal_id,)
+    ).fetchall()
+    meal['components'] = [dict(comp) for comp in components]
+    return meal
 
 def getRecipeComponents():
     db = get_db()

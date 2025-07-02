@@ -48,9 +48,7 @@ CREATE TABLE Component (
     component_name TEXT NOT NULL,
     component_description TEXT,
     component_notes TEXT,
-    component_image TEXT,
-    unit_id INTEGER,
-    FOREIGN KEY (unit_id) REFERENCES Units(unit_id)
+    component_image TEXT
 );
 
 CREATE TABLE Recipe (
@@ -174,13 +172,11 @@ BEGIN
         component_name,
         component_description,
         component_notes,
-        component_image,
-        unit_id
+        component_image
     ) VALUES (
         NEW.recipe_name,
         NEW.recipe_description,
         NEW.recipe_notes,
-        NEW.recipe_image,
-        0
+        NEW.recipe_image
     );
 END;

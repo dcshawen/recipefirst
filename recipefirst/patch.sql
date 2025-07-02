@@ -261,5 +261,38 @@ INSERT INTO NutritionFields (nutritionfield_id, nutritionfield_name, nutritionfi
 (2, 'Fat', '10', 1),
 (3, 'Protein', '8', 1);
 
+-- Meals
+INSERT INTO Meal (meal_id, meal_name, meal_description, meal_notes, meal_image)
+VALUES
+(1, 'Classic Diner Breakfast', 'Eggs, toast, and breakfast burrito', '', ''),
+(2, 'Italian Night', 'Spaghetti marinara, garlic bread, and caprese salad', '', ''),
+(3, 'Burger Combo', 'Hamburger, fries (not in db), and a side salad', '', ''),
+(4, 'Pizza Party', 'Pizza Margherita and Veggie Pizza', '', ''),
+(5, 'Quick Lunch', 'Chicken Salad and Quesadilla', '', '');
+
+-- MealComponent (link meals to components)
+-- Classic Diner Breakfast: Scrambled Eggs, Grilled Cheese Sandwich, Breakfast Burrito
+INSERT INTO MealComponent (meal_id, component_id, mc_quantity, unit_id) VALUES
+(1, 2, 1, 0),   -- Scrambled Eggs (component_id=2)
+(1, 1, 1, 0),   -- Grilled Cheese Sandwich (component_id=1, as "toast")
+(1, 10, 1, 0),  -- Breakfast Burrito (component_id=10)
+
+-- Italian Night: Spaghetti Marinara, Grilled Cheese Sandwich, Caprese Salad (use Grilled Cheese as placeholder for garlic bread)
+(2, 4, 1, 0),   -- Spaghetti Marinara (component_id=4)
+(2, 1, 1, 0),   -- Grilled Cheese Sandwich (component_id=1, as "garlic bread" placeholder)
+(2, 3, 1, 0),   -- Chicken Salad (component_id=3, as "caprese salad" placeholder)
+
+-- Burger Combo: Hamburger, Chicken Salad
+(3, 6, 1, 0),   -- Hamburger (component_id=6)
+(3, 3, 1, 0),   -- Chicken Salad (component_id=3)
+
+-- Pizza Party: Pizza Margherita, Veggie Pizza
+(4, 7, 1, 0),   -- Pizza Margherita (component_id=7)
+(4, 8, 1, 0),   -- Veggie Pizza (component_id=8)
+
+-- Quick Lunch: Chicken Salad, Quesadilla
+(5, 3, 1, 0),   -- Chicken Salad (component_id=3)
+(5, 9, 1, 0);   -- Quesadilla (component_id=9)
+
 -- Done
 -- Done
