@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS Pantry;
 DROP TABLE IF EXISTS MealComponent;
 DROP TABLE IF EXISTS ComponentIngredient;
 DROP TABLE IF EXISTS RecipeComponent;
+DROP TABLE IF EXISTS RecipeIngredient;
 DROP TABLE IF EXISTS Meal;
 DROP TABLE IF EXISTS Recipe;
 DROP TABLE IF EXISTS Component;
@@ -39,9 +40,7 @@ CREATE TABLE Ingredient (
     ingredient_name TEXT NOT NULL,
     ingredient_description TEXT,
     ingredient_notes TEXT,
-    ingredient_image TEXT,
-    unit_id INTEGER,
-    FOREIGN KEY (unit_id) REFERENCES Units(unit_id)
+    ingredient_image TEXT
 );
 
 CREATE TABLE Component (
@@ -81,6 +80,17 @@ CREATE TABLE RecipeComponent (
     FOREIGN KEY (recipe_id) REFERENCES Recipe(recipe_id) ON DELETE CASCADE,
     FOREIGN KEY (component_id) REFERENCES Component(component_id) ON DELETE CASCADE,
     FOREIGN KEY (unit_id) REFERENCES Units(unit_id)
+);
+
+CREATE TABLE RecipeIngredient (
+		recipe_id INTEGER NOT NULL,
+		ingredient_id INTEGER NOT NULL,
+		ri_quantity REAL,
+		unit_id INTEGER,
+		PRIMARY KEY (recipe_id, ingredient_id),
+		FOREIGN KEY (recipe_id) REFERENCES Recipe(recipe_id) ON DELETE CASCADE,
+		FOREIGN KEY (ingredient_id) REFERENCES Ingredient(ingredient_id) ON DELETE CASCADE,
+		FOREIGN KEY (unit_id) REFERENCES Units(unit_id)
 );
 
 CREATE TABLE ComponentIngredient (

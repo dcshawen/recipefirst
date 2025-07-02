@@ -1,251 +1,265 @@
--- Insert test data for Ingredient (30 entries)
-INSERT INTO Ingredient (ingredient_name, ingredient_description, ingredient_notes, ingredient_image, unit_id) VALUES
-('Almond Flour', 'Finely ground blanched almonds', 'Gluten-free baking', 'almond_flour.jpg', 1),
-('Whole Wheat Flour', 'Stone-ground wheat flour', 'High-fiber baking', 'whole_wheat_flour.jpg', 1),
-('Cumin', 'Aromatic spice from dried seeds', 'Essential in chili powder', 'cumin.jpg', 1),
-('Paprika', 'Ground dried red peppers', 'Adds color & mild heat', 'paprika.jpg', 1),
-('Dried Oregano', 'Mediterranean herb', 'Earthy flavor', 'dried_oregano.jpg', 1),
-('Green Chiles', 'Mild peppers from Hatch region', 'Roasted or diced', 'green_chiles.jpg', 0),
-('Avocado', 'Creamy green fruit', 'High healthy fats', 'avocado.jpg', 0),
-('Sesame Oil', 'Oil from sesame seeds', 'Strong, nutty aroma', 'sesame_oil.jpg', 2),
-('Quinoa', 'High-protein grain alternative', 'Rinse before cooking', 'quinoa.jpg', 1),
-('Black Beans', 'Canned or dried legumes', 'Rinse to reduce sodium', 'black_beans.jpg', 1),
-('Greek Yogurt', 'Thick, strained yogurt', 'High in protein', 'greek_yogurt.jpg', 0),
-('Tuna', 'Canned light tuna', 'Check expiration date', 'tuna.jpg', 4),
-('Salmon Fillet', 'Fresh or frozen salmon', 'Keep refrigerated', 'salmon.jpg', 4),
-('Shrimp', 'Peeled & deveined raw shrimp', 'Keep on ice if fresh', 'shrimp.jpg', 4),
-('Applesauce', 'Purée of cooked apples', 'Unsweetened option', 'applesauce.jpg', 2),
-('Green Tea', 'Dried leaves', 'Store in airtight container', 'green_tea.jpg', 0),
-('Instant Coffee', 'Freeze-dried granules', 'Keep sealed', 'coffee.jpg', 0),
-('Brown Rice', 'Whole grain rice', 'Longer cook time', 'brown_rice.jpg', 1),
-('Asparagus', 'Green veggie spears', 'Trim tough ends', 'asparagus.jpg', 0),
-('Pineapple', 'Tropical fruit', 'Peel & core before use', 'pineapple.jpg', 0),
-('Ground Turkey', 'Lean white poultry meat', 'Store in fridge', 'ground_turkey.jpg', 4),
-('Shredded Carrots', 'Pre-shredded carrots', 'Great for salads', 'shredded_carrots.jpg', 1),
-('Noodles', 'Egg or rice noodles', 'Check cooking time', 'noodles.jpg', 1),
-('Feta Cheese', 'Crumbly Greek cheese', 'Brine packed', 'feta.jpg', 1),
-('Ground Pork', 'Pork mince (80/20)', 'Use within 2 days', 'pork.jpg', 4),
-('Mango', 'Sweet tropical fruit', 'Ripen at room temp', 'mango.jpg', 0),
-('Green Beans', 'Long green pods', 'Snip ends off', 'green_beans.jpg', 0),
-('Corn Kernels', 'Sweet yellow corn', 'Canned or fresh', 'corn_kernels.jpg', 1),
-('Maple Syrup', 'Pure from maple trees', 'Refrigerate after opening', 'maple_syrup.jpg', 2),
-('Red Wine Vinegar', 'Vinegar from fermented wine', 'Adds tangy flavor', 'red_wine_vinegar.jpg', 2);
+-- Units (if not already present)
+INSERT OR IGNORE INTO Units (unit_id, unit_name) VALUES
+(0, 'piece'), (1, 'g'), (2, 'ml'), (3, 'oz'), (4, 'lb'), (5, 'cup'), (6, 'tbsp'), (7, 'tsp'), (8, 'gal');
 
--- Insert test data for Component (30 entries)
-INSERT INTO Component (component_name, component_description, component_notes, component_image, unit_id) VALUES
-('Hummus Spread', 'Blended chickpeas and tahini', 'Middle Eastern dip', 'hummus.jpg', 5),
-('Marinara Sauce', 'Tomato-based sauce', 'Use fresh garlic & basil', 'marinara_sauce.jpg', 5),
-('Plain Oatmeal', 'Cooked rolled oats', 'Fiber-rich breakfast', 'oatmeal.jpg', 5),
-('Mixed Berries Topping', 'Strawberries, blueberries, raspberries', 'Lightly sweetened', 'mixed_berries.jpg', 5),
-('Chicken Stock', 'Stock from boiled chicken bones', 'Skim fat', 'chicken_stock.jpg', 5),
-('Guacamole Dip', 'Mashed avocado, onions, lime', 'Keep covered to prevent browning', 'guacamole.jpg', 0),
-('Pesto', 'Basil, pine nuts, olive oil sauce', 'Keep chilled', 'pesto.jpg', 5),
-('Refried Beans', 'Mashed cooked pinto beans', 'Tex-Mex style', 'refried_beans.jpg', 5),
-('Caramelized Onions', 'Slow-cooked onions', 'Sweet, golden brown', 'caramelized_onions.jpg', 5),
-('Gravy', 'Sauce from meat juices & flour', 'Brown or poultry style', 'gravy.jpg', 5),
-('Scrambled Eggs', 'Lightly beaten egg mixture', 'Cook until set', 'scrambled_eggs.jpg', 0),
-('Roasted Vegetables', 'Oven-roasted carrots, potatoes, etc.', 'Season with herbs', 'roasted_veggies.jpg', 5),
-('Fruit Salad', 'Cut mixed fruits', 'Add citrus to preserve color', 'fruit_salad.jpg', 0),
-('Coleslaw', 'Shredded cabbage & carrots', 'Creamy or vinegar-based dressing', 'coleslaw.jpg', 5),
-('Cream Sauce', 'White sauce with butter & flour', 'Season with salt, pepper', 'cream_sauce.jpg', 5),
-('Ground Sausage Mix', 'Cooked sausage crumbles', 'Use mild or spicy', 'sausage_mix.jpg', 5),
-('Black Bean Salsa', 'Beans, corn, peppers, onions', 'Southwestern flavor', 'black_bean_salsa.jpg', 5),
-('Peanut Sauce', 'Peanut butter, soy sauce, etc.', 'Asian inspired dip', 'peanut_sauce.jpg', 5),
-('Tomato Salsa', 'Chopped tomatoes, onions, cilantro', 'Fresh or mild/hot style', 'tomato_salsa.jpg', 5),
-('Beef Broth', 'Base for soups & stews', 'From simmered beef bones', 'beef_broth.jpg', 5),
-('Mashed Potatoes', 'Boiled potatoes whipped w/butter', 'Creamy side dish', 'mashed_potatoes.jpg', 5),
-('Tzatziki', 'Greek yogurt w/cucumber & dill', 'Chill before serving', 'tzatziki.jpg', 5),
-('BBQ Sauce', 'Tomato-based sweet & tangy sauce', 'Brush on grilled meats', 'bbq_sauce.jpg', 5),
-('Teriyaki Sauce', 'Soy sauce, sugar, ginger mix', 'Marinade or glaze', 'teriyaki_sauce.jpg', 5),
-('Hot Fudge Sauce', 'Rich chocolate sauce', 'Warm before serving', 'hot_fudge.jpg', 5),
-('Stuffing Mix', 'Seasoned bread crumbs & herbs', 'Moisten with stock', 'stuffing.jpg', 5),
-('Alfredo Sauce', 'Cream, butter, parmesan', 'Use fresh cheese', 'alfredo_sauce.jpg', 5),
-('Roasted Garlic Paste', 'Oven-roasted garlic cloves', 'Spreadable & sweet', 'roasted_garlic.jpg', 5),
-('Ginger Soy Glaze', 'Soy sauce, ginger, honey mix', 'Reduce until thick', 'ginger_soy_glaze.jpg', 5),
-('Pancake Batter', 'Flour, eggs, milk mixture', 'Cook on hot griddle', 'pancake_batter.jpg', 5);
+-- Ingredients
+INSERT INTO Ingredient (ingredient_id, ingredient_name, ingredient_description, ingredient_notes, ingredient_image)
+VALUES
+(1, 'Bread', 'Sliced sandwich bread', '', ''),
+(2, 'Cheddar Cheese', 'Mild cheddar cheese', '', ''),
+(3, 'Butter', 'Unsalted butter', '', ''),
+(4, 'Egg', 'Large chicken egg', '', ''),
+(5, 'Milk', 'Whole milk', '', ''),
+(6, 'Salt', 'Table salt', '', ''),
+(7, 'Pepper', 'Black pepper', '', ''),
+(8, 'Tomato', 'Fresh tomato', '', ''),
+(9, 'Lettuce', 'Romaine lettuce', '', ''),
+(10, 'Chicken Breast', 'Boneless skinless chicken breast', '', ''),
+(11, 'Olive Oil', 'Extra virgin olive oil', '', ''),
+(12, 'Garlic', 'Fresh garlic cloves', '', ''),
+(13, 'Pasta', 'Spaghetti pasta', '', ''),
+(14, 'Parmesan Cheese', 'Grated parmesan', '', ''),
+(15, 'Basil', 'Fresh basil leaves', '', ''),
+(16, 'Ground Beef', '80/20 ground beef', '', ''),
+(17, 'Onion', 'Yellow onion', '', ''),
+(18, 'Ketchup', 'Tomato ketchup', '', ''),
+(19, 'Mustard', 'Yellow mustard', '', ''),
+(20, 'Pickle', 'Dill pickle slices', '', ''),
+(21, 'Hamburger Bun', 'Classic hamburger bun', '', ''),
+(22, 'Mayonnaise', 'Classic mayo', '', ''),
+(23, 'Mozzarella Cheese', 'Shredded mozzarella', '', ''),
+(24, 'Pizza Dough', 'Prepared pizza dough', '', ''),
+(25, 'Marinara Sauce', 'Classic marinara', '', ''),
+(26, 'Bell Pepper', 'Red bell pepper', '', ''),
+(27, 'Mushroom', 'White button mushroom', '', ''),
+(28, 'Spinach', 'Fresh spinach', '', ''),
+(29, 'Tortilla', 'Flour tortilla', '', ''),
+(30, 'Black Beans', 'Canned black beans', '', '');
 
--- Insert test data for Recipe (30 entries)
-INSERT INTO Recipe (recipe_name, recipe_description, recipe_notes, recipe_instructions, recipe_servings, recipe_image) VALUES
-('Chicken Tortilla Soup', 'Spicy tomato-based soup with chicken', 'Use tortilla strips as garnish', 'Simmer chicken, tomatoes, chiles; add tortilla strips.', 4, 'chicken_tortilla_soup.jpg'),
-('Spanish Paella', 'Rice dish with seafood & chorizo', 'Saffron for authentic color', 'Cook chorizo, add rice & broth, top with seafood.', 4, 'paella.jpg'),
-('Beef Stroganoff', 'Creamy mushroom sauce over beef strips', 'Serve over egg noodles', 'Sauté beef & mushrooms, stir in cream sauce.', 4, 'beef_stroganoff.jpg'),
-('Caprese Salad', 'Tomatoes, mozzarella, fresh basil', 'Drizzle with balsamic glaze', 'Layer tomato & cheese, top with basil & dressing.', 4, 'caprese_salad.jpg'),
-('Chicken Fajitas', 'Sizzling peppers & onions with chicken', 'Serve with warm tortillas', 'Marinate chicken, sauté with peppers, onions.', 4, 'chicken_fajitas.jpg'),
-('Veggie Stir-Fry', 'Assorted vegetables in soy-ginger sauce', 'Great for meal prep', 'Sauté veggies, add sauce, serve over rice.', 4, 'veggie_stir_fry.jpg'),
-('Shrimp Scampi', 'Garlicky shrimp in butter & white wine', 'Serve with pasta', 'Sauté shrimp in garlic, butter, splash of wine.', 4, 'shrimp_scampi.jpg'),
-('Chocolate Brownies', 'Fudgy baked chocolate squares', 'Add nuts if desired', 'Mix batter, bake until set.', 4, 'brownies.jpg'),
-('Caesar Salad', 'Crisp romaine with creamy dressing', 'Add croutons & shaved parmesan', 'Toss lettuce with dressing.', 4, 'caesar_salad.jpg'),
-('Avocado Toast', 'Mashed avocado on toasted bread', 'Top with egg or tomato', 'Spread avocado, season, add toppings.', 2, 'avocado_toast.jpg'),
-('Pad Thai', 'Stir-fried rice noodles, tofu, peanuts', 'Balance sweet, sour, salty', 'Prepare sauce, stir-fry noodles & ingredients.', 4, 'pad_thai.jpg'),
-('Fish Tacos', 'Grilled fish, cabbage, creamy sauce', 'Use fresh lime juice', 'Season fish, grill, assemble in tortillas.', 4, 'fish_tacos.jpg'),
-('French Toast', 'Bread soaked in egg mixture & fried', 'Sprinkle with powdered sugar', 'Dip bread in egg batter, cook on griddle.', 4, 'french_toast.jpg'),
-('Ramen Bowl', 'Japanese noodle soup', 'Optional soft-boiled egg', 'Simmer broth, add noodles & toppings.', 2, 'ramen.jpg'),
-('Shepherd’s Pie', 'Ground lamb & veggies topped with mash', 'Also called cottage pie with beef', 'Brown meat, add veggies, top with mashed potatoes, bake.', 6, 'shepherds_pie.jpg'),
-('Tofu Curry', 'Spiced coconut milk sauce with tofu', 'Use Thai basil for garnish', 'Sauté aromatics, stir in tofu & curry sauce.', 4, 'tofu_curry.jpg'),
-('Lasagna', 'Layered pasta, sauce, cheese, & meat', 'Let rest before slicing', 'Layer noodles, sauce, cheese, bake.', 8, 'lasagna.jpg'),
-('Veggie Quesadillas', 'Tortilla filled with cheese & veggies', 'Serve with salsa and sour cream', 'Sandwich veggies & cheese in tortilla, grill.', 4, 'veggie_quesadillas.jpg'),
-('Tom Kha Gai', 'Thai coconut chicken soup', 'Lemongrass & galangal base', 'Simmer broth with chicken, coconut milk, herbs.', 4, 'tom_kha_gai.jpg'),
-('Pancakes', 'Fluffy griddle cakes', 'Use buttermilk for best results', 'Mix batter, spoon onto hot pan.', 4, 'pancakes.jpg'),
-('BBQ Pulled Pork', 'Slow-cooked pork in barbecue sauce', 'Serve on buns', 'Cook pork shoulder, shred, stir in sauce.', 6, 'pulled_pork.jpg'),
-('Veggie Burger', 'Patty from beans or vegetables', 'Top with lettuce, tomato', 'Form patties, cook, assemble with toppings.', 4, 'veggie_burger.jpg'),
-('Chicken Alfredo', 'Fettuccine with creamy sauce & chicken', 'Add broccoli if desired', 'Cook pasta, stir in sauce & cooked chicken.', 4, 'chicken_alfredo.jpg'),
-('Eggplant Parmesan', 'Breaded eggplant with tomato sauce & cheese', 'Layer in casserole dish', 'Fry eggplant, layer with sauce & cheese, bake.', 4, 'eggplant_parm.jpg'),
-('Clam Chowder', 'Creamy soup with clams & potatoes', 'New England style', 'Sauté onions, add clams, cream, potatoes.', 4, 'clam_chowder.jpg'),
-('Grilled Cheese', 'Toasted sandwich with melted cheese', 'Serve with tomato soup', 'Butter bread, insert cheese, grill both sides.', 2, 'grilled_cheese.jpg'),
-('Chicken Tenders', 'Breaded strips of chicken', 'Dip in honey mustard', 'Coat chicken in breadcrumbs, bake or fry.', 4, 'chicken_tenders.jpg'),
-('Pita Sandwich', 'Pocket bread stuffed with fillings', 'Try falafel or chicken', 'Open pita, insert fillings, drizzle sauce.', 2, 'pita_sandwich.jpg'),
-('Cobb Salad', 'Lettuce, bacon, avocado, chicken, egg', 'Top with blue cheese dressing', 'Arrange ingredients on bed of lettuce.', 4, 'cobb_salad.jpg'),
-('Mushroom Risotto', 'Creamy Arborio rice with mushrooms', 'Stir constantly, add stock slowly', 'Sauté mushrooms, add rice, ladle in warm stock.', 4, 'mushroom_risotto.jpg');
+-- Components (some are just ingredients, some are prepped mixes)
+INSERT INTO Component (component_id, component_name, component_description, component_notes, component_image)
+VALUES
+(1, 'Grilled Cheese Sandwich', 'Classic grilled cheese', '', ''),
+(2, 'Scrambled Eggs', 'Fluffy scrambled eggs', '', ''),
+(3, 'Chicken Salad', 'Simple chicken salad', '', ''),
+(4, 'Spaghetti Marinara', 'Pasta with marinara sauce', '', ''),
+(5, 'Hamburger Patty', 'Seasoned ground beef patty', '', ''),
+(6, 'Hamburger', 'Classic hamburger', '', ''),
+(7, 'Pizza Margherita', 'Classic pizza with tomato, mozzarella, basil', '', ''),
+(8, 'Veggie Pizza', 'Pizza with assorted vegetables', '', ''),
+(9, 'Quesadilla', 'Cheese quesadilla', '', ''),
+(10, 'Breakfast Burrito', 'Egg and bean breakfast burrito', '', '');
 
--- Insert test data for Meal (30 entries)
-INSERT INTO Meal (meal_name, meal_description, meal_notes, meal_image) VALUES
-('Quick Breakfast', 'Fast morning meal', 'Grab-and-go', 'quick_breakfast.jpg'),
-('Hearty Lunch', 'Filling mid-day feast', 'Focus on protein', 'hearty_lunch.jpg'),
-('Light Dinner', 'Lower calorie evening meal', 'Include veggies', 'light_dinner.jpg'),
-('Post-Workout Meal', 'High-protein recovery meal', 'Balance macros', 'post_workout.jpg'),
-('Kid-Friendly Lunch', 'Easy meals for children', 'Finger foods', 'kid_lunch.jpg'),
-('Romantic Dinner', 'Special meal for two', 'Candlelit setting', 'romantic_dinner.jpg'),
-('Vegan Feast', 'All plant-based foods', 'No animal products', 'vegan_feast.jpg'),
-('Holiday Brunch', 'Festive late-morning meal', 'Sweet & savory', 'holiday_brunch.jpg'),
-('Picnic Basket', 'Portable outdoor meal', 'Pack assorted bites', 'picnic_basket.jpg'),
-('Movie Night Snacks', 'Finger foods & munchies', 'Popcorn or candies', 'movie_snacks.jpg'),
-('Game Day Spread', 'Appetizers & dips', 'Serve with beverages', 'game_day.jpg'),
-('Office Potluck', 'Shared dishes among coworkers', 'Variety is key', 'office_potluck.jpg'),
-('Sunday Roast', 'Traditional roast dinner', 'Gravy recommended', 'sunday_roast.jpg'),
-('Healthy Dinner', 'Low-fat, balanced meal', 'Focus on greens', 'healthy_dinner.jpg'),
-('Lunch For Two', 'Small portion lunch', 'Quick & easy', 'lunch_for_two.jpg'),
-('Family Dinner', 'Larger meal for a family', 'Multiple courses', 'family_dinner.jpg'),
-('Budget Meal', 'Cost-effective recipes', 'Use seasonal ingredients', 'budget_meal.jpg'),
-('Fancy Brunch', 'Upscale late-morning feast', 'Mimosas optional', 'fancy_brunch.jpg'),
-('BBQ Party', 'Outdoor grilling event', 'Meat & veggie options', 'bbq_party.jpg'),
-('Comfort Food Night', 'Classic comforting dishes', 'Warm & hearty', 'comfort_food.jpg'),
-('Seafood Extravaganza', 'All seafood variety', 'Fresh is best', 'seafood_extravaganza.jpg'),
-('High-Protein Meal', 'Extra protein focus', 'Low carb option', 'high_protein.jpg'),
-('Low-Carb Dinner', 'Minimal carbs, more fat/protein', 'Zucchini noodles', 'low_carb.jpg'),
-('Weekend Special', 'Indulgent meal', 'Dessert included', 'weekend_special.jpg'),
-('Meal Prep Monday', 'Meals for the week', 'Containers portioned', 'meal_prep_monday.jpg'),
-('Midnight Snack', 'Light bite after hours', 'Keep it simple', 'midnight_snack.jpg'),
-('Birthday Bash Meal', 'Birthday celebration feast', 'Cake for dessert', 'birthday_bash.jpg'),
-('International Sampler', 'Global flavor variety', 'Small portions each', 'international_sampler.jpg'),
-('Vegetarian Lunch', 'No meat included', 'Cheese allowed', 'vegetarian_lunch.jpg'),
-('Protein Shake Bar', 'Supplement shakes & snacks', 'Post-workout or snacks', 'shake_bar.jpg');
+-- Recipes
+INSERT INTO Recipe (recipe_id, recipe_name, recipe_description, recipe_notes, recipe_instructions, recipe_servings, recipe_image)
+VALUES
+(1, 'Grilled Cheese', 'A classic grilled cheese sandwich.', '', 'Butter bread, add cheese, grill until golden.', 1, ''),
+(2, 'Scrambled Eggs', 'Fluffy scrambled eggs.', '', 'Whisk eggs, cook in butter, season.', 1, ''),
+(3, 'Chicken Salad', 'Simple chicken salad.', '', 'Cook chicken, chop, mix with mayo and veggies.', 2, ''),
+(4, 'Spaghetti Marinara', 'Pasta with marinara sauce.', '', 'Cook pasta, heat sauce, combine, top with cheese.', 2, ''),
+(5, 'Hamburger', 'Classic hamburger with toppings.', '', 'Grill patty, assemble with bun and toppings.', 1, ''),
+(6, 'Pizza Margherita', 'Classic pizza with tomato, mozzarella, basil.', '', 'Top dough, bake at high heat.', 2, ''),
+(7, 'Veggie Pizza', 'Pizza with assorted vegetables.', '', 'Top dough with sauce, cheese, veggies, bake.', 2, ''),
+(8, 'Quesadilla', 'Cheese quesadilla.', '', 'Fill tortilla with cheese, grill until melted.', 1, ''),
+(9, 'Breakfast Burrito', 'Egg and bean breakfast burrito.', '', 'Fill tortilla with eggs, beans, cheese, roll up.', 1, ''),
+(10, 'BLT Sandwich', 'Bacon, lettuce, tomato sandwich.', '', 'Layer bacon, lettuce, tomato on bread.', 1, ''),
+(11, 'Egg Salad Sandwich', 'Egg salad on bread.', '', 'Mix boiled eggs with mayo, spread on bread.', 1, ''),
+(12, 'Chicken Wrap', 'Chicken and veggies in a wrap.', '', 'Fill tortilla with chicken, lettuce, tomato.', 1, ''),
+(13, 'Pasta Primavera', 'Pasta with fresh vegetables.', '', 'Cook pasta, sauté veggies, combine.', 2, ''),
+(14, 'Cheeseburger', 'Hamburger with cheese.', '', 'Add cheese to patty, assemble burger.', 1, ''),
+(15, 'Caprese Salad', 'Tomato, mozzarella, basil salad.', '', 'Layer tomato, mozzarella, basil, drizzle oil.', 2, ''),
+(16, 'Garlic Bread', 'Toasted bread with garlic butter.', '', 'Spread garlic butter, toast until golden.', 2, ''),
+(17, 'Spinach Omelette', 'Omelette with spinach.', '', 'Cook eggs with spinach, fold and serve.', 1, ''),
+(18, 'Chicken Quesadilla', 'Quesadilla with chicken and cheese.', '', 'Fill tortilla with chicken, cheese, grill.', 1, ''),
+(19, 'Veggie Burrito', 'Burrito with beans and veggies.', '', 'Fill tortilla with beans, veggies, roll up.', 1, ''),
+(20, 'Mushroom Pizza', 'Pizza with mushrooms.', '', 'Top dough with sauce, cheese, mushrooms, bake.', 2, ''),
+(21, 'Pepperoni Pizza', 'Pizza with pepperoni.', '', 'Top dough with sauce, cheese, pepperoni, bake.', 2, ''),
+(22, 'Chicken Parmesan', 'Breaded chicken with marinara and cheese.', '', 'Bread chicken, fry, top with sauce and cheese, bake.', 2, ''),
+(23, 'Tuna Salad', 'Tuna with mayo and veggies.', '', 'Mix tuna with mayo, add veggies.', 2, ''),
+(24, 'Egg Fried Rice', 'Rice stir-fried with egg and veggies.', '', 'Cook rice, scramble eggs, stir-fry with veggies.', 2, '');
 
--- Insert test data for Pantry (30 entries)
-INSERT INTO Pantry (pantry_name, pantry_description, pantry_notes) VALUES
-('Main Storage', 'Largest pantry in the kitchen', 'Holds staples'),
-('Spice Rack', 'Small rack for dried herbs & spices', 'Keep away from heat'),
-('Baking Cabinet', 'Flour, sugar, baking supplies', 'Keep sealed'),
-('Canned Goods Shelf', 'Stacked canned vegetables & beans', 'Check expiry often'),
-('Breakfast Nook Pantry', 'Cereals & morning items', 'Accessible for quick meals'),
-('Outdoor Kitchen Shed', 'Backup items stored outside', 'Watch for humidity'),
-('Freezer Drawer', 'Frozen items & bulk meats', 'Label with dates'),
-('Fridge Door Rack', 'Condiments & smaller items', 'Keep upright'),
-('Vegetable Crisper', 'Produce that needs humidity', 'Wash before use'),
-('Meat Locker', 'Special fridge for large meats', 'Ensure safe temperature'),
-('Herb Drying Cabinet', 'Herbs hung to dry', 'Use paper bags'),
-('Snack Drawer', 'Chips, crackers, small candies', 'Reseal for freshness'),
-('Overflow Shelf', 'Excess supplies & bulk buys', 'Rotate older stock'),
-('Sauce Cabinet', 'Variety of sauces & dressings', 'Shake before opening'),
-('International Shelf', 'Imported products & exotic spices', 'Unique items'),
-('Gluten-Free Section', 'Dedicated GF items to avoid contamination', 'Label clearly'),
-('Bulk Bins', 'Large containers for dry goods', 'Scoop carefully'),
-('Wine Rack', 'Bottles of cooking wine', 'Store horizontally'),
-('Root Cellar', 'Potatoes, onions, root veggies', 'Dark & cool conditions'),
-('Baby Food Shelf', 'Purees & infant cereals', 'Check date carefully'),
-('Deli Drawer', 'Sliced meats & cheeses in fridge', 'Keep sealed'),
-('Lunch Prep Station', 'Lunchboxes & easy assembly items', 'Stock daily'),
-('Confectionery Stock', 'Candy, chocolate, dessert toppings', 'Temperature sensitive'),
-('Beverage Station', 'Teas, coffees, syrups, mixers', 'Shelf stable or chilled'),
-('Emergency Rations', 'Non-perishables for emergencies', 'Rotate every 6 months'),
-('Pickling Shelf', 'Jars of pickles, sauerkraut', 'Strong vinegar smell'),
-('Gourmet Pantry', 'High-end or specialty items', 'Use sparingly'),
-('Spare Freezer', 'Extra capacity for frozen goods', 'Good for large cuts'),
-('Test Kitchen Shelf', 'Experimental ingredients', 'Chef use only'),
-('Holiday Supplies', 'Seasonal items & treats', 'Store away off-season');
+-- RecipeIngredient (direct ingredient usage in recipes)
+INSERT INTO RecipeIngredient (recipe_id, ingredient_id, ri_quantity, unit_id) VALUES
+-- Grilled Cheese
+(1, 1, 2, 0), -- Bread, 2 pieces
+(1, 2, 2, 1), -- Cheddar Cheese, 2g
+(1, 3, 1, 6), -- Butter, 1 tbsp
+-- Scrambled Eggs
+(2, 4, 2, 0), -- Egg, 2 pieces
+(2, 5, 30, 2), -- Milk, 30ml
+(2, 3, 1, 6), -- Butter, 1 tbsp
+(2, 6, 1, 7), -- Salt, 1 tsp
+(2, 7, 0.5, 7), -- Pepper, 0.5 tsp
+-- Chicken Salad
+(3, 10, 1, 0), -- Chicken Breast, 1 piece
+(3, 22, 2, 6), -- Mayonnaise, 2 tbsp
+(3, 9, 2, 0), -- Lettuce, 2 leaves
+(3, 8, 1, 0), -- Tomato, 1 piece
+-- Spaghetti Marinara
+(4, 13, 100, 1), -- Pasta, 100g
+(4, 25, 100, 1), -- Marinara Sauce, 100g
+(4, 14, 10, 1), -- Parmesan Cheese, 10g
+-- Hamburger
+(5, 16, 1, 0), -- Ground Beef, 1 patty
+(5, 21, 1, 0), -- Hamburger Bun, 1 piece
+(5, 18, 1, 6), -- Ketchup, 1 tbsp
+(5, 19, 1, 7), -- Mustard, 1 tsp
+(5, 20, 3, 0), -- Pickle, 3 slices
+(5, 17, 1, 0), -- Onion, 1 slice
+-- Pizza Margherita
+(6, 24, 1, 0), -- Pizza Dough, 1 piece
+(6, 25, 50, 1), -- Marinara Sauce, 50g
+(6, 23, 50, 1), -- Mozzarella Cheese, 50g
+(6, 15, 5, 0), -- Basil, 5 leaves
+-- Veggie Pizza
+(7, 24, 1, 0), -- Pizza Dough, 1 piece
+(7, 25, 50, 1), -- Marinara Sauce, 50g
+(7, 23, 50, 1), -- Mozzarella Cheese, 50g
+(7, 26, 0.5, 0), -- Bell Pepper, 0.5 piece
+(7, 27, 3, 0), -- Mushroom, 3 pieces
+(7, 28, 20, 1), -- Spinach, 20g
+-- Quesadilla
+(8, 29, 1, 0), -- Tortilla, 1 piece
+(8, 23, 40, 1), -- Mozzarella Cheese, 40g
+-- Breakfast Burrito
+(9, 29, 1, 0), -- Tortilla, 1 piece
+(9, 4, 2, 0), -- Egg, 2 pieces
+(9, 30, 50, 1), -- Black Beans, 50g
+(9, 23, 20, 1), -- Mozzarella Cheese, 20g
+-- BLT Sandwich
+(10, 1, 2, 0), -- Bread, 2 pieces
+(10, 8, 2, 0), -- Tomato, 2 slices
+(10, 9, 2, 0), -- Lettuce, 2 leaves
+(10, 3, 1, 6), -- Butter, 1 tbsp
+-- Egg Salad Sandwich
+(11, 4, 2, 0), -- Egg, 2 pieces
+(11, 22, 1, 6), -- Mayonnaise, 1 tbsp
+(11, 1, 2, 0), -- Bread, 2 pieces
+-- Chicken Wrap
+(12, 29, 1, 0), -- Tortilla, 1 piece
+(12, 10, 1, 0), -- Chicken Breast, 1 piece
+(12, 9, 2, 0), -- Lettuce, 2 leaves
+(12, 8, 1, 0), -- Tomato, 1 piece
+-- Pasta Primavera
+(13, 13, 100, 1), -- Pasta, 100g
+(13, 26, 0.5, 0), -- Bell Pepper, 0.5 piece
+(13, 28, 20, 1), -- Spinach, 20g
+(13, 27, 3, 0), -- Mushroom, 3 pieces
+-- Cheeseburger
+(14, 16, 1, 0), -- Ground Beef, 1 patty
+(14, 21, 1, 0), -- Hamburger Bun, 1 piece
+(14, 2, 2, 1), -- Cheddar Cheese, 2g
+-- Caprese Salad
+(15, 8, 2, 0), -- Tomato, 2 pieces
+(15, 23, 40, 1), -- Mozzarella Cheese, 40g
+(15, 15, 5, 0), -- Basil, 5 leaves
+-- Garlic Bread
+(16, 1, 2, 0), -- Bread, 2 pieces
+(16, 12, 1, 0), -- Garlic, 1 clove
+(16, 3, 1, 6), -- Butter, 1 tbsp
+-- Spinach Omelette
+(17, 4, 2, 0), -- Egg, 2 pieces
+(17, 28, 20, 1), -- Spinach, 20g
+(17, 3, 1, 6), -- Butter, 1 tbsp
+-- Chicken Quesadilla
+(18, 29, 1, 0), -- Tortilla, 1 piece
+(18, 10, 1, 0), -- Chicken Breast, 1 piece
+(18, 23, 40, 1), -- Mozzarella Cheese, 40g
+-- Veggie Burrito
+(19, 29, 1, 0), -- Tortilla, 1 piece
+(19, 30, 50, 1), -- Black Beans, 50g
+(19, 26, 0.5, 0), -- Bell Pepper, 0.5 piece
+(19, 28, 20, 1), -- Spinach, 20g
+-- Mushroom Pizza
+(20, 24, 1, 0), -- Pizza Dough, 1 piece
+(20, 25, 50, 1), -- Marinara Sauce, 50g
+(20, 23, 50, 1), -- Mozzarella Cheese, 50g
+(20, 27, 5, 0), -- Mushroom, 5 pieces
+-- Pepperoni Pizza (assume pepperoni is not in ingredient list, skip)
+-- Chicken Parmesan
+(22, 10, 1, 0), -- Chicken Breast, 1 piece
+(22, 25, 50, 1), -- Marinara Sauce, 50g
+(22, 23, 40, 1), -- Mozzarella Cheese, 40g
+(22, 14, 10, 1); -- Parmesan Cheese, 10g
+-- Tuna Salad (assume tuna is not in ingredient list, skip)
+-- Egg Fried Rice (assume rice is not in ingredient list, skip)
 
--- Insert test data for Nutrition (30 entries)
-INSERT INTO Nutrition (nutrition_calories) VALUES
-(50),   (75),   (90),   (120),  (130),
-(150),  (180),  (220),  (250),  (280),
-(300),  (320),  (350),  (375),  (400),
-(420),  (450),  (480),  (500),  (550),
-(600),  (625),  (650),  (700),  (725),
-(750),  (800),  (850),  (900),  (1000);
+-- RecipeComponent (for recipes that use components)
+INSERT INTO RecipeComponent (recipe_id, component_id, rc_quantity, unit_id) VALUES
+(5, 5, 1, 0), -- Hamburger uses Hamburger Patty component
+(5, 6, 1, 0), -- Hamburger as a component (for demonstration)
+(6, 7, 1, 0), -- Pizza Margherita as a component
+(7, 8, 1, 0), -- Veggie Pizza as a component
+(8, 9, 1, 0), -- Quesadilla as a component
+(9, 10, 1, 0); -- Breakfast Burrito as a component
 
--- Insert test data for NutritionFields (10 entries)
-INSERT INTO NutritionFields (nutritionfield_name, nutritionfield_value, unit_id) VALUES
-('Protein', '20', 1),
-('Carbohydrates', '35', 1),
-('Fat', '10', 1),
-('Fiber', '4', 1),
-('Sugar', '5', 1),
-('Sodium', '300', 1),
-('Cholesterol', '45', 1),
-('Vitamin D', '2', 1),
-('Calcium', '150', 1),
-('Iron', '3', 1);
+-- ComponentIngredient (components made from ingredients)
+INSERT INTO ComponentIngredient (component_id, ingredient_id, ci_quantity, unit_id) VALUES
+(1, 1, 2, 0), -- Grilled Cheese Sandwich: Bread
+(1, 2, 2, 1), -- Cheddar Cheese
+(1, 3, 1, 6), -- Butter
+(2, 4, 2, 0), -- Scrambled Eggs: Egg
+(2, 5, 30, 2), -- Milk
+(2, 3, 1, 6), -- Butter
+(3, 10, 1, 0), -- Chicken Salad: Chicken Breast
+(3, 22, 2, 6), -- Mayonnaise
+(3, 9, 2, 0), -- Lettuce
+(3, 8, 1, 0), -- Tomato
+(4, 13, 100, 1), -- Spaghetti Marinara: Pasta
+(4, 25, 100, 1), -- Marinara Sauce
+(4, 14, 10, 1), -- Parmesan Cheese
+(5, 16, 1, 0), -- Hamburger Patty: Ground Beef
+(5, 6, 1, 7), -- Salt
+(5, 7, 0.5, 7), -- Pepper
+(6, 5, 1, 0), -- Hamburger: Hamburger Patty
+(6, 21, 1, 0), -- Hamburger Bun
+(6, 18, 1, 6), -- Ketchup
+(6, 19, 1, 7), -- Mustard
+(6, 20, 3, 0), -- Pickle
+(6, 17, 1, 0), -- Onion
+(7, 24, 1, 0), -- Pizza Margherita: Pizza Dough
+(7, 25, 50, 1), -- Marinara Sauce
+(7, 23, 50, 1), -- Mozzarella Cheese
+(7, 15, 5, 0), -- Basil
+(8, 24, 1, 0), -- Veggie Pizza: Pizza Dough
+(8, 25, 50, 1), -- Marinara Sauce
+(8, 23, 50, 1), -- Mozzarella Cheese
+(8, 26, 0.5, 0), -- Bell Pepper
+(8, 27, 3, 0), -- Mushroom
+(8, 28, 20, 1), -- Spinach
+(9, 29, 1, 0), -- Quesadilla: Tortilla
+(9, 23, 40, 1), -- Mozzarella Cheese
+(10, 29, 1, 0), -- Breakfast Burrito: Tortilla
+(10, 4, 2, 0), -- Egg
+(10, 30, 50, 1), -- Black Beans
+(10, 23, 20, 1); -- Mozzarella Cheese
 
--- Insert test data for RecipeComponent (10 entries)
-INSERT OR IGNORE INTO RecipeComponent (recipe_id, component_id, rc_quantity, unit_id) VALUES
-(1, 4, 2.0, 5),
-(1, 11, 1.5, 5),
-(2, 9, 1.0, 5),
-(3, 15, 0.5, 5),
-(4, 8, 1.0, 5),
-(8, 2, 1.5, 5),
-(12, 3, 2.0, 5),
-(10, 7, 1.0, 0),
-(14, 1, 3.5, 5),
-(20, 5, 2.0, 5);
+-- Pantry
+INSERT INTO Pantry (pantry_id, pantry_name, pantry_description, pantry_notes)
+VALUES
+(1, 'Main Pantry', 'Default kitchen pantry', '');
 
--- Insert test data for ComponentIngredient (10 entries)
-INSERT OR IGNORE INTO ComponentIngredient (component_id, ingredient_id, ci_quantity, unit_id) VALUES
-(1, 1, 0.5, 4),
-(2, 2, 2.0, 0),
-(3, 3, 1.0, 0),
-(4, 9, 1.0, 0),
-(5, 7, 6.0, 3),
-(6, 25, 4.0, 4),
-(8, 10, 2.0, 6),
-(11, 12, 0.5, 7),
-(12, 30, 1.0, 2),
-(15, 2, 1.0, 0);
+-- PantryComponent (stock some components in the pantry)
+INSERT INTO PantryComponent (pantry_id, component_id, pc_quantity, unit_id) VALUES
+(1, 1, 2, 0), -- Grilled Cheese Sandwich
+(1, 2, 2, 0), -- Scrambled Eggs
+(1, 3, 1, 0); -- Chicken Salad
 
--- Insert test data for MealComponent (10 entries)
-INSERT OR IGNORE INTO MealComponent (meal_id, component_id, mc_quantity, unit_id) VALUES
-(1, 1, 1.0, 5),
-(2, 2, 1.0, 5),
-(3, 3, 1.0, 0),
-(4, 4, 1.5, 5),
-(5, 5, 1.0, 5),
-(6, 6, 2.0, 0),
-(7, 7, 1.0, 0),
-(10, 9, 0.75, 5),
-(12, 11, 2.0, 5),
-(15, 15, 1.5, 5);
+-- Nutrition (minimal, for demonstration)
+INSERT INTO Nutrition (nutrition_id, nutrition_calories) VALUES
+(1, 300), (2, 250), (3, 400);
 
--- Insert test data for PantryComponent (10 entries)
-INSERT OR IGNORE INTO PantryComponent (pantry_id, component_id, pc_quantity, unit_id) VALUES
-(1, 1, 3.0, 5),
-(2, 2, 2.0, 5),
-(3, 4, 5.0, 5),
-(4, 6, 6.0, 0),
-(5, 5, 1.5, 5),
-(6, 3, 3.0, 0),
-(7, 10, 2.0, 6),
-(8, 7, 4.0, 0),
-(9, 8, 1.5, 5),
-(10, 15, 2.0, 5);
+-- NutritionIngredient (link some ingredients to nutrition)
+INSERT INTO NutritionIngredient (ni_id, ingredient_id, nutrition_id) VALUES
+(1, 1, 1), -- Bread
+(2, 2, 2), -- Cheddar Cheese
+(3, 3, 3); -- Butter
 
--- Insert test data for NutritionIngredient (10 entries)
-INSERT INTO NutritionIngredient (ingredient_id, nutrition_id) VALUES
-(1, 2),
-(2, 3),
-(3, 4),
-(4, 5),
-(9, 6),
-(10, 7),
-(12, 8),
-(15, 10),
-(19, 12),
-(30, 15);
+-- NutritionFields (minimal)
+INSERT INTO NutritionFields (nutritionfield_id, nutritionfield_name, nutritionfield_value, unit_id) VALUES
+(1, 'Calories', '300', NULL),
+(2, 'Fat', '10', 1),
+(3, 'Protein', '8', 1);
+
+-- Done
+-- Done

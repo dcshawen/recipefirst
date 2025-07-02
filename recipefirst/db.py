@@ -141,7 +141,7 @@ def getComponent(component_id):
     return dict(row) if row else None
 
 def getRecipes(limit=None, name=None, description=None):
-    """Fetch recipes with optional filters."""
+    """Fetch recipes with optional filters, including ingredients and components."""
     db = get_db()
     query = 'SELECT * FROM Recipe'
     filters = []
@@ -159,7 +159,33 @@ def getRecipes(limit=None, name=None, description=None):
         query += ' LIMIT ?'
         params.append(limit)
     rows = db.execute(query, params).fetchall()
-    return [dict(row) for row in rows]
+    recipes = []
+    for row in rows:
+        recipe = dict(row)
+        # Fetch ingredients for this recipe
+        ingredients = db.execute(
+            '''
+            SELECT ri.*, i.ingredient_name, i.ingredient_description, i.ingredient_notes, i.ingredient_image
+            FROM RecipeIngredient ri
+            JOIN Ingredient i ON ri.ingredient_id = i.ingredient_id
+            WHERE ri.recipe_id = ?
+            ''',
+            (recipe['recipe_id'],)
+        ).fetchall()
+        recipe['ingredients'] = [dict(ing) for ing in ingredients]
+        # Fetch components for this recipe
+        components = db.execute(
+            '''
+            SELECT rc.*, c.component_name, c.component_description, c.component_notes, c.component_image, c.unit_id
+            FROM RecipeComponent rc
+            JOIN Component c ON rc.component_id = c.component_id
+            WHERE rc.recipe_id = ?
+            ''',
+            (recipe['recipe_id'],)
+        ).fetchall()
+        recipe['components'] = [dict(comp) for comp in components]
+        recipes.append(recipe)
+    return recipes
 
 def getRecipe(recipe_id):
     db = get_db()
