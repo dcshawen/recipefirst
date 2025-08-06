@@ -1,7 +1,6 @@
 import sqlite3
 import os
-import pathlib
-import io
+from pathlib import Path
 
 def init_db(db_name='recipefirst.db'):
     """
@@ -13,37 +12,28 @@ def init_db(db_name='recipefirst.db'):
     Returns:
         str: Path to the created database file.
     """
-    # Get the project root directory (parent of the data directory)
-    root_dir = pathlib.Path(__file__).parent.parent
-    
-    # Create instances directory if it doesn't exist
-    instances_dir = root_dir / 'data' / 'instances'
+    # Get paths
+    current_dir = Path(__file__).parent
+    root_dir = current_dir.parent
+    instances_dir = current_dir / 'instances'
     os.makedirs(instances_dir, exist_ok=True)
     
-    # Full path to the database file
     db_path = instances_dir / db_name
+    schema_path = current_dir / 'schema.sql'
     
-    # Full path to the schema file
-    schema_path = root_dir / 'schema.sql'
+    if not schema_path.exists():
+        raise FileNotFoundError(f"Schema file not found at {schema_path}")
     
     # Connect to the database
-    conn = sqlite3.connect(db_path)
-    
-    try:
-        # Read the schema file
+    with sqlite3.connect(db_path) as conn:
+        # Read and execute the schema file
         with open(schema_path, 'r') as f:
             schema_sql = f.read()
         
-        # Execute the schema SQL
         conn.executescript(schema_sql)
         
         print(f"Database initialized at {db_path}")
         return str(db_path)
-    except Exception as e:
-        print(f"Error initializing database: {e}")
-        raise
-    finally:
-        conn.close()
 
 def getDBSchema():
     """
@@ -70,3 +60,33 @@ def getDBSchema():
     
     conn.close()
     return [item[0] for item in schema if item[0] is not None]
+
+def patch_db():
+    """
+    Apply patches to the database by executing the patch.sql file.
+    
+    Returns:
+        str: Path to the patched database file.
+    """
+    # Get paths
+    current_dir = Path(__file__).parent
+    instances_dir = current_dir / 'instances'
+    db_path = instances_dir / 'recipefirst.db'
+    patch_path = current_dir / 'patch.sql'
+    
+    if not db_path.exists():
+        raise FileNotFoundError(f"Database file not found at {db_path}. Please run init_db() first.")
+    
+    if not patch_path.exists():
+        raise FileNotFoundError(f"Patch file not found at {patch_path}")
+    
+    # Connect to the database
+    with sqlite3.connect(db_path) as conn:
+        # Read and execute the patch file
+        with open(patch_path, 'r') as f:
+            patch_sql = f.read()
+        
+        conn.executescript(patch_sql)
+        
+        print(f"Database patched successfully at {db_path}")
+        return str(db_path)
