@@ -43,7 +43,7 @@ def getDBSchema():
         str: The SQL schema of the database.
     """
     # Get the project root directory (parent of the data directory)
-    root_dir = pathlib.Path(__file__).parent.parent
+    root_dir = Path(__file__).parent.parent
     instances_dir = root_dir / 'data' / 'instances'
     db_path = instances_dir / 'recipefirst.db'
     
@@ -90,3 +90,103 @@ def patch_db():
         
         print(f"Database patched successfully at {db_path}")
         return str(db_path)
+
+# Recipes
+def get_all_recipes():
+    return []
+
+def get_recipe_by_id(id):
+    return {"id": id, "name": "Sample Recipe"}
+
+def create_recipe(recipe_data):
+    return {"id": 1, "data": recipe_data}
+
+def update_recipe(id, recipe_data):
+    return True
+
+def delete_recipe(id):
+    return True
+
+# Ingredients
+def get_all_ingredients():
+    return []
+
+def get_ingredient_by_id(id):
+    return {"id": id, "name": "Sample Ingredient"}
+
+def create_ingredient(ingredient_data):
+    return {"id": 1, "data": ingredient_data}
+
+def update_ingredient(id, ingredient_data):
+    return True
+
+def delete_ingredient(id):
+    return True
+
+# Recipe Ingredients
+def get_recipe_ingredients(id):
+    return []
+
+def add_ingredient_to_recipe(id, ingredient_data):
+    return {"recipe_id": id, "ingredient": ingredient_data}
+
+def update_recipe_ingredient(id, ingredient_id, update_data):
+    return True
+
+def remove_ingredient_from_recipe(id, ingredient_id):
+    return True
+
+# Categories
+def get_all_categories():
+    return []
+
+def get_category_by_id(id):
+    return {"id": id, "name": "Sample Category"}
+
+def create_category(category_data):
+    return {"id": 1, "data": category_data}
+
+def update_category(id, category_data):
+    return True
+
+def delete_category(id):
+    return True
+
+# Food Items
+def get_all_food_items():
+    return []
+
+def get_food_item_by_id(id):
+    return {"id": id, "name": "Sample Food Item"}
+
+def create_food_item(food_item_data):
+    return {"id": 1, "data": food_item_data}
+
+def update_food_item(id, food_item_data):
+    return True
+
+def delete_food_item(id):
+    return True
+
+# Meals
+def get_all_meals():
+    return []
+
+def get_meal_by_id(id):
+    return {"id": id, "name": "Sample Meal"}
+
+def create_meal(meal_data):
+    return {"id": 1, "data": meal_data}
+
+def update_meal(id, meal_data):
+    return True
+
+def delete_meal(id):
+    return True
+
+# Utility
+def search_recipes(q):
+    return []
+
+def get_recipes_by_category(category_id):
+    return []
