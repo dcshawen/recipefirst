@@ -18,7 +18,7 @@ DROP TABLE IF EXISTS Category;
 -- Table: Ingredient
 CREATE TABLE Ingredient (
   ingredient_id   INTEGER PRIMARY KEY,
-  ingredient_name TEXT    NOT NULL UNIQUE,
+  ingredient_name TEXT    NOT NULL,
   created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -119,7 +119,7 @@ CREATE TABLE MealFoodItem (
 -- Base category table that can be used for recipes, ingredients, and meals
 CREATE TABLE Category (
   category_id          INTEGER PRIMARY KEY,
-  category_name        TEXT NOT NULL UNIQUE,
+  category_name        TEXT NOT NULL,
   category_description TEXT,
   parent_category_id   INTEGER,
   created_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
