@@ -1,0 +1,265 @@
+### Root
+GET http://localhost:8000/
+
+### Recipes
+GET http://localhost:8000/recipes
+
+### Recipes (single, pass)
+GET http://localhost:8000/recipes/1
+
+### Recipes (single, fail)
+GET http://localhost:8000/recipes/-1
+
+### Recipes (create, pass)
+POST http://localhost:8000/recipes
+Content-Type: application/json
+
+{
+  "name": "Test Recipe"
+}
+
+### Recipes (create, fail)
+POST http://localhost:8000/recipes
+Content-Type: application/json
+
+{}  // fail (missing required fields)
+
+### Recipes (update, pass)
+PUT http://localhost:8000/recipes/1
+Content-Type: application/json
+
+{
+  "name": "Updated Recipe"
+}
+
+### Recipes (update, fail)
+PUT http://localhost:8000/recipes/-1
+Content-Type: application/json
+
+{
+  "name": "Updated Recipe"
+}  // fail
+
+### Recipes (delete, pass)
+DELETE http://localhost:8000/recipes/1
+
+### Recipes (delete, fail)
+DELETE http://localhost:8000/recipes/-1  // fail
+
+### Ingredients
+GET http://localhost:8000/ingredients
+
+### Ingredients (single, pass)
+GET http://localhost:8000/ingredients/1
+
+### Ingredients (single, fail)
+GET http://localhost:8000/ingredients/-1  // fail
+
+### Ingredients (create, pass)
+POST http://localhost:8000/ingredients
+Content-Type: application/json
+
+{
+  "name": "Test Ingredient"
+}
+
+### Ingredients (create, fail)
+POST http://localhost:8000/ingredients
+Content-Type: application/json
+
+{}  // fail
+
+### Ingredients (update, pass)
+PUT http://localhost:8000/ingredients/1
+Content-Type: application/json
+
+{
+  "name": "Updated Ingredient"
+}
+
+### Ingredients (update, fail)
+PUT http://localhost:8000/ingredients/-1
+Content-Type: application/json
+
+{
+  "name": "Updated Ingredient"
+}  // fail
+
+### Ingredients (delete, pass)
+DELETE http://localhost:8000/ingredients/1
+
+### Ingredients (delete, fail)
+DELETE http://localhost:8000/ingredients/-1  // fail
+
+### Recipe Ingredients
+GET http://localhost:8000/recipes/1/ingredients
+
+GET http://localhost:8000/recipes/-1/ingredients  // fail
+
+POST http://localhost:8000/recipes/1/ingredients
+Content-Type: application/json
+
+{
+  "ingredient_id": 1
+}
+
+POST http://localhost:8000/recipes/-1/ingredients
+Content-Type: application/json
+
+{
+  "ingredient_id": 1
+}  // fail
+
+PUT http://localhost:8000/recipes/1/ingredients/1
+Content-Type: application/json
+
+{
+  "amount": "2 cups"
+}
+
+PUT http://localhost:8000/recipes/-1/ingredients/1
+Content-Type: application/json
+
+{
+  "amount": "2 cups"
+}  // fail
+
+DELETE http://localhost:8000/recipes/1/ingredients/1
+
+DELETE http://localhost:8000/recipes/-1/ingredients/1  // fail
+
+### Categories
+GET http://localhost:8000/categories
+
+### Categories (single, pass)
+GET http://localhost:8000/categories/1
+
+### Categories (single, fail)
+GET http://localhost:8000/categories/-1  // fail
+
+### Categories (create, pass)
+POST http://localhost:8000/categories
+Content-Type: application/json
+
+{
+  "name": "Test Category"
+}
+
+### Categories (create, fail)
+POST http://localhost:8000/categories
+Content-Type: application/json
+
+{}  // fail
+
+### Categories (update, pass)
+PUT http://localhost:8000/categories/1
+Content-Type: application/json
+
+{
+  "name": "Updated Category"
+}
+
+### Categories (update, fail)
+PUT http://localhost:8000/categories/-1
+Content-Type: application/json
+
+{
+  "name": "Updated Category"
+}  // fail
+
+### Categories (delete, pass)
+DELETE http://localhost:8000/categories/1
+
+### Categories (delete, fail)
+DELETE http://localhost:8000/categories/-1  // fail
+
+### Food Items
+GET http://localhost:8000/food-items
+
+### Food Items (single, pass)
+GET http://localhost:8000/food-items/1
+
+### Food Items (single, fail)
+GET http://localhost:8000/food-items/-1  // fail
+
+### Food Items (create, pass)
+POST http://localhost:8000/food-items
+Content-Type: application/json
+
+{
+  "name": "Test Food Item"
+}
+
+### Food Items (create, fail)
+POST http://localhost:8000/food-items
+Content-Type: application/json
+
+{}  // fail
+
+### Food Items (update, pass)
+PUT http://localhost:8000/food-items/1
+Content-Type: application/json
+
+{
+  "name": "Updated Food Item"
+}
+
+### Food Items (update, fail)
+PUT http://localhost:8000/food-items/-1
+Content-Type: application/json
+
+{
+  "name": "Updated Food Item"
+}  // fail
+
+### Food Items (delete, pass)
+DELETE http://localhost:8000/food-items/1
+
+### Food Items (delete, fail)
+DELETE http://localhost:8000/food-items/-1  // fail
+
+### Meals
+GET http://localhost:8000/meals
+
+### Meals (single, pass)
+GET http://localhost:8000/meals/1
+
+### Meals (single, fail)
+GET http://localhost:8000/meals/-1  // fail
+
+### Meals (create, pass)
+POST http://localhost:8000/meals
+Content-Type: application/json
+
+{
+  "name": "Test Meal"
+}
+
+### Meals (create, fail)
+POST http://localhost:8000/meals
+Content-Type: application/json
+
+{}  // fail
+
+### Meals (update, pass)
+PUT http://localhost:8000/meals/1
+Content-Type: application/json
+
+{
+  "name": "Updated Meal"
+}
+
+### Meals (update, fail)
+PUT http://localhost:8000/meals/-1
+Content-Type: application/json
+
+{
+  "name": "Updated Meal"
+}  // fail
+
+### Meals (delete, pass)
+DELETE http://localhost:8000/meals/1
+
+### Meals (delete, fail)
+DELETE http://localhost:8000/meals/-1  // fail
+
