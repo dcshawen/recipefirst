@@ -1,265 +1,242 @@
 ### Root
 GET http://localhost:8000/
 
-### Recipes
+### Get all recipes
 GET http://localhost:8000/recipes
 
-### Recipes (single, pass)
+### Get recipe by valid ID
 GET http://localhost:8000/recipes/1
 
-### Recipes (single, fail)
+### Get recipe by invalid ID (should fail - negative ID)
 GET http://localhost:8000/recipes/-1
 
-### Recipes (create, pass)
+### Create a new recipe
 POST http://localhost:8000/recipes
 Content-Type: application/json
 
 {
-  "name": "Test Recipe"
+  "name": "Test Recipe",
+  "description": "A test recipe",
+  "fooditem_id": 1,
+  "category_id": 1
 }
 
-### Recipes (create, fail)
-POST http://localhost:8000/recipes
-Content-Type: application/json
-
-{}  // fail (missing required fields)
-
-### Recipes (update, pass)
+### Update recipe by valid ID
 PUT http://localhost:8000/recipes/1
 Content-Type: application/json
 
 {
-  "name": "Updated Recipe"
+  "name": "Updated Recipe Name",
+  "fooditem_id": 1
 }
 
-### Recipes (update, fail)
+### Update recipe by invalid ID (should fail - negative ID)
 PUT http://localhost:8000/recipes/-1
 Content-Type: application/json
 
 {
-  "name": "Updated Recipe"
-}  // fail
+  "name": "Should Fail",
+  "fooditem_id": 1
+}
 
-### Recipes (delete, pass)
+### Delete recipe by valid ID
 DELETE http://localhost:8000/recipes/1
 
-### Recipes (delete, fail)
-DELETE http://localhost:8000/recipes/-1  // fail
+### Delete recipe by invalid ID (should fail - negative ID)
+DELETE http://localhost:8000/recipes/-1
 
-### Ingredients
+### Get all ingredients
 GET http://localhost:8000/ingredients
 
-### Ingredients (single, pass)
+### Get ingredient by valid ID
 GET http://localhost:8000/ingredients/1
 
-### Ingredients (single, fail)
-GET http://localhost:8000/ingredients/-1  // fail
+### Get ingredient by invalid ID (should fail - negative ID)
+GET http://localhost:8000/ingredients/-1
 
-### Ingredients (create, pass)
+### Create a new ingredient
 POST http://localhost:8000/ingredients
 Content-Type: application/json
 
 {
-  "name": "Test Ingredient"
+  "ingredient_name": "Test Salt"
 }
 
-### Ingredients (create, fail)
-POST http://localhost:8000/ingredients
-Content-Type: application/json
-
-{}  // fail
-
-### Ingredients (update, pass)
+### Update ingredient by valid ID
 PUT http://localhost:8000/ingredients/1
 Content-Type: application/json
 
 {
-  "name": "Updated Ingredient"
+  "ingredient_name": "Sea Salt"
 }
 
-### Ingredients (update, fail)
+### Update ingredient by invalid ID (should fail - negative ID)
 PUT http://localhost:8000/ingredients/-1
 Content-Type: application/json
 
 {
-  "name": "Updated Ingredient"
-}  // fail
+  "name": "Should Fail"
+}
 
-### Ingredients (delete, pass)
+### Delete ingredient by valid ID
 DELETE http://localhost:8000/ingredients/1
 
-### Ingredients (delete, fail)
-DELETE http://localhost:8000/ingredients/-1  // fail
+### Delete ingredient by invalid ID (should fail - negative ID)
+DELETE http://localhost:8000/ingredients/-1
 
-### Recipe Ingredients
+### Get ingredients for a recipe by valid recipe ID
 GET http://localhost:8000/recipes/1/ingredients
 
-GET http://localhost:8000/recipes/-1/ingredients  // fail
+### Get ingredients for a recipe by invalid recipe ID (should fail - negative ID)
+GET http://localhost:8000/recipes/-1/ingredients
 
+### Add ingredient to recipe
 POST http://localhost:8000/recipes/1/ingredients
 Content-Type: application/json
 
 {
-  "ingredient_id": 1
+  "ri_ingredient_id": 2,
+  "ri_unit_type_id": 1,
+  "ri_quantity": 1
 }
 
-POST http://localhost:8000/recipes/-1/ingredients
+### Update recipe ingredient by valid IDs
+PUT http://localhost:8000/recipes/1/ingredients/2
 Content-Type: application/json
 
 {
-  "ingredient_id": 1
-}  // fail
-
-PUT http://localhost:8000/recipes/1/ingredients/1
-Content-Type: application/json
-
-{
-  "amount": "2 cups"
+  "ri_unit_type_id": 1,
+  "ri_quantity": 2
 }
 
-PUT http://localhost:8000/recipes/-1/ingredients/1
+### Update recipe ingredient by invalid IDs (should fail - negative IDs)
+PUT http://localhost:8000/recipes/-1/ingredients/-2
 Content-Type: application/json
 
 {
-  "amount": "2 cups"
-}  // fail
+  "ri_unit_type_id": 1,
+  "ri_quantity": 2
+}
 
-DELETE http://localhost:8000/recipes/1/ingredients/1
+### Remove ingredient from recipe by valid IDs
+DELETE http://localhost:8000/recipes/1/ingredients/2
 
-DELETE http://localhost:8000/recipes/-1/ingredients/1  // fail
+### Remove ingredient from recipe by invalid IDs (should fail - negative IDs)
+DELETE http://localhost:8000/recipes/-1/ingredients/-2
 
-### Categories
+### Get all categories
 GET http://localhost:8000/categories
 
-### Categories (single, pass)
+### Get category by valid ID
 GET http://localhost:8000/categories/1
 
-### Categories (single, fail)
-GET http://localhost:8000/categories/-1  // fail
+### Get category by invalid ID (should fail - negative ID)
+GET http://localhost:8000/categories/-1
 
-### Categories (create, pass)
+### Create a new category
 POST http://localhost:8000/categories
 Content-Type: application/json
 
 {
-  "name": "Test Category"
+  "category_name": "Dessert"
 }
 
-### Categories (create, fail)
-POST http://localhost:8000/categories
-Content-Type: application/json
-
-{}  // fail
-
-### Categories (update, pass)
+### Update category by valid ID
 PUT http://localhost:8000/categories/1
 Content-Type: application/json
 
 {
-  "name": "Updated Category"
+  "category_name": "Updated Dessert"
 }
 
-### Categories (update, fail)
+### Update category by invalid ID (should fail - negative ID)
 PUT http://localhost:8000/categories/-1
 Content-Type: application/json
 
 {
-  "name": "Updated Category"
-}  // fail
+  "name": "Should Fail"
+}
 
-### Categories (delete, pass)
+### Delete category by valid ID
 DELETE http://localhost:8000/categories/1
 
-### Categories (delete, fail)
-DELETE http://localhost:8000/categories/-1  // fail
+### Delete category by invalid ID (should fail - negative ID)
+DELETE http://localhost:8000/categories/-1
 
-### Food Items
+### Get all food items
 GET http://localhost:8000/food-items
 
-### Food Items (single, pass)
+### Get food item by valid ID
 GET http://localhost:8000/food-items/1
 
-### Food Items (single, fail)
-GET http://localhost:8000/food-items/-1  // fail
+### Get food item by invalid ID (should fail - negative ID)
+GET http://localhost:8000/food-items/-1
 
-### Food Items (create, pass)
+### Create a new food item
 POST http://localhost:8000/food-items
 Content-Type: application/json
 
 {
-  "name": "Test Food Item"
+  "fooditem_name": "Apple"
 }
 
-### Food Items (create, fail)
-POST http://localhost:8000/food-items
-Content-Type: application/json
-
-{}  // fail
-
-### Food Items (update, pass)
+### Update food item by valid ID
 PUT http://localhost:8000/food-items/1
 Content-Type: application/json
 
 {
-  "name": "Updated Food Item"
+  "fooditem_name": "Green Apple"
 }
 
-### Food Items (update, fail)
+### Update food item by invalid ID (should fail - negative ID)
 PUT http://localhost:8000/food-items/-1
 Content-Type: application/json
 
 {
-  "name": "Updated Food Item"
-}  // fail
+  "fooditem_name": "Should Fail"
+}
 
-### Food Items (delete, pass)
+### Delete food item by valid ID
 DELETE http://localhost:8000/food-items/1
 
-### Food Items (delete, fail)
-DELETE http://localhost:8000/food-items/-1  // fail
+### Delete food item by invalid ID (should fail - negative ID)
+DELETE http://localhost:8000/food-items/-1
 
-### Meals
+### Get all meals
 GET http://localhost:8000/meals
 
-### Meals (single, pass)
+### Get meal by valid ID
 GET http://localhost:8000/meals/1
 
-### Meals (single, fail)
-GET http://localhost:8000/meals/-1  // fail
+### Get meal by invalid ID (should fail - negative ID)
+GET http://localhost:8000/meals/-1
 
-### Meals (create, pass)
+### Create a new meal
 POST http://localhost:8000/meals
 Content-Type: application/json
 
 {
-  "name": "Test Meal"
+  "meal_name": "Breakfast"
 }
 
-### Meals (create, fail)
-POST http://localhost:8000/meals
-Content-Type: application/json
-
-{}  // fail
-
-### Meals (update, pass)
+### Update meal by valid ID
 PUT http://localhost:8000/meals/1
 Content-Type: application/json
 
 {
-  "name": "Updated Meal"
+  "meal_name": "Brunch"
 }
 
-### Meals (update, fail)
+### Update meal by invalid ID (should fail - negative ID)
 PUT http://localhost:8000/meals/-1
 Content-Type: application/json
 
 {
-  "name": "Updated Meal"
-}  // fail
+  "meal_name": "Should Faild"
+}
 
-### Meals (delete, pass)
+### Delete meal by valid ID
 DELETE http://localhost:8000/meals/1
 
-### Meals (delete, fail)
-DELETE http://localhost:8000/meals/-1  // fail
-
+### Delete meal by invalid ID (should fail - negative ID)
+DELETE http://localhost:8000/meals/-1
