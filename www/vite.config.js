@@ -15,4 +15,9 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  server: {
+    allowedHosts: [
+      "ec2-16-52-42-204.ca-central-1.compute.amazonaws.com"
+    ]
+  }
 })

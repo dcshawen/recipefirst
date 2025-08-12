@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Usage: start-dev --server <fastapi|vuejs>
+
+SERVER=""
+VENV_PATH="/home/recipefirst/recipefirst/venv"
+FASTAPI_BIN="/home/recipefirst/recipefirst/venv/bin/fastapi"
+NPM_BIN="/usr/bin/npm"
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --server) SERVER="$2"; shift ;;
+        *) echo "Unknown parameter passed: $1"; exit 1 ;;
+    esac
+    shift
+done
+
+# Activate virtual environment
+if [ -d "$VENV_PATH" ]; then
+    source "$VENV_PATH/bin/activate"
+else
+    echo "❌ Virtual environment not found at $VENV_PATH"
+    exit 1
+fi
+
+if [[ "$SERVER" == "fastapi" ]]; then
+    echo "🚀 Starting FastAPI server (accessible externally)..."
+    cd /home/recipefirst/recipefirst/data/
+    "$FASTAPI_BIN" dev server.py --host 0.0.0.0 --port 8000
+
+elif [[ "$SERVER" == "vuejs" ]]; then
+    echo "🌐 Starting Vue.js dev server (accessible externally)..."
+    cd /home/recipefirst/recipefirst/www/
+    "$NPM_BIN" run dev -- --host 0.0.0.0 --port 5173
+
+else
+    echo "❌ Invalid server type. Use --server fastapi or --server vuejs"
+    exit 1
+fi
