@@ -17,7 +17,7 @@ export default defineConfig({
   },
   server: {
     allowedHosts: [
-      "ec2-16-52-42-204.ca-central-1.compute.amazonaws.com"
+      "ec2-99-79-147-109.ca-central-1.compute.amazonaws.com"
     ]
   }
 })
