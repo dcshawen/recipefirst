@@ -9,15 +9,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import IngredientListViewItem from './IngredientListViewItem.vue'
 
-// Example ingredients data
-const ingredients = ref([
-	{ id: 1, name: 'Flour', amount: '2 cups' },
-	{ id: 2, name: 'Sugar', amount: '1 cup' },
-	{ id: 3, name: 'Eggs', amount: '3' }
-])
+defineProps({
+	ingredients: {
+		type: Array,
+		required: true
+	}
+})
 </script>
 
 <style scoped>

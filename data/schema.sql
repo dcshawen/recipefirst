@@ -19,6 +19,8 @@ DROP TABLE IF EXISTS Category;
 CREATE TABLE Ingredient (
   ingredient_id   INTEGER PRIMARY KEY,
   ingredient_name TEXT    NOT NULL,
+	ingredient_description TEXT,
+	ingredient_notes TEXT, 
   created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
