@@ -1,21 +1,18 @@
 <script setup>
-import GenericListView from './components/GenericListView.vue'
+import GenericListView from './views/GenericListView.vue'
+import IngredientDetails from './pages/IngredientDetails.vue'
 import { ref } from 'vue'
+import ingredients from './dev/ingredients.json'
 
 // Start test items
 let columns = ref([
-    { label: 'Name', field: 'name' },
-    { label: 'Description', field: 'description' },
-    { label: 'Notes', field: 'notes' },
+    { label: 'Name', field: 'ingredient_name' },
+    { label: 'Notes', field: 'ingredient_notes' },
     { label: 'Created On', field: 'created_at' }
 ])
 
+let items = ref(ingredients)
 
-let items = ref([
-    { id: 1, name: 'Flour', description: "All-purpose flour", notes: "Follow recipe", created_at: new Date().toLocaleDateString() },
-    { id: 2, name: 'Sugar', description: "Granulated sugar", notes: "Adjust to taste", created_at: new Date().toLocaleDateString() },
-    { id: 3, name: 'Eggs', description: "Large eggs", notes: "Use fresh eggs", created_at: new Date().toLocaleDateString() }
-])
 let itemData = ref({
     columns: columns.value,
     items: items.value
@@ -25,4 +22,6 @@ let itemData = ref({
 
 <template>
     <GenericListView :itemData="itemData" />
+
+    <IngredientDetails :ingredient="items[2]" />
 </template>
