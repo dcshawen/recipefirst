@@ -1,0 +1,142 @@
+[
+  {
+    "ingredient_id": 0,
+    "ingredient_name": "Flour",
+    "ingredient_description": "All-purpose flour",
+    "ingredient_notes": "Follow recipe",
+    "created_at": "2024-06-09"
+  },
+  {
+    "ingredient_id": 1,
+    "ingredient_name": "Sugar",
+    "ingredient_description": "Granulated sugar",
+    "ingredient_notes": "Adjust to taste",
+    "created_at": "2024-06-09"
+  },
+  {
+    "ingredient_id": 2,
+    "ingredient_name": "Eggs",
+    "ingredient_description": "Large eggs",
+    "ingredient_notes": "Use fresh eggs",
+    "created_at": "2024-06-09"
+  },
+  {
+    "ingredient_id": 3,
+    "ingredient_name": "Butter",
+    "ingredient_description": "Unsalted butter",
+    "ingredient_notes": "Room temperature",
+    "created_at": "2024-06-09"
+  },
+  {
+    "ingredient_id": 4,
+    "ingredient_name": "Milk",
+    "ingredient_description": "Whole milk",
+    "ingredient_notes": "Warm slightly",
+    "created_at": "2024-06-09"
+  },
+  {
+    "ingredient_id": 5,
+    "ingredient_name": "Baking Powder",
+    "ingredient_description": "Leavening agent",
+    "ingredient_notes": "Check expiration",
+    "created_at": "2024-06-09"
+  },
+  {
+    "ingredient_id": 6,
+    "ingredient_name": "Salt",
+    "ingredient_description": "Table salt",
+    "ingredient_notes": "Use sparingly",
+    "created_at": "2024-06-09"
+  },
+  {
+    "ingredient_id": 7,
+    "ingredient_name": "Yeast",
+    "ingredient_description": "Active dry yeast",
+    "ingredient_notes": "Proof before use",
+    "created_at": "2024-06-09"
+  },
+  {
+    "ingredient_id": 8,
+    "ingredient_name": "Olive Oil",
+    "ingredient_description": "Extra virgin olive oil",
+    "ingredient_notes": "Store in cool place",
+    "created_at": "2024-06-09"
+  },
+  {
+    "ingredient_id": 9,
+    "ingredient_name": "Vanilla Extract",
+    "ingredient_description": "Pure vanilla extract",
+    "ingredient_notes": "Adds flavor",
+    "created_at": "2024-06-09"
+  },
+  {
+    "ingredient_id": 10,
+    "ingredient_name": "Cocoa Powder",
+    "ingredient_description": "Unsweetened cocoa powder",
+    "ingredient_notes": "Sift before use",
+    "created_at": "2024-06-09"
+  },
+  {
+    "ingredient_id": 11,
+    "ingredient_name": "Baking Soda",
+    "ingredient_description": "Leavening agent",
+    "ingredient_notes": "Do not confuse with baking powder",
+    "created_at": "2024-06-09"
+  },
+  {
+    "ingredient_id": 12,
+    "ingredient_name": "Cornstarch",
+    "ingredient_description": "Thickening agent",
+    "ingredient_notes": "Mix with cold water",
+    "created_at": "2024-06-09"
+  },
+  {
+    "ingredient_id": 13,
+    "ingredient_name": "Honey",
+    "ingredient_description": "Natural sweetener",
+    "ingredient_notes": "Use local honey",
+    "created_at": "2024-06-09"
+  },
+  {
+    "ingredient_id": 14,
+    "ingredient_name": "Lemon Juice",
+    "ingredient_description": "Freshly squeezed lemon juice",
+    "ingredient_notes": "Adds acidity",
+    "created_at": "2024-06-09"
+  },
+  {
+    "ingredient_id": 15,
+    "ingredient_name": "Cinnamon",
+    "ingredient_description": "Ground cinnamon",
+    "ingredient_notes": "Adds warmth",
+    "created_at": "2024-06-09"
+  },
+  {
+    "ingredient_id": 16,
+    "ingredient_name": "Nutmeg",
+    "ingredient_description": "Ground nutmeg",
+    "ingredient_notes": "Use sparingly",
+    "created_at": "2024-06-09"
+  },
+  {
+    "ingredient_id": 17,
+    "ingredient_name": "Brown Sugar",
+    "ingredient_description": "Packed brown sugar",
+    "ingredient_notes": "Adds moisture",
+    "created_at": "2024-06-09"
+  },
+  {
+    "ingredient_id": 18,
+    "ingredient_name": "Powdered Sugar",
+    "ingredient_description": "Confectioners' sugar",
+    "ingredient_notes": "For icing",
+    "created_at": "2024-06-09"
+  },
+  {
+    "ingredient_id": 19,
+    "ingredient_name": "Heavy Cream",
+    "ingredient_description": "For whipping",
+    "ingredient_notes": "Keep refrigerated",
+    "created_at": "2024-06-09"
+  }
+]
