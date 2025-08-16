@@ -62,7 +62,10 @@ async function showRecipes() {
     const list = data?.recipes ?? []
     if (!Array.isArray(list) || list.length === 0) return
     const columns = getColumns(list[0]).filter(col => {
-      return col.field !== 'ingredients' && col.field !== 'instructions' && col.field !== 'recipe_fooditem_id'
+      return col.field !== 'recipe_description' &&
+        col.field !== 'ingredients' &&
+        col.field !== 'instructions' &&
+        col.field !== 'recipe_fooditem_id'
     })
     itemData.value = {
       items: list,
