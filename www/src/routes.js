@@ -8,10 +8,14 @@ const routes = [
     { path: '/recipes', component: GenericListView, props: { type: 'recipes' } },
     { path: '/meals', component: GenericListView, props: { type: 'meals' } },
     { path: '/fooditems', component: GenericListView, props: { type: 'fooditems' } },
+    { path: '/unittypes', component: GenericListView, props: { type: 'unit types' } },
+    { path: '/categories', component: GenericListView, props: { type: 'categories' } },
     { path: '/ingredients/:id', component: ItemDetails, props: true },
 		{ path: '/recipes/:id', component: ItemDetails, props: true },
 		{ path: '/meals/:id', component: ItemDetails, props: true },
-		{ path: '/fooditems/:id', component: ItemDetails, props: true }
+		{ path: '/fooditems/:id', component: ItemDetails, props: true },
+		{ path: '/unittypes/:id', component: ItemDetails, props: true },
+		{ path: '/categories/:id', component: ItemDetails, props: true }
 ];
 
 const router = createRouter({

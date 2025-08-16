@@ -38,7 +38,7 @@ export default {
 		},
 		type: {
 			type: String,
-			default: "Items"
+			default: "Recipe First"
 		}
 	},
 	computed: {

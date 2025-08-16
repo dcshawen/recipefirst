@@ -5,6 +5,8 @@
 		<button @click="$emit('showRandomRecipe')">Recipe Details</button>
 		<button @click="$emit('showRandomMeal')">Meal Details</button>
 		<button @click="$emit('showRandomFoodItem')">Food Item Details</button>
+		<button @click="$emit('showUnitTypes')">Unit Types</button>
+		<button @click="$emit('showCategories')">Categories</button>
 	</nav>
 </template>
 
