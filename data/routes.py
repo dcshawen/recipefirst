@@ -212,3 +212,35 @@ async def search_recipes(
 @router.get("/recipes/category/{category_id}")
 async def get_recipes_by_category(category_id: int = Path(..., gt=0)):
     return {"recipes": db.get_recipes_by_category(category_id)}
+
+# Unit Types endpoints
+@router.get("/unit-types")
+async def get_unit_types():
+    return {"unit_types": db.get_all_unit_types()}
+
+@router.get("/unit-types/{id}")
+async def get_unit_type(id: int = Path(..., gt=0)):
+    unit_type = db.get_unit_type_by_id(id)
+    if unit_type is None:
+        raise HTTPException(status_code=404, detail="Unit type not found")
+    return unit_type
+
+@router.post("/unit-types")
+async def create_unit_type(unit_type_data = Body(...)):
+    return db.create_unit_type(unit_type_data)
+
+@router.put("/unit-types/{id}")
+async def update_unit_type(id: int = Path(..., gt=0), unit_type_data = Body(...)):
+    updated = db.update_unit_type(id, unit_type_data)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Unit type not found")
+    return {"message": "Unit type updated successfully"}
+
+@router.delete("/unit-types/{id}")
+async def delete_unit_type(id: int = Path(..., gt=0)):
+    deleted = db.delete_unit_type(id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Unit type not found")
+    return {"message": "Unit type deleted successfully"}
+
+

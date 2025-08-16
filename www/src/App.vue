@@ -30,19 +30,7 @@ async function fetchJSON(path) {
 }
 
 async function showHome() {
-  try {
-    const data = await fetchJSON('/recipes')
-    const list = data?.recipes ?? []
-    if (!Array.isArray(list)) return
-    const columns = list.length ? getColumns(list[0]) : []
-    itemData.value = {
-      items: list,
-      columns
-    }
-    router.push(`/`)
-  } catch (e) {
-    console.error('Failed to load home list', e)
-  }
+ router.push('/') 
 }
 
 async function showIngredients() {
@@ -115,6 +103,37 @@ async function showFoodItems() {
   }
 }
 
+async function showUnitTypes() {
+  try {
+    const data = await fetchJSON('/unit-types')
+    const list = data?.unit_types ?? []
+    if (!Array.isArray(list) || list.length === 0) return
+    const columns = getColumns(list[0])
+    itemData.value = {
+      items: list,
+      columns
+    }
+    router.push(`/unittypes`)
+  } catch (e) {
+    console.error('Failed to fetch unit types', e)
+  }
+}
+
+async function showCategories() {
+  try {
+    const data = await fetchJSON('/categories')
+    const list = data?.categories ?? []
+    if (!Array.isArray(list) || list.length === 0) return
+    const columns = getColumns(list[0])
+    itemData.value = {
+      items: list,
+      columns
+    }
+    router.push(`/categories`)
+  } catch (e) {
+    console.error('Failed to fetch categories', e)
+  }
+}
 </script>
 
 <template>
@@ -127,6 +146,8 @@ async function showFoodItems() {
 			@showRandomRecipe="showRecipes"
 			@showRandomMeal="showMeals"
 			@showRandomFoodItem="showFoodItems"
+			@showUnitTypes="showUnitTypes"
+			@showCategories="showCategories"
 		/>
 		<router-view
 			:itemData="itemData" />

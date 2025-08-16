@@ -550,6 +550,54 @@ def delete_meal(meal_id):
         conn.commit()
         return cur.rowcount > 0
 
+# Unit Types
+def get_all_unit_types():
+    db_path = _get_db_path()
+    with sqlite3.connect(db_path) as conn:
+        conn.row_factory = sqlite3.Row
+        rows = conn.execute("SELECT * FROM UnitType").fetchall()
+        return [dict(row) for row in rows]
+
+def get_unit_type_by_id(unit_type_id):
+    db_path = _get_db_path()
+    with sqlite3.connect(db_path) as conn:
+        conn.row_factory = sqlite3.Row
+        row = conn.execute("SELECT * FROM UnitType WHERE id = ?", (unit_type_id,)).fetchone()
+        return dict(row) if row else None
+
+def create_unit_type(unit_type_data):
+    db_path = _get_db_path()
+    # unit_type is required and must be unique
+    if "unit_type" not in unit_type_data:
+        raise ValueError("Missing required field: unit_type")
+    with sqlite3.connect(db_path) as conn:
+        columns = ', '.join(unit_type_data.keys())
+        placeholders = ', '.join(['?'] * len(unit_type_data))
+        sql = f"INSERT INTO UnitType ({columns}) VALUES ({placeholders})"
+        cur = conn.execute(sql, tuple(unit_type_data.values()))
+        conn.commit()
+        return get_unit_type_by_id(cur.lastrowid)
+
+def update_unit_type(unit_type_id, unit_type_data):
+    db_path = _get_db_path()
+    allowed_fields = {"unit_type"}
+    unit_type_data = {k: v for k, v in unit_type_data.items() if k in allowed_fields}
+    if not unit_type_data:
+        return False
+    with sqlite3.connect(db_path) as conn:
+        sets = ', '.join([f"{k}=?" for k in unit_type_data.keys()])
+        sql = f"UPDATE UnitType SET {sets} WHERE id=?"
+        cur = conn.execute(sql, tuple(unit_type_data.values()) + (unit_type_id,))
+        conn.commit()
+        return cur.rowcount > 0
+
+def delete_unit_type(unit_type_id):
+    db_path = _get_db_path()
+    with sqlite3.connect(db_path) as conn:
+        cur = conn.execute("DELETE FROM UnitType WHERE id=?", (unit_type_id,))
+        conn.commit()
+        return cur.rowcount > 0
+
 # Utility
 def search_recipes(q):
     db_path = _get_db_path()
