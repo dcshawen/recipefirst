@@ -18,19 +18,12 @@ export default defineConfig({
     },
   },
   server: {
+		port: 80,
     allowedHosts: [
       "ec2-99-79-147-109.ca-central-1.compute.amazonaws.com"
     ],
 		watch: {
 			usePolling: true
 		},
-    proxy: {
-      '/': {
-        target: 'http://localhost:80',
-        changeOrigin: true,
-        secure: false,
-        // No rewrite: proxy all requests as-is
-      }
-    },
   }
 })
