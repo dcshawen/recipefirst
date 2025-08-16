@@ -438,3 +438,31 @@ INSERT OR IGNORE INTO Recipe (recipe_name, recipe_description, recipe_fooditem_i
 -- Fruit Salad
 INSERT OR IGNORE INTO Recipe (recipe_name, recipe_description, recipe_fooditem_id) VALUES
 ('Fruit Salad', 'Fresh mixed fruits in a light syrup', 25);
+
+-- Insert Recipes for FoodItems 26–50
+INSERT OR IGNORE INTO Recipe (recipe_name, recipe_description, recipe_fooditem_id) VALUES
+('Grilled Chicken Breast', 'Juicy grilled chicken breast seasoned with herbs', 26),
+('Classic Beef Burger', 'Juicy beef patty with classic toppings', 27),
+('Spaghetti Carbonara', 'Pasta with creamy egg sauce and bacon', 28),
+('Tomato Soup', 'Comforting tomato soup with herbs', 29),
+('Caesar Salad', 'Romaine lettuce with Caesar dressing and croutons', 30),
+('Roasted Vegetables', 'Seasonal vegetables roasted with olive oil', 31),
+('Mashed Potatoes', 'Creamy mashed potatoes with butter', 32),
+('Chocolate Chip Cookies', 'Classic homemade chocolate chip cookies', 33),
+('Blueberry Muffins', 'Fluffy muffins with fresh blueberries', 34),
+('Chicken Stir Fry', 'Chicken and vegetables in a savory sauce', 35),
+('Beef Stew', 'Hearty beef stew with vegetables', 36),
+('Pancakes', 'Fluffy breakfast pancakes', 37),
+('French Toast', 'Classic breakfast french toast', 38),
+('Scrambled Eggs', 'Fluffy scrambled eggs', 39),
+('Grilled Cheese Sandwich', 'Classic comfort food sandwich', 40),
+('Garden Salad', 'Fresh mixed greens with vegetables', 41),
+('Rice Pilaf', 'Flavorful rice cooked with broth and spices', 42),
+('Garlic Bread', 'Toasted bread with garlic butter', 43),
+('Macaroni and Cheese', 'Creamy cheese sauce with macaroni', 44),
+('Vegetable Soup', 'Hearty soup with mixed vegetables', 45),
+('Apple Pie', 'Classic dessert with cinnamon-spiced apples', 46),
+('Chocolate Cake', 'Rich and moist chocolate cake', 47),
+('Guacamole', 'Fresh avocado dip with lime and cilantro', 48),
+('Hummus', 'Creamy chickpea dip with tahini', 49),
+('Fruit Salad', 'Fresh mixed fruits in a light syrup', 50);
