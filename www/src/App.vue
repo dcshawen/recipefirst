@@ -61,7 +61,6 @@ function showRandomMeal() {
 			@showRandomMeal="showRandomMeal"
 		/>
 		<router-view
-			class="h-fit"
 			:itemData="itemData" />
 	</div>
 	<Footer class="fixed bottom-0 left-0 w-full" />
