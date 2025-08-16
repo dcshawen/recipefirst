@@ -400,14 +400,34 @@ def get_all_food_items():
     with sqlite3.connect(db_path) as conn:
         conn.row_factory = sqlite3.Row
         rows = conn.execute("SELECT * FROM FoodItem").fetchall()
-        return [dict(row) for row in rows]
+        result = []
+        for fooditem in rows:
+            fooditem_dict = dict(fooditem)
+            fooditem_id = fooditem_dict["fooditem_id"]
+            # Associated Recipe (if any)
+            recipe = conn.execute(
+                "SELECT * FROM Recipe WHERE recipe_fooditem_id = ?",
+                (fooditem_id,)
+            ).fetchone()
+            fooditem_dict["recipe"] = dict(recipe) if recipe else None
+            result.append(fooditem_dict)
+        return result
 
 def get_food_item_by_id(fooditem_id):
     db_path = _get_db_path()
     with sqlite3.connect(db_path) as conn:
         conn.row_factory = sqlite3.Row
         row = conn.execute("SELECT * FROM FoodItem WHERE fooditem_id = ?", (fooditem_id,)).fetchone()
-        return dict(row) if row else None
+        if not row:
+            return None
+        fooditem_dict = dict(row)
+        # Associated Recipe (if any)
+        recipe = conn.execute(
+            "SELECT * FROM Recipe WHERE recipe_fooditem_id = ?",
+            (fooditem_id,)
+        ).fetchone()
+        fooditem_dict["recipe"] = dict(recipe) if recipe else None
+        return fooditem_dict
 
 def create_food_item(food_item_data):
     db_path = _get_db_path()
