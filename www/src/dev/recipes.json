@@ -1,0 +1,849 @@
+[
+  {
+    "recipe_id": 1,
+    "recipe_name": "Classic Pancakes",
+    "recipe_description": "Fluffy pancakes perfect for breakfast.",
+    "created_at": "2024-06-01T09:00:00Z",
+    "uploaded_at": "2024-06-01T09:05:00Z",
+    "recipe_fooditem": {
+      "fooditem_id": 1,
+      "fooditem_name": "Pancakes",
+      "fooditem_description": "Cooked pancakes"
+    },
+    "ingredients": [
+      {
+        "ri_id": 1,
+        "ingredient": {
+          "ingredient_id": 1,
+          "ingredient_name": "Flour",
+          "ingredient_description": "All-purpose flour"
+        },
+        "unit_type": {
+          "id": 1,
+          "unit_type": "cup"
+        },
+        "quantity": 1.5
+      },
+      {
+        "ri_id": 2,
+        "ingredient": {
+          "ingredient_id": 2,
+          "ingredient_name": "Milk",
+          "ingredient_description": "Whole milk"
+        },
+        "unit_type": {
+          "id": 2,
+          "unit_type": "cup"
+        },
+        "quantity": 1.25
+      },
+      {
+        "ri_id": 3,
+        "ingredient": {
+          "ingredient_id": 3,
+          "ingredient_name": "Egg",
+          "ingredient_description": "Large egg"
+        },
+        "unit_type": {
+          "id": 3,
+          "unit_type": "piece"
+        },
+        "quantity": 1
+      },
+      {
+        "ri_id": 4,
+        "ingredient": {
+          "ingredient_id": 4,
+          "ingredient_name": "Sugar",
+          "ingredient_description": "Granulated sugar"
+        },
+        "unit_type": {
+          "id": 4,
+          "unit_type": "tablespoon"
+        },
+        "quantity": 2
+      },
+      {
+        "ri_id": 5,
+        "ingredient": {
+          "ingredient_id": 5,
+          "ingredient_name": "Baking Powder",
+          "ingredient_description": "Leavening agent"
+        },
+        "unit_type": {
+          "id": 5,
+          "unit_type": "teaspoon"
+        },
+        "quantity": 2
+      },
+      {
+        "ri_id": 6,
+        "ingredient": {
+          "ingredient_id": 6,
+          "ingredient_name": "Salt",
+          "ingredient_description": "Table salt"
+        },
+        "unit_type": {
+          "id": 6,
+          "unit_type": "teaspoon"
+        },
+        "quantity": 0.5
+      }
+    ],
+    "instructions": [
+      {
+        "instruction_id": 1,
+        "step_number": 1,
+        "instruction_text": "In a bowl, mix flour, sugar, baking powder, and salt."
+      },
+      {
+        "instruction_id": 2,
+        "step_number": 2,
+        "instruction_text": "In another bowl, whisk milk and egg together."
+      },
+      {
+        "instruction_id": 3,
+        "step_number": 3,
+        "instruction_text": "Combine wet and dry ingredients, mix until just combined."
+      },
+      {
+        "instruction_id": 4,
+        "step_number": 4,
+        "instruction_text": "Heat a skillet and pour batter to form pancakes. Cook until golden."
+      }
+    ],
+    "categories": [
+      {
+        "category_id": 1,
+        "category_name": "Breakfast"
+      },
+      {
+        "category_id": 2,
+        "category_name": "Vegetarian"
+      }
+    ]
+  },
+  {
+    "recipe_id": 2,
+    "recipe_name": "Tomato Soup",
+    "recipe_description": "Simple and comforting tomato soup.",
+    "created_at": "2024-06-01T09:10:00Z",
+    "uploaded_at": "2024-06-01T09:15:00Z",
+    "recipe_fooditem": {
+      "fooditem_id": 2,
+      "fooditem_name": "Tomato Soup",
+      "fooditem_description": "Smooth tomato soup"
+    },
+    "ingredients": [
+      {
+        "ri_id": 7,
+        "ingredient": {
+          "ingredient_id": 7,
+          "ingredient_name": "Tomato",
+          "ingredient_description": "Fresh ripe tomatoes"
+        },
+        "unit_type": {
+          "id": 7,
+          "unit_type": "piece"
+        },
+        "quantity": 5
+      },
+      {
+        "ri_id": 8,
+        "ingredient": {
+          "ingredient_id": 8,
+          "ingredient_name": "Onion",
+          "ingredient_description": "Medium onion"
+        },
+        "unit_type": {
+          "id": 3,
+          "unit_type": "piece"
+        },
+        "quantity": 1
+      },
+      {
+        "ri_id": 9,
+        "ingredient": {
+          "ingredient_id": 9,
+          "ingredient_name": "Garlic",
+          "ingredient_description": "Garlic clove"
+        },
+        "unit_type": {
+          "id": 8,
+          "unit_type": "clove"
+        },
+        "quantity": 2
+      },
+      {
+        "ri_id": 10,
+        "ingredient": {
+          "ingredient_id": 10,
+          "ingredient_name": "Vegetable Broth",
+          "ingredient_description": "Low sodium"
+        },
+        "unit_type": {
+          "id": 2,
+          "unit_type": "cup"
+        },
+        "quantity": 2
+      },
+      {
+        "ri_id": 11,
+        "ingredient": {
+          "ingredient_id": 6,
+          "ingredient_name": "Salt",
+          "ingredient_description": "Table salt"
+        },
+        "unit_type": {
+          "id": 6,
+          "unit_type": "teaspoon"
+        },
+        "quantity": 0.5
+      }
+    ],
+    "instructions": [
+      {
+        "instruction_id": 5,
+        "step_number": 1,
+        "instruction_text": "Sauté onion and garlic until soft."
+      },
+      {
+        "instruction_id": 6,
+        "step_number": 2,
+        "instruction_text": "Add chopped tomatoes and cook until soft."
+      },
+      {
+        "instruction_id": 7,
+        "step_number": 3,
+        "instruction_text": "Add vegetable broth and simmer for 15 minutes."
+      },
+      {
+        "instruction_id": 8,
+        "step_number": 4,
+        "instruction_text": "Blend until smooth, season with salt."
+      }
+    ],
+    "categories": [
+      {
+        "category_id": 3,
+        "category_name": "Soup"
+      },
+      {
+        "category_id": 2,
+        "category_name": "Vegetarian"
+      }
+    ]
+  },
+  {
+    "recipe_id": 3,
+    "recipe_name": "Spaghetti Aglio e Olio",
+    "recipe_description": "Simple Italian pasta with garlic and olive oil.",
+    "created_at": "2024-06-01T09:20:00Z",
+    "uploaded_at": "2024-06-01T09:25:00Z",
+    "recipe_fooditem": {
+      "fooditem_id": 3,
+      "fooditem_name": "Spaghetti Aglio e Olio",
+      "fooditem_description": "Pasta with garlic and olive oil"
+    },
+    "ingredients": [
+      {
+        "ri_id": 12,
+        "ingredient": {
+          "ingredient_id": 11,
+          "ingredient_name": "Spaghetti",
+          "ingredient_description": "Dry pasta"
+        },
+        "unit_type": {
+          "id": 1,
+          "unit_type": "cup"
+        },
+        "quantity": 2
+      },
+      {
+        "ri_id": 13,
+        "ingredient": {
+          "ingredient_id": 9,
+          "ingredient_name": "Garlic",
+          "ingredient_description": "Garlic clove"
+        },
+        "unit_type": {
+          "id": 8,
+          "unit_type": "clove"
+        },
+        "quantity": 3
+      },
+      {
+        "ri_id": 14,
+        "ingredient": {
+          "ingredient_id": 12,
+          "ingredient_name": "Olive Oil",
+          "ingredient_description": "Extra virgin"
+        },
+        "unit_type": {
+          "id": 4,
+          "unit_type": "tablespoon"
+        },
+        "quantity": 3
+      },
+      {
+        "ri_id": 15,
+        "ingredient": {
+          "ingredient_id": 6,
+          "ingredient_name": "Salt",
+          "ingredient_description": "Table salt"
+        },
+        "unit_type": {
+          "id": 6,
+          "unit_type": "teaspoon"
+        },
+        "quantity": 0.5
+      }
+    ],
+    "instructions": [
+      {
+        "instruction_id": 9,
+        "step_number": 1,
+        "instruction_text": "Cook spaghetti in salted water."
+      },
+      {
+        "instruction_id": 10,
+        "step_number": 2,
+        "instruction_text": "Sauté garlic in olive oil."
+      },
+      {
+        "instruction_id": 11,
+        "step_number": 3,
+        "instruction_text": "Combine spaghetti and garlic oil."
+      }
+    ],
+    "categories": [
+      {
+        "category_id": 4,
+        "category_name": "Pasta"
+      },
+      {
+        "category_id": 2,
+        "category_name": "Vegetarian"
+      }
+    ]
+  },
+  {
+    "recipe_id": 4,
+    "recipe_name": "Chicken Curry",
+    "recipe_description": "Spicy and flavorful chicken curry.",
+    "created_at": "2024-06-01T09:30:00Z",
+    "uploaded_at": "2024-06-01T09:35:00Z",
+    "recipe_fooditem": {
+      "fooditem_id": 4,
+      "fooditem_name": "Chicken Curry",
+      "fooditem_description": "Chicken cooked in curry sauce"
+    },
+    "ingredients": [
+      {
+        "ri_id": 16,
+        "ingredient": {
+          "ingredient_id": 13,
+          "ingredient_name": "Chicken Breast",
+          "ingredient_description": "Boneless, skinless"
+        },
+        "unit_type": {
+          "id": 3,
+          "unit_type": "piece"
+        },
+        "quantity": 2
+      },
+      {
+        "ri_id": 17,
+        "ingredient": {
+          "ingredient_id": 8,
+          "ingredient_name": "Onion",
+          "ingredient_description": "Medium onion"
+        },
+        "unit_type": {
+          "id": 3,
+          "unit_type": "piece"
+        },
+        "quantity": 1
+      },
+      {
+        "ri_id": 18,
+        "ingredient": {
+          "ingredient_id": 14,
+          "ingredient_name": "Curry Powder",
+          "ingredient_description": "Spicy blend"
+        },
+        "unit_type": {
+          "id": 5,
+          "unit_type": "teaspoon"
+        },
+        "quantity": 2
+      },
+      {
+        "ri_id": 19,
+        "ingredient": {
+          "ingredient_id": 2,
+          "ingredient_name": "Milk",
+          "ingredient_description": "Whole milk"
+        },
+        "unit_type": {
+          "id": 2,
+          "unit_type": "cup"
+        },
+        "quantity": 1
+      }
+    ],
+    "instructions": [
+      {
+        "instruction_id": 12,
+        "step_number": 1,
+        "instruction_text": "Sauté onion until golden."
+      },
+      {
+        "instruction_id": 13,
+        "step_number": 2,
+        "instruction_text": "Add chicken and cook until browned."
+      },
+      {
+        "instruction_id": 14,
+        "step_number": 3,
+        "instruction_text": "Add curry powder and milk, simmer."
+      }
+    ],
+    "categories": [
+      {
+        "category_id": 5,
+        "category_name": "Dinner"
+      }
+    ]
+  },
+  {
+    "recipe_id": 5,
+    "recipe_name": "Caesar Salad",
+    "recipe_description": "Crisp romaine lettuce with Caesar dressing.",
+    "created_at": "2024-06-01T09:40:00Z",
+    "uploaded_at": "2024-06-01T09:45:00Z",
+    "recipe_fooditem": {
+      "fooditem_id": 5,
+      "fooditem_name": "Caesar Salad",
+      "fooditem_description": "Salad with Caesar dressing"
+    },
+    "ingredients": [
+      {
+        "ri_id": 20,
+        "ingredient": {
+          "ingredient_id": 15,
+          "ingredient_name": "Romaine Lettuce",
+          "ingredient_description": "Fresh leaves"
+        },
+        "unit_type": {
+          "id": 1,
+          "unit_type": "cup"
+        },
+        "quantity": 3
+      },
+      {
+        "ri_id": 21,
+        "ingredient": {
+          "ingredient_id": 16,
+          "ingredient_name": "Parmesan Cheese",
+          "ingredient_description": "Grated"
+        },
+        "unit_type": {
+          "id": 4,
+          "unit_type": "tablespoon"
+        },
+        "quantity": 2
+      },
+      {
+        "ri_id": 22,
+        "ingredient": {
+          "ingredient_id": 17,
+          "ingredient_name": "Croutons",
+          "ingredient_description": "Toasted bread cubes"
+        },
+        "unit_type": {
+          "id": 3,
+          "unit_type": "piece"
+        },
+        "quantity": 10
+      }
+    ],
+    "instructions": [
+      {
+        "instruction_id": 15,
+        "step_number": 1,
+        "instruction_text": "Toss lettuce with dressing."
+      },
+      {
+        "instruction_id": 16,
+        "step_number": 2,
+        "instruction_text": "Add cheese and croutons."
+      }
+    ],
+    "categories": [
+      {
+        "category_id": 6,
+        "category_name": "Salad"
+      }
+    ]
+  },
+  {
+    "recipe_id": 6,
+    "recipe_name": "Vegetable Stir Fry",
+    "recipe_description": "Mixed vegetables stir-fried in soy sauce.",
+    "created_at": "2024-06-01T09:50:00Z",
+    "uploaded_at": "2024-06-01T09:55:00Z",
+    "recipe_fooditem": {
+      "fooditem_id": 6,
+      "fooditem_name": "Vegetable Stir Fry",
+      "fooditem_description": "Stir-fried vegetables"
+    },
+    "ingredients": [
+      {
+        "ri_id": 23,
+        "ingredient": {
+          "ingredient_id": 18,
+          "ingredient_name": "Broccoli",
+          "ingredient_description": "Florets"
+        },
+        "unit_type": {
+          "id": 1,
+          "unit_type": "cup"
+        },
+        "quantity": 1
+      },
+      {
+        "ri_id": 24,
+        "ingredient": {
+          "ingredient_id": 19,
+          "ingredient_name": "Carrot",
+          "ingredient_description": "Sliced"
+        },
+        "unit_type": {
+          "id": 3,
+          "unit_type": "piece"
+        },
+        "quantity": 1
+      },
+      {
+        "ri_id": 25,
+        "ingredient": {
+          "ingredient_id": 20,
+          "ingredient_name": "Soy Sauce",
+          "ingredient_description": "Low sodium"
+        },
+        "unit_type": {
+          "id": 4,
+          "unit_type": "tablespoon"
+        },
+        "quantity": 2
+      }
+    ],
+    "instructions": [
+      {
+        "instruction_id": 17,
+        "step_number": 1,
+        "instruction_text": "Heat oil in wok."
+      },
+      {
+        "instruction_id": 18,
+        "step_number": 2,
+        "instruction_text": "Add vegetables and stir fry."
+      },
+      {
+        "instruction_id": 19,
+        "step_number": 3,
+        "instruction_text": "Add soy sauce and cook briefly."
+      }
+    ],
+    "categories": [
+      {
+        "category_id": 7,
+        "category_name": "Vegetarian"
+      },
+      {
+        "category_id": 8,
+        "category_name": "Asian"
+      }
+    ]
+  },
+  {
+    "recipe_id": 7,
+    "recipe_name": "Beef Tacos",
+    "recipe_description": "Seasoned beef in crispy taco shells.",
+    "created_at": "2024-06-01T10:00:00Z",
+    "uploaded_at": "2024-06-01T10:05:00Z",
+    "recipe_fooditem": {
+      "fooditem_id": 7,
+      "fooditem_name": "Beef Tacos",
+      "fooditem_description": "Tacos with beef filling"
+    },
+    "ingredients": [
+      {
+        "ri_id": 26,
+        "ingredient": {
+          "ingredient_id": 21,
+          "ingredient_name": "Ground Beef",
+          "ingredient_description": "Lean"
+        },
+        "unit_type": {
+          "id": 1,
+          "unit_type": "cup"
+        },
+        "quantity": 1
+      },
+      {
+        "ri_id": 27,
+        "ingredient": {
+          "ingredient_id": 22,
+          "ingredient_name": "Taco Shells",
+          "ingredient_description": "Crispy"
+        },
+        "unit_type": {
+          "id": 3,
+          "unit_type": "piece"
+        },
+        "quantity": 6
+      },
+      {
+        "ri_id": 28,
+        "ingredient": {
+          "ingredient_id": 23,
+          "ingredient_name": "Lettuce",
+          "ingredient_description": "Shredded"
+        },
+        "unit_type": {
+          "id": 1,
+          "unit_type": "cup"
+        },
+        "quantity": 1
+      }
+    ],
+    "instructions": [
+      {
+        "instruction_id": 20,
+        "step_number": 1,
+        "instruction_text": "Cook beef with seasoning."
+      },
+      {
+        "instruction_id": 21,
+        "step_number": 2,
+        "instruction_text": "Fill taco shells with beef and lettuce."
+      }
+    ],
+    "categories": [
+      {
+        "category_id": 9,
+        "category_name": "Mexican"
+      }
+    ]
+  },
+  {
+    "recipe_id": 8,
+    "recipe_name": "Fruit Smoothie",
+    "recipe_description": "Blend of fresh fruits and yogurt.",
+    "created_at": "2024-06-01T10:10:00Z",
+    "uploaded_at": "2024-06-01T10:15:00Z",
+    "recipe_fooditem": {
+      "fooditem_id": 8,
+      "fooditem_name": "Fruit Smoothie",
+      "fooditem_description": "Smoothie with mixed fruits"
+    },
+    "ingredients": [
+      {
+        "ri_id": 29,
+        "ingredient": {
+          "ingredient_id": 24,
+          "ingredient_name": "Banana",
+          "ingredient_description": "Ripe"
+        },
+        "unit_type": {
+          "id": 3,
+          "unit_type": "piece"
+        },
+        "quantity": 1
+      },
+      {
+        "ri_id": 30,
+        "ingredient": {
+          "ingredient_id": 25,
+          "ingredient_name": "Strawberry",
+          "ingredient_description": "Fresh"
+        },
+        "unit_type": {
+          "id": 1,
+          "unit_type": "cup"
+        },
+        "quantity": 1
+      },
+      {
+        "ri_id": 31,
+        "ingredient": {
+          "ingredient_id": 26,
+          "ingredient_name": "Yogurt",
+          "ingredient_description": "Plain"
+        },
+        "unit_type": {
+          "id": 2,
+          "unit_type": "cup"
+        },
+        "quantity": 0.5
+      }
+    ],
+    "instructions": [
+      {
+        "instruction_id": 22,
+        "step_number": 1,
+        "instruction_text": "Combine all ingredients in blender."
+      },
+      {
+        "instruction_id": 23,
+        "step_number": 2,
+        "instruction_text": "Blend until smooth."
+      }
+    ],
+    "categories": [
+      {
+        "category_id": 10,
+        "category_name": "Breakfast"
+      },
+      {
+        "category_id": 11,
+        "category_name": "Drink"
+      }
+    ]
+  },
+  {
+    "recipe_id": 9,
+    "recipe_name": "Grilled Cheese Sandwich",
+    "recipe_description": "Classic grilled cheese sandwich.",
+    "created_at": "2024-06-01T10:20:00Z",
+    "uploaded_at": "2024-06-01T10:25:00Z",
+    "recipe_fooditem": {
+      "fooditem_id": 9,
+      "fooditem_name": "Grilled Cheese Sandwich",
+      "fooditem_description": "Toasted bread with melted cheese"
+    },
+    "ingredients": [
+      {
+        "ri_id": 32,
+        "ingredient": {
+          "ingredient_id": 27,
+          "ingredient_name": "Bread",
+          "ingredient_description": "White or whole wheat"
+        },
+        "unit_type": {
+          "id": 3,
+          "unit_type": "piece"
+        },
+        "quantity": 2
+      },
+      {
+        "ri_id": 33,
+        "ingredient": {
+          "ingredient_id": 16,
+          "ingredient_name": "Parmesan Cheese",
+          "ingredient_description": "Grated"
+        },
+        "unit_type": {
+          "id": 4,
+          "unit_type": "tablespoon"
+        },
+        "quantity": 2
+      }
+    ],
+    "instructions": [
+      {
+        "instruction_id": 24,
+        "step_number": 1,
+        "instruction_text": "Place cheese between bread slices."
+      },
+      {
+        "instruction_id": 25,
+        "step_number": 2,
+        "instruction_text": "Grill until golden brown."
+      }
+    ],
+    "categories": [
+      {
+        "category_id": 1,
+        "category_name": "Breakfast"
+      }
+    ]
+  },
+  {
+    "recipe_id": 10,
+    "recipe_name": "Lentil Soup",
+    "recipe_description": "Hearty soup made with lentils and vegetables.",
+    "created_at": "2024-06-01T10:30:00Z",
+    "uploaded_at": "2024-06-01T10:35:00Z",
+    "recipe_fooditem": {
+      "fooditem_id": 10,
+      "fooditem_name": "Lentil Soup",
+      "fooditem_description": "Soup with lentils and vegetables"
+    },
+    "ingredients": [
+      {
+        "ri_id": 34,
+        "ingredient": {
+          "ingredient_id": 28,
+          "ingredient_name": "Lentils",
+          "ingredient_description": "Dry, rinsed"
+        },
+        "unit_type": {
+          "id": 1,
+          "unit_type": "cup"
+        },
+        "quantity": 1
+      },
+      {
+        "ri_id": 35,
+        "ingredient": {
+          "ingredient_id": 19,
+          "ingredient_name": "Carrot",
+          "ingredient_description": "Sliced"
+        },
+        "unit_type": {
+          "id": 3,
+          "unit_type": "piece"
+        },
+        "quantity": 1
+      },
+      {
+        "ri_id": 36,
+        "ingredient": {
+          "ingredient_id": 8,
+          "ingredient_name": "Onion",
+          "ingredient_description": "Medium onion"
+        },
+        "unit_type": {
+          "id": 3,
+          "unit_type": "piece"
+        },
+        "quantity": 1
+      }
+    ],
+    "instructions": [
+      {
+        "instruction_id": 26,
+        "step_number": 1,
+        "instruction_text": "Sauté onion and carrot."
+      },
+      {
+        "instruction_id": 27,
+        "step_number": 2,
+        "instruction_text": "Add lentils and water, simmer until tender."
+      }
+    ],
+    "categories": [
+      {
+        "category_id": 3,
+        "category_name": "Soup"
+      },
+      {
+        "category_id": 7,
+        "category_name": "Vegetarian"
+      }
+    ]
+  }
+]
