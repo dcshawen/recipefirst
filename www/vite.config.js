@@ -18,7 +18,6 @@ export default defineConfig({
     },
   },
   server: {
-    port: 8080,
     allowedHosts: [
       "ec2-99-79-147-109.ca-central-1.compute.amazonaws.com"
     ],
