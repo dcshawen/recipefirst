@@ -1,4 +1,4 @@
-/* -- Test data insertion script
+-- /* /* -- Test data insertion script
 
 -- Insert basic unit types
 INSERT OR IGNORE INTO UnitType (unit_type) VALUES
