@@ -31,7 +31,7 @@ if [[ "$SERVER" == "fastapi" ]]; then
 elif [[ "$SERVER" == "vuejs" ]]; then
     echo "🌐 Starting Vue.js dev server (accessible externally)..."
     cd /home/recipefirst/recipefirst/www/
-    "$NPM_BIN" run dev -- --host 0.0.0.0 --port 5173
+    "$NPM_BIN" run dev -- --host 0.0.0.0
 
 else
     echo "❌ Invalid server type. Use --server fastapi or --server vuejs"
