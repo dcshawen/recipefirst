@@ -40,7 +40,7 @@ CREATE TABLE Recipe (
   recipe_id           INTEGER PRIMARY KEY,
   recipe_name         TEXT    NOT NULL,
   recipe_description  TEXT,
-  recipe_fooditem_id  INTEGER NOT NULL UNIQUE,
+  recipe_fooditem_id  INTEGER NOT NULL,
   created_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY(recipe_fooditem_id)
