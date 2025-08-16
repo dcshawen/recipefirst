@@ -358,3 +358,83 @@ INSERT OR IGNORE INTO RecipeCategory (recipe_id, category_id) VALUES
 (8, 1), -- Pancakes - Breakfast
 (9, 1), -- Scrambled Eggs - Breakfast
 (10, 10); -- Mac and Cheese - Comfort Food
+
+-- Insert Recipes for FoodItems that do not have a recipe yet
+-- FoodItem IDs: 1 to 25
+-- Existing recipes cover: 3, 4, 6, 7, 8, 10, 11, 12, 14, 19
+
+-- Grilled Chicken Breast
+INSERT OR IGNORE INTO Recipe (recipe_name, recipe_description, recipe_fooditem_id) VALUES
+('Simple Grilled Chicken Breast', 'Grilled chicken breast with basic seasoning', 1);
+
+-- Classic Beef Burger
+INSERT OR IGNORE INTO Recipe (recipe_name, recipe_description, recipe_fooditem_id) VALUES
+('Classic Beef Burger', 'Juicy beef patty with classic toppings', 2);
+
+-- Caesar Salad
+INSERT OR IGNORE INTO Recipe (recipe_name, recipe_description, recipe_fooditem_id) VALUES
+('Caesar Salad', 'Romaine lettuce with Caesar dressing and croutons', 5);
+
+-- Roasted Vegetables (already covered by recipe 3)
+
+-- Mashed Potatoes (already covered by recipe 4)
+
+-- Chocolate Chip Cookies (already covered by recipe 5)
+
+-- Blueberry Muffins
+INSERT OR IGNORE INTO Recipe (recipe_name, recipe_description, recipe_fooditem_id) VALUES
+('Blueberry Muffins', 'Fluffy muffins with fresh blueberries', 9);
+
+-- Chicken Stir Fry (already covered by recipe 6)
+
+-- Beef Stew (already covered by recipe 7)
+
+-- Pancakes (already covered by recipe 8)
+
+-- French Toast
+INSERT OR IGNORE INTO Recipe (recipe_name, recipe_description, recipe_fooditem_id) VALUES
+('French Toast', 'Classic breakfast french toast', 13);
+
+-- Scrambled Eggs (already covered by recipe 9)
+
+-- Grilled Cheese Sandwich
+INSERT OR IGNORE INTO Recipe (recipe_name, recipe_description, recipe_fooditem_id) VALUES
+('Grilled Cheese Sandwich', 'Classic comfort food sandwich', 15);
+
+-- Garden Salad
+INSERT OR IGNORE INTO Recipe (recipe_name, recipe_description, recipe_fooditem_id) VALUES
+('Garden Salad', 'Fresh mixed greens with vegetables', 16);
+
+-- Rice Pilaf
+INSERT OR IGNORE INTO Recipe (recipe_name, recipe_description, recipe_fooditem_id) VALUES
+('Rice Pilaf', 'Flavorful rice cooked with broth and spices', 17);
+
+-- Garlic Bread
+INSERT OR IGNORE INTO Recipe (recipe_name, recipe_description, recipe_fooditem_id) VALUES
+('Garlic Bread', 'Toasted bread with garlic butter', 18);
+
+-- Macaroni and Cheese (already covered by recipe 10)
+
+-- Vegetable Soup
+INSERT OR IGNORE INTO Recipe (recipe_name, recipe_description, recipe_fooditem_id) VALUES
+('Vegetable Soup', 'Hearty soup with mixed vegetables', 20);
+
+-- Apple Pie
+INSERT OR IGNORE INTO Recipe (recipe_name, recipe_description, recipe_fooditem_id) VALUES
+('Apple Pie', 'Classic dessert with cinnamon-spiced apples', 21);
+
+-- Chocolate Cake
+INSERT OR IGNORE INTO Recipe (recipe_name, recipe_description, recipe_fooditem_id) VALUES
+('Chocolate Cake', 'Rich and moist chocolate cake', 22);
+
+-- Guacamole
+INSERT OR IGNORE INTO Recipe (recipe_name, recipe_description, recipe_fooditem_id) VALUES
+('Guacamole', 'Fresh avocado dip with lime and cilantro', 23);
+
+-- Hummus
+INSERT OR IGNORE INTO Recipe (recipe_name, recipe_description, recipe_fooditem_id) VALUES
+('Hummus', 'Creamy chickpea dip with tahini', 24);
+
+-- Fruit Salad
+INSERT OR IGNORE INTO Recipe (recipe_name, recipe_description, recipe_fooditem_id) VALUES
+('Fruit Salad', 'Fresh mixed fruits in a light syrup', 25);
