@@ -448,14 +448,54 @@ def get_all_meals():
     with sqlite3.connect(db_path) as conn:
         conn.row_factory = sqlite3.Row
         rows = conn.execute("SELECT * FROM Meal").fetchall()
-        return [dict(row) for row in rows]
+        result = []
+        for meal in rows:
+            meal_dict = dict(meal)
+            meal_id = meal_dict["meal_id"]
+            # FoodItems
+            fooditems = conn.execute("""
+                SELECT f.fooditem_id, f.fooditem_name, f.fooditem_description
+                FROM MealFoodItem mfi
+                JOIN FoodItem f ON mfi.mf_fooditem_id = f.fooditem_id
+                WHERE mfi.mf_meal_id = ?
+            """, (meal_id,)).fetchall()
+            meal_dict["fooditems"] = [dict(row) for row in fooditems]
+            # Categories
+            categories = conn.execute("""
+                SELECT c.category_id, c.category_name, c.category_description
+                FROM MealCategory mc
+                JOIN Category c ON mc.category_id = c.category_id
+                WHERE mc.meal_id = ?
+            """, (meal_id,)).fetchall()
+            meal_dict["categories"] = [dict(row) for row in categories]
+            result.append(meal_dict)
+        return result
 
 def get_meal_by_id(meal_id):
     db_path = _get_db_path()
     with sqlite3.connect(db_path) as conn:
         conn.row_factory = sqlite3.Row
-        row = conn.execute("SELECT * FROM Meal WHERE meal_id = ?", (meal_id,)).fetchone()
-        return dict(row) if row else None
+        meal = conn.execute("SELECT * FROM Meal WHERE meal_id = ?", (meal_id,)).fetchone()
+        if not meal:
+            return None
+        meal_dict = dict(meal)
+        # FoodItems
+        fooditems = conn.execute("""
+            SELECT f.fooditem_id, f.fooditem_name, f.fooditem_description
+            FROM MealFoodItem mfi
+            JOIN FoodItem f ON mfi.mf_fooditem_id = f.fooditem_id
+            WHERE mfi.mf_meal_id = ?
+        """, (meal_id,)).fetchall()
+        meal_dict["fooditems"] = [dict(row) for row in fooditems]
+        # Categories
+        categories = conn.execute("""
+            SELECT c.category_id, c.category_name, c.category_description
+            FROM MealCategory mc
+            JOIN Category c ON mc.category_id = c.category_id
+            WHERE mc.meal_id = ?
+        """, (meal_id,)).fetchall()
+        meal_dict["categories"] = [dict(row) for row in categories]
+        return meal_dict
 
 def create_meal(meal_data):
     db_path = _get_db_path()
