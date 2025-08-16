@@ -4,6 +4,11 @@ import ingredients from './dev/ingredients.json'
 import recipes from './dev/recipes.json'
 import meals from './dev/meals.json'
 import { useRouter, useRoute } from 'vue-router'
+import Header from './templates/Header.vue'
+import MainMenu from './templates/MainMenu.vue'
+import Footer from './templates/Footer.vue'
+import ItemDetails from './pages/ItemDetails.vue'
+import router from './routes.js'
 
 function getColumns(obj) {
   return Object.keys(obj).map(key => ({
@@ -12,7 +17,6 @@ function getColumns(obj) {
   }))
 }
 
-const router = useRouter()
 const itemData = ref({
 	item: null,
 	columns: []
@@ -48,11 +52,17 @@ function showRandomMeal() {
 </script>
 
 <template>
-	<nav class="flex space-x-4 p-2 bg-gray-100">
-		<router-link to="/">Home</router-link>
-		<button @click="showRandomIngredient">Ingredient Details</button>
-		<button @click="showRandomRecipe">Recipe Details</button>
-		<button @click="showRandomMeal">Meal Details</button>
-	</nav>
-	<router-view :itemData="itemData" />
+	<Header />
+	<div class="flex pb-4">
+		<MainMenu 
+			class="min-h-screen"
+			@showRandomIngredient="showRandomIngredient"
+			@showRandomRecipe="showRandomRecipe"
+			@showRandomMeal="showRandomMeal"
+		/>
+		<router-view
+			class="h-fit"
+			:itemData="itemData" />
+	</div>
+	<Footer class="fixed bottom-0 left-0 w-full" />
 </template>
