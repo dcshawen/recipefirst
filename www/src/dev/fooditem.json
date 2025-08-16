@@ -1,0 +1,72 @@
+[
+  {
+    "fooditem_id": 1,
+    "fooditem_name": "Pancakes",
+    "fooditem_description": "Cooked pancakes",
+    "created_at": "2024-06-01T09:00:00Z",
+    "updated_at": "2024-06-01T09:00:00Z"
+  },
+  {
+    "fooditem_id": 2,
+    "fooditem_name": "Tomato Soup",
+    "fooditem_description": "Smooth tomato soup",
+    "created_at": "2024-06-01T09:10:00Z",
+    "updated_at": "2024-06-01T09:10:00Z"
+  },
+  {
+    "fooditem_id": 3,
+    "fooditem_name": "Spaghetti Aglio e Olio",
+    "fooditem_description": "Pasta with garlic and olive oil",
+    "created_at": "2024-06-01T09:20:00Z",
+    "updated_at": "2024-06-01T09:20:00Z"
+  },
+  {
+    "fooditem_id": 4,
+    "fooditem_name": "Chicken Curry",
+    "fooditem_description": "Chicken cooked in curry sauce",
+    "created_at": "2024-06-01T09:30:00Z",
+    "updated_at": "2024-06-01T09:30:00Z"
+  },
+  {
+    "fooditem_id": 5,
+    "fooditem_name": "Caesar Salad",
+    "fooditem_description": "Salad with Caesar dressing",
+    "created_at": "2024-06-01T09:40:00Z",
+    "updated_at": "2024-06-01T09:40:00Z"
+  },
+  {
+    "fooditem_id": 6,
+    "fooditem_name": "Vegetable Stir Fry",
+    "fooditem_description": "Stir-fried vegetables",
+    "created_at": "2024-06-01T09:50:00Z",
+    "updated_at": "2024-06-01T09:50:00Z"
+  },
+  {
+    "fooditem_id": 7,
+    "fooditem_name": "Beef Tacos",
+    "fooditem_description": "Tacos with beef filling",
+    "created_at": "2024-06-01T10:00:00Z",
+    "updated_at": "2024-06-01T10:00:00Z"
+  },
+  {
+    "fooditem_id": 8,
+    "fooditem_name": "Fruit Smoothie",
+    "fooditem_description": "Smoothie with mixed fruits",
+    "created_at": "2024-06-01T10:10:00Z",
+    "updated_at": "2024-06-01T10:10:00Z"
+  },
+  {
+    "fooditem_id": 9,
+    "fooditem_name": "Grilled Cheese Sandwich",
+    "fooditem_description": "Toasted bread with melted cheese",
+    "created_at": "2024-06-01T10:20:00Z",
+    "updated_at": "2024-06-01T10:20:00Z"
+  },
+  {
+    "fooditem_id": 10,
+    "fooditem_name": "Lentil Soup",
+    "fooditem_description": "Soup with lentils and vegetables",
+    "created_at": "2024-06-01T10:30:00Z",
+    "updated_at": "2024-06-01T10:30:00Z"
+  }
+]
