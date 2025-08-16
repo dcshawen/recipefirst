@@ -22,6 +22,7 @@ const itemData = ref({
   item: null,
   columns: []
 })
+const isLoading = ref(false)
 
 async function fetchJSON(path) {
   const res = await fetch(`${API_BASE}${path}`)
@@ -34,11 +35,14 @@ async function showHome() {
 }
 
 async function showIngredients() {
+  isLoading.value = true
   try {
     const data = await fetchJSON('/ingredients')
     const list = data?.ingredients ?? []
     if (!Array.isArray(list) || list.length === 0) return
-    const columns = getColumns(list[0])
+		const columns = getColumns(list[0]).filter(col => {
+			return col.field !== 'ingredient_description' && col.field !== 'ingredient_notes'
+		})
     itemData.value = {
       items: list,
       columns
@@ -46,10 +50,13 @@ async function showIngredients() {
     router.push(`/ingredients`)
   } catch (e) {
     console.error('Failed to fetch ingredients', e)
+  } finally {
+    isLoading.value = false
   }
 }
 
 async function showRecipes() {
+  isLoading.value = true
   try {
     const data = await fetchJSON('/recipes')
     const list = data?.recipes ?? []
@@ -64,17 +71,20 @@ async function showRecipes() {
     router.push(`/recipes`)
   } catch (e) {
     console.error('Failed to fetch recipes', e)
+  } finally {
+    isLoading.value = false
   }
 }
 
 async function showMeals() {
+  isLoading.value = true
   try {
     const data = await fetchJSON('/meals')
     const list = data?.meals ?? []
     if (!Array.isArray(list) || list.length === 0) return
     const columns = getColumns(list[0]).filter(col => {
-			return col.field !== 'fooditems' && col.field !== 'meal_recipe_id'
-		})
+      return col.field !== 'fooditems' && col.field !== 'meal_recipe_id'
+    })
     itemData.value = {
       items: list,
       columns
@@ -82,17 +92,20 @@ async function showMeals() {
     router.push(`/meals`)
   } catch (e) {
     console.error('Failed to fetch meals', e)
+  } finally {
+    isLoading.value = false
   }
 }
 
 async function showFoodItems() {
+  isLoading.value = true
   try {
     const data = await fetchJSON('/food-items')
     const list = data?.food_items ?? []
     if (!Array.isArray(list) || list.length === 0) return
-		const columns = getColumns(list[0]).filter(col => {
-			return col.field !== 'recipe'
-		})
+    const columns = getColumns(list[0]).filter(col => {
+      return col.field !== 'recipe'
+    })
     itemData.value = {
       items: list,
       columns
@@ -100,10 +113,13 @@ async function showFoodItems() {
     router.push(`/fooditems`)
   } catch (e) {
     console.error('Failed to fetch food items', e)
+  } finally {
+    isLoading.value = false
   }
 }
 
 async function showUnitTypes() {
+  isLoading.value = true
   try {
     const data = await fetchJSON('/unit-types')
     const list = data?.unit_types ?? []
@@ -116,10 +132,13 @@ async function showUnitTypes() {
     router.push(`/unittypes`)
   } catch (e) {
     console.error('Failed to fetch unit types', e)
+  } finally {
+    isLoading.value = false
   }
 }
 
 async function showCategories() {
+  isLoading.value = true
   try {
     const data = await fetchJSON('/categories')
     const list = data?.categories ?? []
@@ -132,25 +151,57 @@ async function showCategories() {
     router.push(`/categories`)
   } catch (e) {
     console.error('Failed to fetch categories', e)
+  } finally {
+    isLoading.value = false
   }
 }
 </script>
 
 <template>
-	<Header />
-	<div class="flex pb-4">
-		<MainMenu 
-			class="min-h-screen"
+  <Header />
+  <div class="flex pb-4">
+    <MainMenu 
+      class="min-h-screen"
       @showHome="showHome"
-			@showRandomIngredient="showIngredients"
-			@showRandomRecipe="showRecipes"
-			@showRandomMeal="showMeals"
-			@showRandomFoodItem="showFoodItems"
-			@showUnitTypes="showUnitTypes"
-			@showCategories="showCategories"
-		/>
-		<router-view
-			:itemData="itemData" />
-	</div>
-	<Footer class="fixed bottom-0 left-0 w-full" />
+      @showRandomIngredient="showIngredients"
+      @showRandomRecipe="showRecipes"
+      @showRandomMeal="showMeals"
+      @showRandomFoodItem="showFoodItems"
+      @showUnitTypes="showUnitTypes"
+      @showCategories="showCategories"
+    />
+    <router-view
+      :itemData="itemData" />
+    <div v-if="isLoading" class="loading-overlay">
+      <div class="spinner"></div>
+    </div>
+  </div>
+  <Footer class="fixed bottom-0 left-0 w-full" />
 </template>
+
+<style>
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255,255,255,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 6px solid #ccc;
+  border-top: 6px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
