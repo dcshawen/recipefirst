@@ -7,21 +7,22 @@ import ingredients from './dev/ingredients.json'
 // Start test items
 let columns = ref([
     { label: 'Name', field: 'ingredient_name' },
+		{ label: 'Description', field: 'ingredient_description' },
     { label: 'Notes', field: 'ingredient_notes' },
-    { label: 'Created On', field: 'created_at' }
+    { label: 'Created On', field: 'created_at' },
+		{ label: 'Uploaded On', field: 'uploaded_at' }
 ])
 
 let items = ref(ingredients)
 
+let randomIndex = Math.floor(Math.random() * items.value.length)
 let itemData = ref({
-    columns: columns.value,
-    items: items.value
+	columns: columns.value,
+	item: items.value[randomIndex] // single item for details view
 })
 // End test items
 </script>
 
 <template>
-    <GenericListView :itemData="itemData" />
-
-    <IngredientDetails :ingredient="items[2]" />
+    <IngredientDetails :itemData="itemData" />
 </template>
