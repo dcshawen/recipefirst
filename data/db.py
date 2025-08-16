@@ -102,15 +102,81 @@ def get_all_recipes():
     db_path = _get_db_path()
     with sqlite3.connect(db_path) as conn:
         conn.row_factory = sqlite3.Row
-        rows = conn.execute("SELECT * FROM Recipe").fetchall()
-        return [dict(row) for row in rows]
+        recipes = conn.execute("SELECT * FROM Recipe").fetchall()
+        result = []
+        for recipe in recipes:
+            recipe_dict = dict(recipe)
+            recipe_id = recipe_dict["recipe_id"]
+            # Ingredients
+            ingredients = conn.execute("""
+                SELECT ri.*, 
+                       i.ingredient_name, i.ingredient_description, i.ingredient_notes,
+                       f.fooditem_name, f.fooditem_description,
+                       ut.unit_type
+                FROM RecipeIngredient ri
+                LEFT JOIN Ingredient i ON ri.ri_ingredient_id = i.ingredient_id
+                LEFT JOIN FoodItem f ON ri.ri_fooditem_id = f.fooditem_id
+                LEFT JOIN UnitType ut ON ri.ri_unit_type_id = ut.id
+                WHERE ri.ri_recipe_id = ?
+            """, (recipe_id,)).fetchall()
+            recipe_dict["ingredients"] = [dict(row) for row in ingredients]
+            # Instructions
+            instructions = conn.execute("""
+                SELECT step_number, instruction_text
+                FROM RecipeInstruction
+                WHERE recipe_id = ?
+                ORDER BY step_number ASC
+            """, (recipe_id,)).fetchall()
+            recipe_dict["instructions"] = [dict(row) for row in instructions]
+            # Categories
+            categories = conn.execute("""
+                SELECT c.category_id, c.category_name, c.category_description
+                FROM RecipeCategory rc
+                JOIN Category c ON rc.category_id = c.category_id
+                WHERE rc.recipe_id = ?
+            """, (recipe_id,)).fetchall()
+            recipe_dict["categories"] = [dict(row) for row in categories]
+            result.append(recipe_dict)
+        return result
 
 def get_recipe_by_id(recipe_id):
     db_path = _get_db_path()
     with sqlite3.connect(db_path) as conn:
         conn.row_factory = sqlite3.Row
-        row = conn.execute("SELECT * FROM Recipe WHERE recipe_id = ?", (recipe_id,)).fetchone()
-        return dict(row) if row else None
+        recipe = conn.execute("SELECT * FROM Recipe WHERE recipe_id = ?", (recipe_id,)).fetchone()
+        if not recipe:
+            return None
+        recipe_dict = dict(recipe)
+        # Ingredients
+        ingredients = conn.execute("""
+            SELECT ri.*, 
+                   i.ingredient_name, i.ingredient_description, i.ingredient_notes,
+                   f.fooditem_name, f.fooditem_description,
+                   ut.unit_type
+            FROM RecipeIngredient ri
+            LEFT JOIN Ingredient i ON ri.ri_ingredient_id = i.ingredient_id
+            LEFT JOIN FoodItem f ON ri.ri_fooditem_id = f.fooditem_id
+            LEFT JOIN UnitType ut ON ri.ri_unit_type_id = ut.id
+            WHERE ri.ri_recipe_id = ?
+        """, (recipe_id,)).fetchall()
+        recipe_dict["ingredients"] = [dict(row) for row in ingredients]
+        # Instructions
+        instructions = conn.execute("""
+            SELECT step_number, instruction_text
+            FROM RecipeInstruction
+            WHERE recipe_id = ?
+            ORDER BY step_number ASC
+        """, (recipe_id,)).fetchall()
+        recipe_dict["instructions"] = [dict(row) for row in instructions]
+        # Categories
+        categories = conn.execute("""
+            SELECT c.category_id, c.category_name, c.category_description
+            FROM RecipeCategory rc
+            JOIN Category c ON rc.category_id = c.category_id
+            WHERE rc.recipe_id = ?
+        """, (recipe_id,)).fetchall()
+        recipe_dict["categories"] = [dict(row) for row in categories]
+        return recipe_dict
 
 def create_recipe(recipe_data):
     db_path = _get_db_path()

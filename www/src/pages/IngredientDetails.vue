@@ -1,16 +1,17 @@
 <template>
-  <div v-if="ingredient" class="p-4 m-6 bg-gray-100 rounded">
-    <div class="font-bold mb-2">Ingredient Details:</div>
-    <div><span class="font-semibold">Name:</span> {{ ingredient.ingredient_name }}</div>
-    <div><span class="font-semibold">Description:</span> {{ ingredient.ingredient_description }}</div>
-    <div><span class="font-semibold">Notes:</span> {{ ingredient.ingredient_notes }}</div>
-    <div><span class="font-semibold">Created On:</span> {{ ingredient.created_at }}</div>
+  <div v-if="itemData && itemData.item" class="p-4 m-6 bg-gray-100 rounded">
+    <div class="pb-3" v-for="col in itemData.columns" :key="col.field">
+			<span v-if="col === itemData.columns[0]" class="font-bold text-2xl">{{ itemData.item[col.field] }}</span>
+			<span v-else>
+				<span class="font-semibold">{{ col.label }}:</span> {{ itemData.item[col.field] }}
+			</span>
+    </div>
   </div>
 </template>
 
 <script setup>
 defineProps({
-  ingredient: {
+  itemData: {
     type: Object,
     required: true
   }
