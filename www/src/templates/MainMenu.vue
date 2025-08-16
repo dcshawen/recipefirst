@@ -4,6 +4,7 @@
 		<button @click="$emit('showRandomIngredient')">Ingredient Details</button>
 		<button @click="$emit('showRandomRecipe')">Recipe Details</button>
 		<button @click="$emit('showRandomMeal')">Meal Details</button>
+		<button @click="$emit('showRandomFoodItem')">Food Item Details</button>
 	</nav>
 </template>
 

@@ -140,6 +140,13 @@ async def delete_category(id: int = Path(..., gt=0)):
 async def get_food_items():
     return {"food_items": db.get_all_food_items()}
 
+@router.get("/food-items/{id}/recipes")
+async def get_food_item_recipes(id: int = Path(..., gt=0)):
+    food_item = db.get_food_item_by_id(id)
+    if food_item is None:
+        raise HTTPException(status_code=404, detail="Food item not found")
+    return {"recipes": db.get_recipes_by_food_item_id(id)}
+
 @router.get("/food-items/{id}")
 async def get_food_item(id: int = Path(..., gt=0)):
     food_item = db.get_food_item_by_id(id)
