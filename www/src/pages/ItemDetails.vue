@@ -1,5 +1,5 @@
 <template>
-  <div v-if="itemData && itemData.item" class="p-4 m-6 bg-gray-100 rounded">
+  <div v-if="itemData && itemData.item" class="p-4 m-6 bg-gray-100 rounded h-fit w-[90%]">
     <div class="pb-3" v-for="col in itemData.columns" :key="col.field">
       <span v-if="col === itemData.columns[0]" class="font-bold text-2xl">{{ itemData.item[col.field] }}</span>
       <span v-else>
