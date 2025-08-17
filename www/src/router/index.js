@@ -1,4 +1,3 @@
-```javascript
 import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
@@ -9,17 +8,32 @@ const routes = [
 	},
 	{
 		path: '/ingredients/:id?',
-		component: () => import('../pages/ItemDetails.vue'),
+		component: () => import('../views/ItemDetails.vue'),
 		props: true
 	},
 	{
 		path: '/recipes/:id?',
-		component: () => import('../pages/ItemDetails.vue'),
+		component: () => import('../views/ItemDetails.vue'),
 		props: true
 	},
 	{
 		path: '/meals/:id?',
-		component: () => import('../pages/ItemDetails.vue'),
+		component: () => import('../views/ItemDetails.vue'),
+		props: true
+	},
+	{
+		path: '/fooditems/:id?',
+		component: () => import('../views/ItemDetails.vue'),
+		props: true
+	},
+	{
+		path: '/unittypes/:id?',
+		component: () => import('../views/ItemDetails.vue'),
+		props: true
+	},
+	{
+		path: '/categories/:id?',
+		component: () => import('../views/ItemDetails.vue'),
 		props: true
 	}
 ];
@@ -30,4 +44,3 @@ const router = createRouter({
 });
 
 export default router;
-```
