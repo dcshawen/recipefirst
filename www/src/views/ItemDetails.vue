@@ -5,44 +5,59 @@
       <span v-else>
         <span class="font-semibold">{{ col.label }}: </span>
         <template v-if="Array.isArray(active.item[col.field])">
-          <ul class="list-disc ml-6">
-            <li v-for="(entry, idx) in active.item[col.field]" :key="idx">
-              <template v-if="typeof entry === 'object' && entry !== null">
-                <ul class="list-disc ml-6">
-                  <li v-for="(val, key) in entry" :key="key">
-                    <span class="font-semibold">{{ key }}:</span>
-                    <template v-if="Array.isArray(val)">
-                      <ul class="list-disc ml-6">
-                        <li v-for="(subval, subidx) in val" :key="subidx">
-                          <span v-if="typeof subval === 'object' && subval !== null">
-                            <ul class="list-disc ml-6">
-                              <li v-for="(subsubval, subkey) in subval" :key="subkey">
-                                <span class="font-semibold">{{ subkey }}:</span> {{ subsubval }}
-                              </li>
-                            </ul>
-                          </span>
-                          <span v-else>{{ subval }}</span>
-                        </li>
-                      </ul>
-                    </template>
-                    <template v-else-if="typeof val === 'object' && val !== null">
-                      <ul class="list-disc ml-6">
-                        <li v-for="(subval, subkey) in val" :key="subkey">
-                          <span class="font-semibold">{{ subkey }}:</span> {{ subval }}
-                        </li>
-                      </ul>
-                    </template>
-                    <template v-else>
-                      {{ val }}
-                    </template>
-                  </li>
-                </ul>
-              </template>
-              <template v-else>
-                {{ entry }}
-              </template>
-            </li>
-          </ul>
+          <!-- Special handling for instructions (should show as numbered list without bullets) -->
+          <template v-if="col.field.toLowerCase() === 'instructions'">
+            <ol class="ml-6 space-y-1">
+              <li v-for="(instruction, idx) in active.item[col.field]" :key="idx" class="leading-relaxed">
+                {{ instruction }}
+              </li>
+            </ol>
+          </template>
+          <!-- Special handling for categories (show as comma-separated list) -->
+          <template v-else-if="col.field.toLowerCase() === 'categories'">
+            <span>{{ active.item[col.field].join(', ') }}</span>
+          </template>
+          <!-- Regular list display for ingredients and other arrays -->
+          <template v-else>
+            <ul class="list-disc ml-6">
+              <li v-for="(entry, idx) in active.item[col.field]" :key="idx">
+                <template v-if="typeof entry === 'object' && entry !== null">
+                  <ul class="list-disc ml-6">
+                    <li v-for="(val, key) in entry" :key="key">
+                      <span class="font-semibold">{{ key }}:</span>
+                      <template v-if="Array.isArray(val)">
+                        <ul class="list-disc ml-6">
+                          <li v-for="(subval, subidx) in val" :key="subidx">
+                            <span v-if="typeof subval === 'object' && subval !== null">
+                              <ul class="list-disc ml-6">
+                                <li v-for="(subsubval, subkey) in subval" :key="subkey">
+                                  <span class="font-semibold">{{ subkey }}:</span> {{ subsubval }}
+                                </li>
+                              </ul>
+                            </span>
+                            <span v-else>{{ subval }}</span>
+                          </li>
+                        </ul>
+                      </template>
+                      <template v-else-if="typeof val === 'object' && val !== null">
+                        <ul class="list-disc ml-6">
+                          <li v-for="(subval, subkey) in val" :key="subkey">
+                            <span class="font-semibold">{{ subkey }}:</span> {{ subval }}
+                          </li>
+                        </ul>
+                      </template>
+                      <template v-else>
+                        {{ val }}
+                      </template>
+                    </li>
+                  </ul>
+                </template>
+                <template v-else>
+                  {{ entry }}
+                </template>
+              </li>
+            </ul>
+          </template>
         </template>
         <template v-else-if="typeof active.item[col.field] === 'object' && active.item[col.field] !== null">
           <ul class="list-disc ml-6">
@@ -98,6 +113,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useNavigation } from '../composables/useNavigation.js'
 
 const props = defineProps({
   itemData: {
@@ -109,6 +125,9 @@ const props = defineProps({
 const route = useRoute()
 const router = useRouter()
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
+
+// Import the parseItemData function from our composable
+const { parseItemData } = useNavigation()
 
 const active = ref({ item: props.itemData?.item || null, columns: props.itemData?.columns || [] })
 const associatedRecipes = ref([])
@@ -141,8 +160,13 @@ async function load() {
   if (!prefix || !id) return
 
   try {
-    const item = await fetchJSON(`/${prefix}/${id}`)
-    active.value = { item, columns: getColumns(item).slice(1) }
+    const rawItem = await fetchJSON(`/${prefix}/${id}`)
+    
+    // Process the item data using our composable's parseItemData function
+    const processedData = parseItemData({ item: rawItem })
+    const processedItem = processedData.item
+    
+    active.value = { item: processedItem, columns: getColumns(processedItem).slice(1) }
 
     // If food item, fetch associated recipes
     if (prefix === 'food-items') {

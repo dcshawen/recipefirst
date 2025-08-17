@@ -1,22 +1,8 @@
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import Header from './templates/Header.vue'
 import MainMenu from './templates/MainMenu.vue'
 import Footer from './templates/Footer.vue'
-import ItemDetails from './pages/ItemDetails.vue'
-
-// Base URL for API; set VITE_API_BASE in your env (e.g., http://localhost:8000)
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
-
-const router = useRouter()
-
-function getColumns(obj) {
-  return Object.keys(obj).map(key => ({
-    field: key,
-    label: key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
-  })).slice(1);
-}
 
 const itemData = ref({
   item: null,
@@ -24,157 +10,12 @@ const itemData = ref({
 })
 const isLoading = ref(false)
 
-async function fetchJSON(path) {
-  const res = await fetch(`${API_BASE}${path}`)
-  if (!res.ok) throw new Error(`HTTP ${res.status} for ${path}`)
-  return res.json()
+function updateItemData(newData) {
+  itemData.value = newData
 }
 
-async function showHome() {
- router.push('/') 
-}
-
-async function showIngredients() {
-  isLoading.value = true
-  try {
-    const data = await fetchJSON('/ingredients')
-    const list = data?.ingredients ?? []
-    if (!Array.isArray(list) || list.length === 0) return
-		const columns = removeColumns(getColumns(list[0]), [
-			'ingredient_description',
-			'ingredient_notes',
-			'created_at'
-		])
-    itemData.value = {
-      items: list,
-      columns
-    }
-    router.push(`/ingredients`)
-  } catch (e) {
-    console.error('Failed to fetch ingredients', e)
-  } finally {
-    isLoading.value = false
-  }
-}
-
-async function showRecipes() {
-  isLoading.value = true
-  try {
-    const data = await fetchJSON('/recipes')
-    const list = data?.recipes ?? []
-    if (!Array.isArray(list) || list.length === 0) return
-    const columns = removeColumns(getColumns(list[0]), [
-      'recipe_description',
-      'ingredients',
-      'instructions',
-      'recipe_fooditem_id',
-      'created_at'
-    ])
-    itemData.value = {
-      items: list,
-      columns
-    }
-    router.push(`/recipes`)
-  } catch (e) {
-    console.error('Failed to fetch recipes', e)
-  } finally {
-    isLoading.value = false
-  }
-}
-
-async function showMeals() {
-  isLoading.value = true
-  try {
-    const data = await fetchJSON('/meals')
-    const list = data?.meals ?? []
-    if (!Array.isArray(list) || list.length === 0) return
-    const columns = removeColumns(getColumns(list[0]), [
-      'fooditems',
-      'meal_recipe_id',
-      'created_at',
-      'meal_description'
-    ])
-    itemData.value = {
-      items: list,
-      columns
-    }
-    router.push(`/meals`)
-  } catch (e) {
-    console.error('Failed to fetch meals', e)
-  } finally {
-    isLoading.value = false
-  }
-}
-
-async function showFoodItems() {
-  isLoading.value = true
-  try {
-    const data = await fetchJSON('/food-items')
-    const list = data?.food_items ?? []
-    if (!Array.isArray(list) || list.length === 0) return
-    const columns = removeColumns(getColumns(list[0]), [
-      'recipe',
-      'created_at',
-      'fooditem_description'
-    ])
-    itemData.value = {
-      items: list,
-      columns
-    }
-    router.push(`/fooditems`)
-  } catch (e) {
-    console.error('Failed to fetch food items', e)
-  } finally {
-    isLoading.value = false
-  }
-}
-
-async function showUnitTypes() {
-  isLoading.value = true
-  try {
-    const data = await fetchJSON('/unit-types')
-    const list = data?.unit_types ?? []
-    if (!Array.isArray(list) || list.length === 0) return
-    const columns = removeColumns(getColumns(list[0]), [
-      'created_at'
-    ])
-    itemData.value = {
-      items: list,
-      columns
-    }
-    router.push(`/unittypes`)
-  } catch (e) {
-    console.error('Failed to fetch unit types', e)
-  } finally {
-    isLoading.value = false
-  }
-}
-
-async function showCategories() {
-  isLoading.value = true
-  try {
-    const data = await fetchJSON('/categories')
-    const list = data?.categories ?? []
-    if (!Array.isArray(list) || list.length === 0) return
-    const columns = removeColumns(getColumns(list[0]), [
-      'created_at',
-      'category_description',
-      'parent_category_id'
-    ])
-    itemData.value = {
-      items: list,
-      columns
-    }
-    router.push(`/categories`)
-  } catch (e) {
-    console.error('Failed to fetch categories', e)
-  } finally {
-    isLoading.value = false
-  }
-}
-
-function removeColumns(columns, fieldsToRemove) {
-  return columns.filter(col => !fieldsToRemove.includes(col.field))
+function updateLoading(loading) {
+  isLoading.value = loading
 }
 </script>
 
@@ -183,13 +24,8 @@ function removeColumns(columns, fieldsToRemove) {
   <div class="flex pb-4">
     <MainMenu 
       class="min-h-screen"
-      @showHome="showHome"
-      @showRandomIngredient="showIngredients"
-      @showRandomRecipe="showRecipes"
-      @showRandomMeal="showMeals"
-      @showRandomFoodItem="showFoodItems"
-      @showUnitTypes="showUnitTypes"
-      @showCategories="showCategories"
+      @updateItemData="updateItemData"
+      @updateLoading="updateLoading"
     />
     <router-view
       :itemData="itemData" />
