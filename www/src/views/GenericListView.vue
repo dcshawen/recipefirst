@@ -51,30 +51,33 @@ export default {
 		navigateToItem(itemId) {
 			if (!itemId) return;
 			
-			// Determine the route path based on the current route or type prop
-			let routePath = '';
-			const currentPath = this.$route.path;
+			// Get the base route from current path or type prop
+			const baseRoute = this.getBaseRoute();
+			if (!baseRoute) return;
 			
-			// Extract the base path to determine the item type
-			if (currentPath.includes('ingredients')) {
-				routePath = `/ingredients/${itemId + 1}`;
-			} else if (currentPath.includes('recipes')) {
-				routePath = `/recipes/${itemId + 1}`;
-			} else if (currentPath.includes('meals')) {
-				routePath = `/meals/${itemId + 1}`;
-			} else if (currentPath.includes('fooditems')) {
-				routePath = `/fooditems/${itemId + 1}`;
-			} else if (currentPath.includes('unittypes')) {
-				routePath = `/unittypes/${itemId + 1}`;
-			} else if (currentPath.includes('categories')) {
-				routePath = `/categories/${itemId + 1}`;
-			} else {
-				// Default fallback - try to infer from the type prop
-				const typeRoute = this.type.toLowerCase().replace(/\s+/g, '');
-				routePath = `/${typeRoute}/${itemId}`;
+			// Navigate to the detail route with the item ID
+			const routePath = `/${baseRoute}/${itemId + 1}`;
+			this.$router.push(routePath);
+		},
+		
+		getBaseRoute() {
+			// First try to extract from current route path
+			const currentPath = this.$route.path;
+			if (currentPath && currentPath !== '/') {
+				// Extract the first segment after the slash
+				const pathSegments = currentPath.split('/').filter(segment => segment);
+				if (pathSegments.length > 0) {
+					return pathSegments[0];
+				}
 			}
 			
-			this.$router.push(routePath);
+			// Fallback to type prop if current path doesn't help
+			if (this.type && this.type !== "Recipe First") {
+				return this.type.toLowerCase().replace(/\s+/g, '').replace(/s$/, 's'); // Keep plural form
+			}
+			
+			// Default fallback
+			return null;
 		}
 	},
 	computed: {
