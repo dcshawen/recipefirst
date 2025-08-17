@@ -40,9 +40,11 @@ async function showIngredients() {
     const data = await fetchJSON('/ingredients')
     const list = data?.ingredients ?? []
     if (!Array.isArray(list) || list.length === 0) return
-		const columns = getColumns(list[0]).filter(col => {
-			return col.field !== 'ingredient_description' && col.field !== 'ingredient_notes'
-		})
+		const columns = removeColumns(getColumns(list[0]), [
+			'ingredient_description',
+			'ingredient_notes',
+			'created_at'
+		])
     itemData.value = {
       items: list,
       columns
@@ -61,12 +63,13 @@ async function showRecipes() {
     const data = await fetchJSON('/recipes')
     const list = data?.recipes ?? []
     if (!Array.isArray(list) || list.length === 0) return
-    const columns = getColumns(list[0]).filter(col => {
-      return col.field !== 'recipe_description' &&
-        col.field !== 'ingredients' &&
-        col.field !== 'instructions' &&
-        col.field !== 'recipe_fooditem_id'
-    })
+    const columns = removeColumns(getColumns(list[0]), [
+      'recipe_description',
+      'ingredients',
+      'instructions',
+      'recipe_fooditem_id',
+      'created_at'
+    ])
     itemData.value = {
       items: list,
       columns
@@ -85,9 +88,12 @@ async function showMeals() {
     const data = await fetchJSON('/meals')
     const list = data?.meals ?? []
     if (!Array.isArray(list) || list.length === 0) return
-    const columns = getColumns(list[0]).filter(col => {
-      return col.field !== 'fooditems' && col.field !== 'meal_recipe_id'
-    })
+    const columns = removeColumns(getColumns(list[0]), [
+      'fooditems',
+      'meal_recipe_id',
+      'created_at',
+      'meal_description'
+    ])
     itemData.value = {
       items: list,
       columns
@@ -106,9 +112,11 @@ async function showFoodItems() {
     const data = await fetchJSON('/food-items')
     const list = data?.food_items ?? []
     if (!Array.isArray(list) || list.length === 0) return
-    const columns = getColumns(list[0]).filter(col => {
-      return col.field !== 'recipe'
-    })
+    const columns = removeColumns(getColumns(list[0]), [
+      'recipe',
+      'created_at',
+      'fooditem_description'
+    ])
     itemData.value = {
       items: list,
       columns
@@ -127,7 +135,9 @@ async function showUnitTypes() {
     const data = await fetchJSON('/unit-types')
     const list = data?.unit_types ?? []
     if (!Array.isArray(list) || list.length === 0) return
-    const columns = getColumns(list[0])
+    const columns = removeColumns(getColumns(list[0]), [
+      'created_at'
+    ])
     itemData.value = {
       items: list,
       columns
@@ -146,7 +156,11 @@ async function showCategories() {
     const data = await fetchJSON('/categories')
     const list = data?.categories ?? []
     if (!Array.isArray(list) || list.length === 0) return
-    const columns = getColumns(list[0])
+    const columns = removeColumns(getColumns(list[0]), [
+      'created_at',
+      'category_description',
+      'parent_category_id'
+    ])
     itemData.value = {
       items: list,
       columns
@@ -157,6 +171,10 @@ async function showCategories() {
   } finally {
     isLoading.value = false
   }
+}
+
+function removeColumns(columns, fieldsToRemove) {
+  return columns.filter(col => !fieldsToRemove.includes(col.field))
 }
 </script>
 
