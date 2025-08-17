@@ -14,7 +14,8 @@
 			<div
 				v-for="(item, index) in itemData.items"
 				:key="item.id || index"
-				class="flex bg-white"
+				class="flex bg-white hover:bg-gray-50 cursor-pointer transition-colors"
+				@click="navigateToItem(item.id || index)"
 			>
 				<div
 					v-for="(column, idx) in itemData.columns"
@@ -44,6 +45,36 @@ export default {
 		type: {
 			type: String,
 			default: "Recipe First"
+		}
+	},
+	methods: {
+		navigateToItem(itemId) {
+			if (!itemId) return;
+			
+			// Determine the route path based on the current route or type prop
+			let routePath = '';
+			const currentPath = this.$route.path;
+			
+			// Extract the base path to determine the item type
+			if (currentPath.includes('ingredients')) {
+				routePath = `/ingredients/${itemId + 1}`;
+			} else if (currentPath.includes('recipes')) {
+				routePath = `/recipes/${itemId + 1}`;
+			} else if (currentPath.includes('meals')) {
+				routePath = `/meals/${itemId + 1}`;
+			} else if (currentPath.includes('fooditems')) {
+				routePath = `/fooditems/${itemId + 1}`;
+			} else if (currentPath.includes('unittypes')) {
+				routePath = `/unittypes/${itemId + 1}`;
+			} else if (currentPath.includes('categories')) {
+				routePath = `/categories/${itemId + 1}`;
+			} else {
+				// Default fallback - try to infer from the type prop
+				const typeRoute = this.type.toLowerCase().replace(/\s+/g, '');
+				routePath = `/${typeRoute}/${itemId}`;
+			}
+			
+			this.$router.push(routePath);
 		}
 	},
 	computed: {
