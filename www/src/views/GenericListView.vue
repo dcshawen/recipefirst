@@ -21,7 +21,12 @@
 					:key="idx"
 					class="flex-1 px-2 py-2"
 				>
-					{{ item[column.field] }}
+					<template v-if="Array.isArray(item[column.field])">
+						{{ item[column.field].join(' ') }}
+					</template>
+					<template v-else>
+						{{ item[column.field] }}
+					</template>
 				</div>
 			</div>
 		</div>
