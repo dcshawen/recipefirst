@@ -21,7 +21,7 @@ function updateLoading(loading) {
 
 <template>
   <Header />
-  <div class="flex pb-4">
+  <div class="flex pb-4 mb-8">
     <MainMenu 
       class="min-h-screen"
       @updateItemData="updateItemData"
