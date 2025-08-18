@@ -15,7 +15,26 @@
           </template>
           <!-- Special handling for categories (show as comma-separated list) -->
           <template v-else-if="col.field.toLowerCase() === 'categories'">
-            <span>{{ active.item[col.field].join(', ') }}</span>
+            <span v-if="Array.isArray(active.item[col.field])">
+              {{ active.item[col.field].map(cat => typeof cat === 'object' ? (cat.category_name || cat.name) : cat).join(', ') }}
+            </span>
+            <span v-else>{{ active.item[col.field] }}</span>
+          </template>
+          <!-- Special handling for fooditems (show as links to each food item) -->
+          <template v-else-if="col.field.toLowerCase() === 'fooditems'">
+            <ul class="list-disc ml-6">
+              <li v-for="(fooditem, idx) in active.item[col.field]" :key="idx">
+                <a 
+                  @click="goToFoodItem(fooditem.fooditem_id)"
+                  class="text-blue-600 hover:text-blue-800 cursor-pointer underline"
+                >
+                  {{ fooditem.fooditem_name }}
+                </a>
+                <span v-if="fooditem.fooditem_description" class="text-gray-600 ml-2">
+                  - {{ fooditem.fooditem_description }}
+                </span>
+              </li>
+            </ul>
           </template>
           <!-- Regular list display for ingredients and other arrays -->
           <template v-else>
@@ -188,16 +207,24 @@ async function load() {
   try {
     const rawItem = await fetchJSON(`/${prefix}/${id}`)
     
-    // Preserve the original recipe object if it exists (for food items)
+    // Preserve original nested objects and arrays that should remain as entities
     const originalRecipe = rawItem.recipe
+    const originalFooditems = rawItem.fooditems
+    const originalCategories = rawItem.categories
     
     // Process the item data using our composable's parseItemData function
     const processedData = parseItemData({ item: rawItem })
     const processedItem = processedData.item
     
-    // Restore the original recipe object if it was there
+    // Restore the original nested data if it was there
     if (originalRecipe) {
       processedItem.recipe = originalRecipe
+    }
+    if (originalFooditems) {
+      processedItem.fooditems = originalFooditems
+    }
+    if (originalCategories) {
+      processedItem.categories = originalCategories
     }
     
     active.value = { item: processedItem, columns: getColumns(processedItem).slice(1) }
@@ -219,6 +246,10 @@ async function load() {
 
 function goToRecipe(id) {
   router.push(`/recipes/${id}`)
+}
+
+function goToFoodItem(id) {
+  router.push(`/fooditems/${id}`)
 }
 
 // Check if a field is a reference field (ends with _id)
@@ -305,7 +336,17 @@ onMounted(async () => {
   if (!active.value.item) {
     load()
   } else {
-    // If we have item data from props, resolve references
+    // If we have item data from props, preserve original nested objects and resolve references
+    const originalData = props.itemData?.item
+    if (originalData?.recipe) {
+      active.value.item.recipe = originalData.recipe
+    }
+    if (originalData?.fooditems) {
+      active.value.item.fooditems = originalData.fooditems
+    }
+    if (originalData?.categories) {
+      active.value.item.categories = originalData.categories
+    }
     resolvedReferences.value = await resolveReferences(active.value.item)
   }
 })
