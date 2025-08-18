@@ -616,3 +616,24 @@ def get_recipes_by_category(category_id):
             WHERE rc.category_id = ?
         """, (category_id,)).fetchall()
         return [dict(row) for row in rows]
+
+def get_recipes_by_food_item_id(food_item_id):
+    """
+    Get all recipes that use a specific food item as an ingredient.
+    
+    Args:
+        food_item_id (int): The ID of the food item to search for
+        
+    Returns:
+        list: A list of recipe dictionaries that use this food item as an ingredient
+    """
+    db_path = _get_db_path()
+    with sqlite3.connect(db_path) as conn:
+        conn.row_factory = sqlite3.Row
+        # Find all recipes that use this food item as an ingredient
+        rows = conn.execute("""
+            SELECT DISTINCT r.* FROM Recipe r
+            JOIN RecipeIngredient ri ON r.recipe_id = ri.ri_recipe_id
+            WHERE ri.ri_fooditem_id = ?
+        """, (food_item_id,)).fetchall()
+        return [dict(row) for row in rows]
