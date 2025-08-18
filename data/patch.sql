@@ -1040,3 +1040,191 @@ INSERT OR IGNORE INTO Recipe (recipe_name, recipe_description, recipe_fooditem_i
 INSERT OR IGNORE INTO Recipe (recipe_name, recipe_description, recipe_fooditem_id) VALUES
 ('Garlic Mashed Potatoes', 'Creamy mashed potatoes with roasted garlic', 7),
 ('Loaded Mashed Potatoes', 'Mashed potatoes with cheese, bacon, and chives', 7);
+
+-- Add missing ingredients and instructions for the duplicate recipe entries (recipes from the second batch)
+
+-- Ingredients for the additional recipes that were missing them
+-- Recipe 37: Simple Grilled Chicken Breast (duplicate entry)
+INSERT OR IGNORE INTO RecipeIngredient (ri_recipe_id, ri_ingredient_id, ri_unit_type_id, ri_quantity) VALUES
+(37, 15, 5, 1.5), -- Chicken Breast
+(37, 3, 2, 2), -- Olive Oil
+(37, 1, 3, 1), -- Salt
+(37, 2, 3, 0.5), -- Black Pepper
+(37, 5, 11, 2); -- Garlic
+
+-- Recipe 38: Classic Beef Burger (duplicate entry)
+INSERT OR IGNORE INTO RecipeIngredient (ri_recipe_id, ri_ingredient_id, ri_unit_type_id, ri_quantity) VALUES
+(38, 16, 5, 1), -- Ground Beef
+(38, 26, 12, 4), -- Bread (burger buns)
+(38, 27, 12, 2), -- Cheese
+(38, 18, 12, 2), -- Tomato
+(38, 19, 12, 4), -- Lettuce
+(38, 6, 12, 4), -- Onion
+(38, 1, 3, 1), -- Salt
+(38, 2, 3, 0.5); -- Black Pepper
+
+-- Recipe 39: Fresh Caesar Salad (duplicate entry)
+INSERT OR IGNORE INTO RecipeIngredient (ri_recipe_id, ri_ingredient_id, ri_unit_type_id, ri_quantity) VALUES
+(39, 58, 13, 2), -- Lettuce
+(39, 59, 1, 0.5), -- Croutons
+(39, 60, 1, 0.25), -- Caesar Dressing
+(39, 29, 1, 0.25), -- Parmesan Cheese
+(39, 30, 13, 1); -- Lemon
+
+-- Recipe 40: Fluffy Blueberry Muffins (duplicate entry)
+INSERT OR IGNORE INTO RecipeIngredient (ri_recipe_id, ri_ingredient_id, ri_unit_type_id, ri_quantity) VALUES
+(40, 7, 1, 2), -- Flour
+(40, 8, 1, 0.75), -- Sugar
+(40, 10, 3, 2), -- Baking Powder
+(40, 1, 3, 0.5), -- Salt
+(40, 13, 1, 1), -- Milk
+(40, 12, 13, 1), -- Eggs
+(40, 4, 2, 4), -- Butter
+(40, 55, 1, 1); -- Blueberries
+
+-- Recipe 41: Classic French Toast (duplicate entry)
+INSERT OR IGNORE INTO RecipeIngredient (ri_recipe_id, ri_ingredient_id, ri_unit_type_id, ri_quantity) VALUES
+(41, 26, 12, 8), -- Bread
+(41, 12, 13, 4), -- Eggs
+(41, 13, 1, 0.5), -- Milk
+(41, 43, 3, 1), -- Vanilla Extract
+(41, 38, 3, 1), -- Cinnamon
+(41, 4, 2, 2); -- Butter
+
+-- Recipe 42: Perfect Grilled Cheese (duplicate entry)
+INSERT OR IGNORE INTO RecipeIngredient (ri_recipe_id, ri_ingredient_id, ri_unit_type_id, ri_quantity) VALUES
+(42, 26, 12, 4), -- Bread
+(42, 27, 12, 4), -- Cheese
+(42, 4, 2, 2); -- Butter
+
+-- Recipe 43: Fresh Garden Salad (duplicate entry)
+INSERT OR IGNORE INTO RecipeIngredient (ri_recipe_id, ri_ingredient_id, ri_unit_type_id, ri_quantity) VALUES
+(43, 58, 13, 4), -- Lettuce
+(43, 18, 13, 2), -- Tomato
+(43, 19, 13, 1), -- Bell Pepper
+(43, 20, 13, 2), -- Carrot
+(43, 21, 13, 2), -- Celery
+(43, 6, 12, 1), -- Onion
+(43, 3, 2, 2), -- Olive Oil
+(43, 47, 2, 1); -- Vinegar
+
+-- Recipe 44: Savory Rice Pilaf (duplicate entry)
+INSERT OR IGNORE INTO RecipeIngredient (ri_recipe_id, ri_ingredient_id, ri_unit_type_id, ri_quantity) VALUES
+(44, 23, 1, 1.5), -- Rice
+(44, 61, 1, 3), -- Vegetable Broth
+(44, 6, 12, 1), -- Onion
+(44, 5, 11, 2), -- Garlic
+(44, 4, 2, 2), -- Butter
+(44, 1, 3, 1), -- Salt
+(44, 2, 3, 0.5); -- Black Pepper
+
+-- Recipe 45: Homemade Garlic Bread (duplicate entry)
+INSERT OR IGNORE INTO RecipeIngredient (ri_recipe_id, ri_ingredient_id, ri_unit_type_id, ri_quantity) VALUES
+(45, 26, 13, 1), -- Bread
+(45, 4, 2, 4), -- Butter
+(45, 5, 11, 4), -- Garlic
+(45, 33, 2, 2), -- Parsley
+(45, 1, 3, 0.5); -- Salt
+
+-- Recipe 46: Hearty Vegetable Soup (duplicate entry)
+INSERT OR IGNORE INTO RecipeIngredient (ri_recipe_id, ri_ingredient_id, ri_unit_type_id, ri_quantity) VALUES
+(46, 61, 1, 6), -- Vegetable Broth
+(46, 18, 13, 3), -- Tomato
+(46, 20, 13, 2), -- Carrot
+(46, 21, 13, 2), -- Celery
+(46, 6, 12, 1), -- Onion
+(46, 5, 11, 3), -- Garlic
+(46, 22, 13, 2), -- Potato
+(46, 1, 3, 1), -- Salt
+(46, 2, 3, 0.5); -- Black Pepper
+
+-- Instructions for the additional duplicate recipes
+-- Recipe 37: Simple Grilled Chicken Breast
+INSERT OR IGNORE INTO RecipeInstruction (recipe_id, step_number, instruction_text) VALUES
+(37, 1, 'Season chicken breast with salt, pepper, and minced garlic.'),
+(37, 2, 'Brush with olive oil and let marinate for 15 minutes.'),
+(37, 3, 'Preheat grill to medium-high heat.'),
+(37, 4, 'Grill chicken 6-7 minutes per side until internal temp reaches 165°F.'),
+(37, 5, 'Let rest 5 minutes before slicing.'),
+(37, 6, 'Serve hot with your favorite sides.');
+
+-- Recipe 38: Classic Beef Burger
+INSERT OR IGNORE INTO RecipeInstruction (recipe_id, step_number, instruction_text) VALUES
+(38, 1, 'Form ground beef into 4 equal patties, season with salt and pepper.'),
+(38, 2, 'Preheat grill or skillet to medium-high heat.'),
+(38, 3, 'Cook patties 4-5 minutes per side for medium doneness.'),
+(38, 4, 'Add cheese in last minute of cooking if desired.'),
+(38, 5, 'Toast burger buns lightly.'),
+(38, 6, 'Assemble burgers with lettuce, tomato, onion, and condiments.');
+
+-- Recipe 39: Fresh Caesar Salad
+INSERT OR IGNORE INTO RecipeInstruction (recipe_id, step_number, instruction_text) VALUES
+(39, 1, 'Wash and chop romaine lettuce into bite-sized pieces.'),
+(39, 2, 'Place lettuce in large salad bowl.'),
+(39, 3, 'Add Caesar dressing and toss to coat evenly.'),
+(39, 4, 'Sprinkle with grated Parmesan cheese.'),
+(39, 5, 'Top with croutons just before serving.'),
+(39, 6, 'Serve immediately with lemon wedges.');
+
+-- Recipe 40: Fluffy Blueberry Muffins
+INSERT OR IGNORE INTO RecipeInstruction (recipe_id, step_number, instruction_text) VALUES
+(40, 1, 'Preheat oven to 375°F and line muffin tin with paper liners.'),
+(40, 2, 'Mix flour, sugar, baking powder, and salt in large bowl.'),
+(40, 3, 'Whisk together milk, egg, and melted butter.'),
+(40, 4, 'Combine wet and dry ingredients until just mixed.'),
+(40, 5, 'Gently fold in blueberries.'),
+(40, 6, 'Fill muffin cups 2/3 full and bake 20-25 minutes until golden.');
+
+-- Recipe 41: Classic French Toast
+INSERT OR IGNORE INTO RecipeInstruction (recipe_id, step_number, instruction_text) VALUES
+(41, 1, 'Whisk together eggs, milk, vanilla, and cinnamon.'),
+(41, 2, 'Heat butter in large skillet over medium heat.'),
+(41, 3, 'Dip bread slices in egg mixture, coating both sides.'),
+(41, 4, 'Cook in skillet 2-3 minutes per side until golden brown.'),
+(41, 5, 'Serve hot with maple syrup and powdered sugar.'),
+(41, 6, 'Keep warm in 200°F oven if making large batches.');
+
+-- Recipe 42: Perfect Grilled Cheese
+INSERT OR IGNORE INTO RecipeInstruction (recipe_id, step_number, instruction_text) VALUES
+(42, 1, 'Butter one side of each bread slice.'),
+(42, 2, 'Place cheese between bread, buttered sides out.'),
+(42, 3, 'Heat skillet over medium heat.'),
+(42, 4, 'Cook sandwich 2-3 minutes per side until golden and crispy.'),
+(42, 5, 'Press down gently with spatula while cooking.'),
+(42, 6, 'Cut diagonally and serve immediately.');
+
+-- Recipe 43: Fresh Garden Salad
+INSERT OR IGNORE INTO RecipeInstruction (recipe_id, step_number, instruction_text) VALUES
+(43, 1, 'Wash and dry all vegetables thoroughly.'),
+(43, 2, 'Chop lettuce, tomatoes, bell pepper, and onion.'),
+(43, 3, 'Grate or julienne carrots and chop celery.'),
+(43, 4, 'Combine all vegetables in large salad bowl.'),
+(43, 5, 'Whisk together olive oil and vinegar for dressing.'),
+(43, 6, 'Toss salad with dressing just before serving.');
+
+-- Recipe 44: Savory Rice Pilaf
+INSERT OR IGNORE INTO RecipeInstruction (recipe_id, step_number, instruction_text) VALUES
+(44, 1, 'Sauté diced onion and garlic in butter until fragrant.'),
+(44, 2, 'Add rice and stir to coat with butter, toasting lightly.'),
+(44, 3, 'Pour in vegetable broth and bring to a boil.'),
+(44, 4, 'Reduce heat, cover, and simmer 18-20 minutes.'),
+(44, 5, 'Let stand 5 minutes, then fluff with fork.'),
+(44, 6, 'Season with salt and pepper, garnish with herbs.');
+
+-- Recipe 45: Homemade Garlic Bread
+INSERT OR IGNORE INTO RecipeInstruction (recipe_id, step_number, instruction_text) VALUES
+(45, 1, 'Preheat oven to 400°F.'),
+(45, 2, 'Mix softened butter with minced garlic, parsley, and salt.'),
+(45, 3, 'Slice bread horizontally and spread garlic butter evenly.'),
+(45, 4, 'Wrap in foil or place cut-side up on baking sheet.'),
+(45, 5, 'Bake 10-12 minutes until heated through and crispy.'),
+(45, 6, 'Slice and serve immediately while hot.');
+
+-- Recipe 46: Hearty Vegetable Soup
+INSERT OR IGNORE INTO RecipeInstruction (recipe_id, step_number, instruction_text) VALUES
+(46, 1, 'Sauté diced onion, garlic, carrots, and celery until softened.'),
+(46, 2, 'Add diced tomatoes and cook 2-3 minutes.'),
+(46, 3, 'Pour in vegetable broth and bring to a boil.'),
+(46, 4, 'Add cubed potatoes and simmer 15-20 minutes until tender.'),
+(46, 5, 'Season with salt, pepper, and herbs to taste.'),
+(46, 6, 'Serve hot with crusty bread or crackers.');
