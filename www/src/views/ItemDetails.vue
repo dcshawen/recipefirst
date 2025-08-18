@@ -91,7 +91,20 @@
           </ul>
         </template>
         <template v-else>
-          {{ active.item[col.field] }}
+          <!-- Handle reference fields (ending with _id) -->
+          <template v-if="isReferenceField(col.field) && active.item[col.field]">
+            <a 
+              v-if="resolvedReferences[col.field]"
+              @click="goToReference(col.field, active.item[col.field])"
+              class="text-blue-600 hover:text-blue-800 cursor-pointer underline"
+            >
+              {{ resolvedReferences[col.field] }}
+            </a>
+            <span v-else class="text-gray-500">{{ active.item[col.field] }}</span>
+          </template>
+          <template v-else>
+            {{ active.item[col.field] }}
+          </template>
         </template>
       </span>
     </div>
@@ -131,6 +144,7 @@ const { parseItemData } = useNavigation()
 
 const active = ref({ item: props.itemData?.item || null, columns: props.itemData?.columns || [] })
 const associatedRecipes = ref([])
+const resolvedReferences = ref({})
 
 function getColumns(obj) {
   return Object.keys(obj).map(key => ({
@@ -168,6 +182,9 @@ async function load() {
     
     active.value = { item: processedItem, columns: getColumns(processedItem).slice(1) }
 
+    // Resolve reference fields to their display names
+    resolvedReferences.value = await resolveReferences(processedItem)
+
     // If food item, fetch associated recipes
     if (prefix === 'food-items') {
       const r = await fetchJSON(`/${prefix}/${id}/recipes`)
@@ -184,10 +201,83 @@ function goToRecipe(id) {
   router.push(`/recipes/${id}`)
 }
 
-onMounted(() => {
+// Check if a field is a reference field (ends with _id)
+function isReferenceField(fieldName) {
+  return fieldName.endsWith('_id') && fieldName !== 'recipe_id' && fieldName !== 'ingredient_id' && fieldName !== 'fooditem_id' && fieldName !== 'meal_id'
+}
+
+// Get the API endpoint for a reference field
+function getReferenceEndpoint(fieldName) {
+  const fieldMap = {
+    'recipe_fooditem_id': 'food-items',
+    'ri_fooditem_id': 'food-items',
+    'ri_ingredient_id': 'ingredients',
+    'mf_fooditem_id': 'food-items',
+    'recipe_id': 'recipes',
+    'fooditem_id': 'food-items',
+    'ingredient_id': 'ingredients',
+    'meal_id': 'meals',
+    'category_id': 'categories'
+  }
+  return fieldMap[fieldName] || null
+}
+
+// Get the route path for a reference field
+function getReferencePath(fieldName) {
+  const pathMap = {
+    'recipe_fooditem_id': 'fooditems',
+    'ri_fooditem_id': 'fooditems',
+    'ri_ingredient_id': 'ingredients',
+    'mf_fooditem_id': 'fooditems',
+    'recipe_id': 'recipes',
+    'fooditem_id': 'fooditems',
+    'ingredient_id': 'ingredients',
+    'meal_id': 'meals',
+    'category_id': 'categories'
+  }
+  return pathMap[fieldName] || null
+}
+
+// Navigate to a referenced item
+function goToReference(fieldName, id) {
+  const path = getReferencePath(fieldName)
+  if (path) {
+    router.push(`/${path}/${id}`)
+  }
+}
+
+// Resolve reference fields to their display names
+async function resolveReferences(item) {
+  const resolved = {}
+  
+  for (const [fieldName, value] of Object.entries(item)) {
+    if (isReferenceField(fieldName) && value) {
+      const endpoint = getReferenceEndpoint(fieldName)
+      if (endpoint) {
+        try {
+          const referencedItem = await fetchJSON(`/${endpoint}/${value}`)
+          // Try to find a name field in the referenced item
+          const nameField = Object.keys(referencedItem).find(key => key.includes('name'))
+          if (nameField) {
+            resolved[fieldName] = referencedItem[nameField]
+          }
+        } catch (e) {
+          console.warn(`Failed to resolve reference ${fieldName}:`, e)
+        }
+      }
+    }
+  }
+  
+  return resolved
+}
+
+onMounted(async () => {
   // If we didn't receive item via props (e.g., direct navigation), fetch it
   if (!active.value.item) {
     load()
+  } else {
+    // If we have item data from props, resolve references
+    resolvedReferences.value = await resolveReferences(active.value.item)
   }
 })
 
