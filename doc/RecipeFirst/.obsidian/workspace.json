@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Dev Log/CHANGE-LOG.md",
+                "file": "Dev Log/0.1.0 Minimum Viable Product/Data Layer Implementation Sprint Complete.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "CHANGE-LOG"
+              "title": "Data Layer Implementation Sprint Complete"
             }
           }
         ]
@@ -168,8 +168,8 @@
   },
   "active": "e3b6f09636163cfc",
   "lastOpenFiles": [
-    "Dev Log/0.1.0 Minimum Viable Product/Data Layer Implementation Sprint Complete.md",
     "Dev Log/CHANGE-LOG.md",
+    "Dev Log/0.1.0 Minimum Viable Product/Data Layer Implementation Sprint Complete.md",
     "Dev Log/RELEASE.md",
     "Documentation/Future Enhancements/Pantry System.md",
     "Dev Log/0.1.0 Minimum Viable Product",
