@@ -14,8 +14,8 @@
 			<div
 				v-for="(item, index) in itemData.items"
 				:key="getItemId(item) || index"
-				class="flex bg-white hover:bg-gray-50 cursor-pointer transition-colors"
-				@click="navigateToItem(item)"
+				:class="['flex bg-white transition-colors', linkactive ? 'hover:bg-gray-50 cursor-pointer' : '']"
+				@click="linkactive && navigateToItem(item)"
 			>
 				<div
 					v-for="(column, idx) in itemData.columns"
@@ -45,6 +45,10 @@ export default {
 		type: {
 			type: String,
 			default: "Recipe First"
+		},
+		linkactive: {
+			type: Boolean,
+			default: false
 		}
 	},
 	methods: {
