@@ -13,9 +13,9 @@
 			</div>
 			<div
 				v-for="(item, index) in itemData.items"
-				:key="item.id || index"
+				:key="getItemId(item) || index"
 				class="flex bg-white hover:bg-gray-50 cursor-pointer transition-colors"
-				@click="navigateToItem(item.id || index)"
+				@click="navigateToItem(item)"
 			>
 				<div
 					v-for="(column, idx) in itemData.columns"
@@ -48,16 +48,31 @@ export default {
 		}
 	},
 	methods: {
-		navigateToItem(itemId) {
-			if (!itemId) return;
+		navigateToItem(item) {
+			// Determine the correct ID field name and value
+			const itemId = this.getItemId(item);
+			if (itemId === null || itemId === undefined) return;
 			
 			// Get the base route from current path or type prop
 			const baseRoute = this.getBaseRoute();
 			if (!baseRoute) return;
 			
-			// Navigate to the detail route with the item ID
-			const routePath = `/${baseRoute}/${itemId + 1}`;
+			// Navigate to the detail route with the actual item ID (no +1 needed)
+			const routePath = `/${baseRoute}/${itemId}`;
 			this.$router.push(routePath);
+		},
+		
+		getItemId(item) {
+			// Try common ID field patterns
+			if (item.ingredient_id !== undefined) return item.ingredient_id;
+			if (item.recipe_id !== undefined) return item.recipe_id;
+			if (item.meal_id !== undefined) return item.meal_id;
+			if (item.fooditem_id !== undefined) return item.fooditem_id;
+			if (item.category_id !== undefined) return item.category_id;
+			if (item.id !== undefined) return item.id; // for unit types
+			
+			// Fallback: return null if no ID found
+			return null;
 		},
 		
 		getBaseRoute() {
