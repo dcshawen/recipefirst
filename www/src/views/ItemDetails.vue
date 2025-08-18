@@ -60,35 +60,47 @@
           </template>
         </template>
         <template v-else-if="typeof active.item[col.field] === 'object' && active.item[col.field] !== null">
-          <ul class="list-disc ml-6">
-            <li v-for="(val, key) in active.item[col.field]" :key="key">
-              <span class="font-semibold">{{ key }}:</span>
-              <template v-if="Array.isArray(val)">
-                <ul class="list-disc ml-6">
-                  <li v-for="(subval, subidx) in val" :key="subidx">
-                    <span v-if="typeof subval === 'object' && subval !== null">
-                      <ul class="list-disc ml-6">
-                        <li v-for="(subsubval, subkey) in subval" :key="subkey">
-                          <span class="font-semibold">{{ subkey }}:</span> {{ subsubval }}
-                        </li>
-                      </ul>
-                    </span>
-                    <span v-else>{{ subval }}</span>
-                  </li>
-                </ul>
-              </template>
-              <template v-else-if="typeof val === 'object' && val !== null">
-                <ul class="list-disc ml-6">
-                  <li v-for="(subval, subkey) in val" :key="subkey">
-                    <span class="font-semibold">{{ subkey }}:</span> {{ subval }}
-                  </li>
-                </ul>
-              </template>
-              <template v-else>
-                {{ val }}
-              </template>
-            </li>
-          </ul>
+          <!-- Handle recipe object for food items -->
+          <template v-if="col.field === 'recipe' && active.item[col.field].recipe_name">
+            <a 
+              @click="goToRecipe(active.item[col.field].recipe_id)"
+              class="text-blue-600 hover:text-blue-800 cursor-pointer underline"
+            >
+              {{ active.item[col.field].recipe_name }}
+            </a>
+          </template>
+          <!-- Default object handling -->
+          <template v-else>
+            <ul class="list-disc ml-6">
+              <li v-for="(val, key) in active.item[col.field]" :key="key">
+                <span class="font-semibold">{{ key }}:</span>
+                <template v-if="Array.isArray(val)">
+                  <ul class="list-disc ml-6">
+                    <li v-for="(subval, subidx) in val" :key="subidx">
+                      <span v-if="typeof subval === 'object' && subval !== null">
+                        <ul class="list-disc ml-6">
+                          <li v-for="(subsubval, subkey) in subval" :key="subkey">
+                            <span class="font-semibold">{{ subkey }}:</span> {{ subsubval }}
+                          </li>
+                        </ul>
+                      </span>
+                      <span v-else>{{ subval }}</span>
+                    </li>
+                  </ul>
+                </template>
+                <template v-else-if="typeof val === 'object' && val !== null">
+                  <ul class="list-disc ml-6">
+                    <li v-for="(subval, subkey) in val" :key="subkey">
+                      <span class="font-semibold">{{ subkey }}:</span> {{ subval }}
+                    </li>
+                  </ul>
+                </template>
+                <template v-else>
+                  {{ val }}
+                </template>
+              </li>
+            </ul>
+          </template>
         </template>
         <template v-else>
           <!-- Handle reference fields (ending with _id) -->
@@ -176,9 +188,17 @@ async function load() {
   try {
     const rawItem = await fetchJSON(`/${prefix}/${id}`)
     
+    // Preserve the original recipe object if it exists (for food items)
+    const originalRecipe = rawItem.recipe
+    
     // Process the item data using our composable's parseItemData function
     const processedData = parseItemData({ item: rawItem })
     const processedItem = processedData.item
+    
+    // Restore the original recipe object if it was there
+    if (originalRecipe) {
+      processedItem.recipe = originalRecipe
+    }
     
     active.value = { item: processedItem, columns: getColumns(processedItem).slice(1) }
 
@@ -204,6 +224,15 @@ function goToRecipe(id) {
 // Check if a field is a reference field (ends with _id)
 function isReferenceField(fieldName) {
   return fieldName.endsWith('_id') && fieldName !== 'recipe_id' && fieldName !== 'ingredient_id' && fieldName !== 'fooditem_id' && fieldName !== 'meal_id'
+}
+
+// Check if an object represents an entity (has id and name fields)
+function isEntityObject(obj) {
+  if (!obj || typeof obj !== 'object') return false
+  const keys = Object.keys(obj)
+  const hasId = keys.some(key => key.endsWith('_id'))
+  const hasName = keys.some(key => key.includes('name'))
+  return hasId && hasName
 }
 
 // Get the API endpoint for a reference field
