@@ -20,6 +20,22 @@
             </span>
             <span v-else>{{ active.item[col.field] }}</span>
           </template>
+          <!-- Special handling for recipes (show as links to each recipe) -->
+          <template v-else-if="col.field.toLowerCase() === 'recipes'">
+            <ul class="list-disc ml-6">
+              <li v-for="(recipe, idx) in active.item[col.field]" :key="idx">
+                <a 
+                  @click="goToRecipe(recipe.recipe_id)"
+                  class="text-blue-600 hover:text-blue-800 cursor-pointer underline"
+                >
+                  {{ recipe.recipe_name }}
+                </a>
+                <span v-if="recipe.recipe_description" class="text-gray-600 ml-2">
+                  - {{ recipe.recipe_description }}
+                </span>
+              </li>
+            </ul>
+          </template>
           <!-- Special handling for fooditems (show as links to each food item) -->
           <template v-else-if="col.field.toLowerCase() === 'fooditems'">
             <ul class="list-disc ml-6">
@@ -79,8 +95,8 @@
           </template>
         </template>
         <template v-else-if="typeof active.item[col.field] === 'object' && active.item[col.field] !== null">
-          <!-- Handle recipe object for food items -->
-          <template v-if="col.field === 'recipe' && active.item[col.field].recipe_name">
+          <!-- Handle single recipe object for backward compatibility -->
+          <template v-if="col.field === 'recipe' && active.item[col.field] && active.item[col.field].recipe_name">
             <a 
               @click="goToRecipe(active.item[col.field].recipe_id)"
               class="text-blue-600 hover:text-blue-800 cursor-pointer underline"
@@ -209,6 +225,7 @@ async function load() {
     
     // Preserve original nested objects and arrays that should remain as entities
     const originalRecipe = rawItem.recipe
+    const originalRecipes = rawItem.recipes
     const originalFooditems = rawItem.fooditems
     const originalCategories = rawItem.categories
     
@@ -219,6 +236,9 @@ async function load() {
     // Restore the original nested data if it was there
     if (originalRecipe) {
       processedItem.recipe = originalRecipe
+    }
+    if (originalRecipes) {
+      processedItem.recipes = originalRecipes
     }
     if (originalFooditems) {
       processedItem.fooditems = originalFooditems
@@ -340,6 +360,9 @@ onMounted(async () => {
     const originalData = props.itemData?.item
     if (originalData?.recipe) {
       active.value.item.recipe = originalData.recipe
+    }
+    if (originalData?.recipes) {
+      active.value.item.recipes = originalData.recipes
     }
     if (originalData?.fooditems) {
       active.value.item.fooditems = originalData.fooditems
