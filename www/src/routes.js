@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import ItemDetails from './views/ItemDetails.vue';
 import GenericListView from './views/GenericListView.vue';
+import Home from './pages/Home.vue';
 
 const routes = [
-    { path: '/', component: GenericListView, props: true },
+    { path: '/', component: Home },
     { path: '/ingredients', component: GenericListView, props: { type: 'ingredients', linkactive: true } },
     { path: '/recipes', component: GenericListView, props: { type: 'recipes', linkactive: true } },
     { path: '/meals', component: GenericListView, props: { type: 'meals', linkactive: true } },
