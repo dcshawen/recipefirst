@@ -404,12 +404,12 @@ def get_all_food_items():
         for fooditem in rows:
             fooditem_dict = dict(fooditem)
             fooditem_id = fooditem_dict["fooditem_id"]
-            # Associated Recipe (if any)
-            recipe = conn.execute(
+            # Associated Recipes (all recipes that produce this food item)
+            recipes = conn.execute(
                 "SELECT * FROM Recipe WHERE recipe_fooditem_id = ?",
                 (fooditem_id,)
-            ).fetchone()
-            fooditem_dict["recipe"] = dict(recipe) if recipe else None
+            ).fetchall()
+            fooditem_dict["recipes"] = [dict(recipe) for recipe in recipes] if recipes else []
             result.append(fooditem_dict)
         return result
 
@@ -421,12 +421,12 @@ def get_food_item_by_id(fooditem_id):
         if not row:
             return None
         fooditem_dict = dict(row)
-        # Associated Recipe (if any)
-        recipe = conn.execute(
+        # Associated Recipes (all recipes that produce this food item)
+        recipes = conn.execute(
             "SELECT * FROM Recipe WHERE recipe_fooditem_id = ?",
             (fooditem_id,)
-        ).fetchone()
-        fooditem_dict["recipe"] = dict(recipe) if recipe else None
+        ).fetchall()
+        fooditem_dict["recipes"] = [dict(recipe) for recipe in recipes] if recipes else []
         return fooditem_dict
 
 def create_food_item(food_item_data):
