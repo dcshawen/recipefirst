@@ -118,9 +118,9 @@ async function showFoodItems() {
     const list = data?.food_items ?? []
     if (!Array.isArray(list) || list.length === 0) return
     const columns = removeColumns(getColumns(list[0]), [
-      'recipe',
+      'recipes',
       'created_at',
-      'fooditem_description'
+      'fooditem_description',
     ])
     itemData.value = parseItemData({
       items: list,
