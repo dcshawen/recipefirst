@@ -23,7 +23,7 @@ function updateLoading(loading) {
   <Header />
   <div class="flex pb-4 mb-8">
     <MainMenu 
-      class="min-h-screen"
+      class="w-[20%]"
       @updateItemData="updateItemData"
       @updateLoading="updateLoading"
     />
