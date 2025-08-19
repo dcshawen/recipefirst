@@ -5,15 +5,19 @@ import Home from './pages/Home.vue';
 
 import IngredientList from './pages/IngredientList.vue';
 import RecipeList from './pages/RecipeList.vue';
+import MealList from './pages/MealList.vue';
+import FoodItemList from './pages/FoodItemList.vue';
+import UnitTypeList from './pages/UnitTypeList.vue';
+import CategoryList from './pages/CategoryList.vue';
 
 const routes = [
     { path: '/', component: Home },
     { path: '/ingredients', component: IngredientList },
     { path: '/recipes', component: RecipeList },
-    { path: '/meals', component: GenericListView, props: { type: 'meals', linkactive: true } },
-    { path: '/fooditems', component: GenericListView, props: { type: 'fooditems', linkactive: true } },
-    { path: '/unittypes', component: GenericListView, props: { type: 'unit types', linkactive: false } },
-    { path: '/categories', component: GenericListView, props: { type: 'categories', linkactive: false } },
+    { path: '/meals', component: MealList },
+    { path: '/fooditems', component: FoodItemList },
+    { path: '/unittypes', component: UnitTypeList },
+    { path: '/categories', component: CategoryList },
     { path: '/ingredients/:id', component: ItemDetails, props: true },
 		{ path: '/recipes/:id', component: ItemDetails, props: true },
 		{ path: '/meals/:id', component: ItemDetails, props: true },
