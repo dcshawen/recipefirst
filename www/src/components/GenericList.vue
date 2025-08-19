@@ -13,7 +13,7 @@
 			</thead>
 			<tbody>
 				<tr v-for="item in items" :key="item[config.idField]">
-					<td v-for="column in columns" :key="column.key">
+					<td v-for="column in columns" :key="column.key" >
 						<template v-if="column.type === 'link'">
 							<router-link :to="{ path: `/${config.routePrefix}/${item[config.idField]}` }">
 								{{ getFieldValue(item, column.field) }}
