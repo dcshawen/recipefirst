@@ -203,16 +203,21 @@ import { useNavigation } from '../composables/useNavigation.js'
 const props = defineProps({
   itemData: {
     type: Object,
-    required: true
+    required: false,
+    default: () => ({ item: null, columns: [] })
+  },
+  id: {
+    type: String,
+    required: false
   }
 })
 
 const route = useRoute()
 const router = useRouter()
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
+const API_BASE = import.meta.env.VITE_API_BASE || '/api'
 
-// Import the parseItemData function from our composable
-const { parseItemData } = useNavigation()
+// Import the parseItemData and fetchJSON function from our composable
+const { parseItemData, fetchJSON } = useNavigation()
 
 const active = ref({ item: props.itemData?.item || null, columns: props.itemData?.columns || [] })
 const associatedRecipes = ref([])
@@ -232,12 +237,6 @@ function resolveTypeToApiPrefix() {
   if (path.startsWith('/meals')) return 'meals'
   if (path.startsWith('/fooditems')) return 'food-items' // note API hyphen
   return null
-}
-
-async function fetchJSON(path) {
-  const res = await fetch(`${API_BASE}${path}`)
-  if (!res.ok) throw new Error(`HTTP ${res.status} for ${path}`)
-  return res.json()
 }
 
 async function load() {

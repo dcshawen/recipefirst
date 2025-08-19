@@ -40,26 +40,7 @@ async function showHome() {
 }
 
 async function showIngredients() {
-  isLoading.value = true
-  try {
-    const data = await fetchJSON('/ingredients')
-    const list = data?.ingredients ?? []
-    if (!Array.isArray(list) || list.length === 0) return
-    const columns = removeColumns(getColumns(list[0]), [
-      'ingredient_description',
-      'ingredient_notes',
-      'created_at'
-    ])
-    itemData.value = parseItemData({
-      items: list,
-      columns
-    })
-    router.push(`/ingredients`)
-  } catch (e) {
-    console.error('Failed to fetch ingredients', e)
-  } finally {
-    isLoading.value = false
-  }
+  router.push('/ingredients')
 }
 
 async function showRecipes() {
