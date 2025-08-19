@@ -1,21 +1,27 @@
 <template>
-	<GenericList :config="ingredientConfig" />
+	<GenericList :config="recipeConfig" />
 </template>
 
 <script setup>
 import GenericList from '../components/GenericList.vue'
 
-const ingredientConfig = {
-	endpoint: '/ingredients',
-	dataKey: 'ingredients',
-	idField: 'ingredient_id',
-	routePrefix: 'ingredients',
+const recipeConfig = {
+	endpoint: '/recipes',
+	dataKey: 'recipes',
+	idField: 'recipe_id',
+	routePrefix: 'recipes',
 	columns: [
 		{
 			key: 'name',
-			label: 'Ingredient',
-			field: 'ingredient_name',
+			label: 'Recipe Name',
+			field: 'recipe_name',
 			type: 'link'
+		},
+		{
+			key: 'category',
+			label: 'Category',
+			field: 'categories',
+			type: 'categories'
 		},
 		{
 			key: 'updated',

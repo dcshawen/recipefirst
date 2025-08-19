@@ -4,11 +4,12 @@ import GenericListView from './views/GenericListView.vue';
 import Home from './pages/Home.vue';
 
 import IngredientList from './pages/IngredientList.vue';
+import RecipeList from './pages/RecipeList.vue';
 
 const routes = [
     { path: '/', component: Home },
     { path: '/ingredients', component: IngredientList },
-    { path: '/recipes', component: GenericListView, props: { type: 'recipes', linkactive: true } },
+    { path: '/recipes', component: RecipeList },
     { path: '/meals', component: GenericListView, props: { type: 'meals', linkactive: true } },
     { path: '/fooditems', component: GenericListView, props: { type: 'fooditems', linkactive: true } },
     { path: '/unittypes', component: GenericListView, props: { type: 'unit types', linkactive: false } },
