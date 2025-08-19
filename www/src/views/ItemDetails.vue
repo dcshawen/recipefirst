@@ -190,7 +190,9 @@
       </ul>
     </div>
   </div>
-  <div v-else class="p-4 m-6">Loading…</div>
+  <div v-else class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
 </template>
 
 <script setup>
@@ -201,16 +203,21 @@ import { useNavigation } from '../composables/useNavigation.js'
 const props = defineProps({
   itemData: {
     type: Object,
-    required: true
+    required: false,
+    default: () => ({ item: null, columns: [] })
+  },
+  id: {
+    type: String,
+    required: false
   }
 })
 
 const route = useRoute()
 const router = useRouter()
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
+const API_BASE = import.meta.env.VITE_API_BASE || '/api'
 
-// Import the parseItemData function from our composable
-const { parseItemData } = useNavigation()
+// Import the parseItemData and fetchJSON function from our composable
+const { parseItemData, fetchJSON } = useNavigation()
 
 const active = ref({ item: props.itemData?.item || null, columns: props.itemData?.columns || [] })
 const associatedRecipes = ref([])
@@ -230,12 +237,6 @@ function resolveTypeToApiPrefix() {
   if (path.startsWith('/meals')) return 'meals'
   if (path.startsWith('/fooditems')) return 'food-items' // note API hyphen
   return null
-}
-
-async function fetchJSON(path) {
-  const res = await fetch(`${API_BASE}${path}`)
-  if (!res.ok) throw new Error(`HTTP ${res.status} for ${path}`)
-  return res.json()
 }
 
 async function load() {
@@ -412,3 +413,30 @@ watch(() => route.fullPath, () => {
   load()
 })
 </script>
+
+<style scoped>
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255,255,255,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 6px solid #ccc;
+  border-top: 6px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
