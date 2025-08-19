@@ -3,9 +3,11 @@ import ItemDetails from './views/ItemDetails.vue';
 import GenericListView from './views/GenericListView.vue';
 import Home from './pages/Home.vue';
 
+import IngredientList from './pages/IngredientList.vue';
+
 const routes = [
     { path: '/', component: Home },
-    { path: '/ingredients', component: GenericListView, props: { type: 'ingredients', linkactive: true } },
+    { path: '/ingredients', component: IngredientList },
     { path: '/recipes', component: GenericListView, props: { type: 'recipes', linkactive: true } },
     { path: '/meals', component: GenericListView, props: { type: 'meals', linkactive: true } },
     { path: '/fooditems', component: GenericListView, props: { type: 'fooditems', linkactive: true } },

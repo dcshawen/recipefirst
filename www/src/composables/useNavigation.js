@@ -1,8 +1,8 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-// Base URL for API; set VITE_API_BASE in your env (e.g., http://localhost:8000)
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
+// Base URL for API; use /api proxy path for local development to avoid CORS issues
+const API_BASE = import.meta.env.VITE_API_BASE || '/api'
 
 export function useNavigation() {
   const router = useRouter()
