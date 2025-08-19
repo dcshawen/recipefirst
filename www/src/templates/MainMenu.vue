@@ -44,28 +44,7 @@ async function showIngredients() {
 }
 
 async function showRecipes() {
-  isLoading.value = true
-  try {
-    const data = await fetchJSON('/recipes')
-    const list = data?.recipes ?? []
-    if (!Array.isArray(list) || list.length === 0) return
-    const columns = removeColumns(getColumns(list[0]), [
-      'recipe_description',
-      'ingredients',
-      'instructions',
-      'recipe_fooditem_id',
-      'created_at'
-    ])
-    itemData.value = parseItemData({
-      items: list,
-      columns
-    })
-    router.push(`/recipes`)
-  } catch (e) {
-    console.error('Failed to fetch recipes', e)
-  } finally {
-    isLoading.value = false
-  }
+  router.push('/recipes')
 }
 
 async function showMeals() {
