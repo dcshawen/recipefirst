@@ -6,7 +6,10 @@
 		<v-table v-else theme="light" class="w-full">
 			<thead>
 				<tr>
-					<th v-for="column in columns" :key="column.key">
+					<th
+						v-for="column in columns" :key="column.key"
+						class="text-h6 pa-2"
+					>
 						{{ column.label }}
 					</th>
 				</tr>
