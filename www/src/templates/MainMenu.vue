@@ -1,5 +1,5 @@
 <template>
-	<nav class="flex flex-col space-y-4 p-2 bg-gray-100 min-h-screen">
+	<nav class="flex flex-col space-y-4 p-2 in-h-screen">
 <!-- 		<button @click="router.push('/')">Home</button>
 		<button @click="router.push('/ingredients')">Ingredient Details</button>
 		<button @click="router.push('/recipes')">Recipe Details</button>
@@ -9,10 +9,12 @@
 		<button @click="router.push('/categories')">Categories</button> -->
 
 		<v-list
+			class="pt-10"
 			:lines="false"
 			density="compact"
 			nav
 		>
+			<v-list-subheader>Main Menu</v-list-subheader>
 			<v-list-item
 				v-for="item in [
 					{ text: 'Home', path: '/' },
