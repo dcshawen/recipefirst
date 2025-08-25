@@ -18,11 +18,11 @@
 			<v-list-item
 				v-for="item in [
 					{ text: 'Home', path: '/' },
-					{ text: 'Ingredient Details', path: '/ingredients' },
-					{ text: 'Recipe Details', path: '/recipes' },
-					{ text: 'Meal Details', path: '/meals' },
-					{ text: 'Food Item Details', path: '/fooditems' },
-					{ text: 'Unit Types', path: '/unittypes' },
+					{ text: 'Ingredienst', path: '/ingredients' },
+					{ text: 'Recipes', path: '/recipes' },
+					{ text: 'Meals', path: '/meals' },
+					{ text: 'Food Items', path: '/fooditems' },
+					{ text: 'Units', path: '/unittypes' },
 					{ text: 'Categories', path: '/categories' }
 				]"
 				:key="item.path"

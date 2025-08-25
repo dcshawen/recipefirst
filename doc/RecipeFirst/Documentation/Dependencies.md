@@ -9,4 +9,5 @@ The following are required to install RecipeFirst.
 - nodejs
 - vuejs
 - vuetify
+	- @mdi/font (pagination icons)
 - tailwindCSS
