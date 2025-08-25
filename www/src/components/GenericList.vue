@@ -15,7 +15,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="item in items" :key="item[config.idField]">
+				<tr v-for="item in pagedItems" :key="item[config.idField]">
 					<td v-for="column in columns" :key="column.key" >
 						<template v-if="column.type === 'link'">
 							<router-link :to="{ path: `/${config.routePrefix}/${item[config.idField]}` }">
@@ -38,11 +38,20 @@
 				</tr>
 			</tbody>
 		</v-table>
+		<div class="d-flex justify-center mt-4">
+			<v-pagination
+				v-model="page"
+				:length="pageCount"
+				:total-visible="7"
+				color="primary"
+				rounded
+			/>
+		</div>
 	</div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useNavigation } from '../composables/useNavigation.js'
 
 const props = defineProps({
@@ -60,6 +69,13 @@ const isLoading = ref(false)
 const { fetchJSON } = useNavigation()
 
 const columns = computed(() => props.config.columns)
+const page = ref(1)
+const itemsPerPage = ref(10)
+const pageCount = computed(() => Math.ceil(items.value.length / itemsPerPage.value))
+const pagedItems = computed(() => {
+	const start = (page.value - 1) * itemsPerPage.value
+	return items.value.slice(start, start + itemsPerPage.value)
+})
 
 function getFieldValue(item, field) {
 	return item[field] || ''
@@ -70,6 +86,7 @@ async function fetchData() {
 	try {
 		const data = await fetchJSON(props.config.endpoint)
 		items.value = data?.[props.config.dataKey] ?? []
+		page.value = 1 // Reset to first page on new data
 	} catch (error) {
 		console.error(`Failed to fetch ${props.config.dataKey}:`, error)
 	} finally {
