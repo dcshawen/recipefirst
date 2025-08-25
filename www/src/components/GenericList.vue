@@ -42,9 +42,12 @@
 			<v-pagination
 				v-model="page"
 				:length="pageCount"
-				:total-visible="7"
+				:total-visible="4"
 				color="primary"
 				rounded
+				show-first-last-page
+				prev-icon="mdi-chevron-left"
+				next-icon="mdi-chevron-right"
 			/>
 		</div>
 	</div>
