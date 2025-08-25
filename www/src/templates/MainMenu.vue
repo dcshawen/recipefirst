@@ -18,7 +18,7 @@
 			<v-list-item
 				v-for="item in [
 					{ text: 'Home', path: '/' },
-					{ text: 'Ingredienst', path: '/ingredients' },
+					{ text: 'Ingredients', path: '/ingredients' },
 					{ text: 'Recipes', path: '/recipes' },
 					{ text: 'Meals', path: '/meals' },
 					{ text: 'Food Items', path: '/fooditems' },
