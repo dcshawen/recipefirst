@@ -5,6 +5,7 @@ This module provides:
 - Async SQLAlchemy engine configuration
 - Session factory for dependency injection
 - FastAPI dependency for database sessions
+- Support for both SQLite (development) and PostgreSQL (production)
 """
 
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
@@ -12,34 +13,48 @@ from sqlalchemy.pool import StaticPool
 from pathlib import Path
 from typing import AsyncGenerator
 import logging
+from .config import settings
 
 # Setup logging
 logger = logging.getLogger(__name__)
 
-# Construct database path
-current_dir = Path(__file__).parent
-db_path = current_dir / 'instances' / 'recipefirst.db'
-
-# Ensure instances directory exists
-db_path.parent.mkdir(parents=True, exist_ok=True)
-
-# SQLite async connection string
-DATABASE_URL = f"sqlite+aiosqlite:///{db_path}"
+# Get database URL from settings
+DATABASE_URL = settings.database_url
 
 logger.info(f"Database URL: {DATABASE_URL}")
 
-# Create async engine
-# For SQLite, we use StaticPool to ensure single connection for file locking
-engine = create_async_engine(
-    DATABASE_URL,
-    echo=False,  # Set to True for SQL query logging (useful for debugging)
-    future=True,
-    # SQLite-specific: use StaticPool for async + file-based DB
-    poolclass=StaticPool,
-    connect_args={
-        "check_same_thread": False  # Required for SQLite async
-    }
-)
+# Create async engine with database-specific configuration
+if DATABASE_URL.startswith("postgresql"):
+    # PostgreSQL configuration with connection pooling
+    engine = create_async_engine(
+        DATABASE_URL,
+        echo=False,  # Set to True for SQL query logging
+        future=True,
+        pool_size=20,  # Number of connections to maintain in the pool
+        max_overflow=40,  # Additional connections allowed beyond pool_size
+        pool_pre_ping=True,  # Verify connections before using them
+        pool_recycle=3600,  # Recycle connections after 1 hour
+    )
+    logger.info("Using PostgreSQL database with connection pooling")
+else:
+    # SQLite configuration (development/testing)
+    # Ensure instances directory exists for SQLite
+    if DATABASE_URL.startswith("sqlite"):
+        db_path_str = DATABASE_URL.replace("sqlite+aiosqlite:///", "")
+        db_path = Path(db_path_str)
+        db_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # For SQLite, we use StaticPool to ensure single connection for file locking
+    engine = create_async_engine(
+        DATABASE_URL,
+        echo=False,
+        future=True,
+        poolclass=StaticPool,  # SQLite-specific: single connection
+        connect_args={
+            "check_same_thread": False  # Required for SQLite async
+        }
+    )
+    logger.info("Using SQLite database (development mode)")
 
 # Create async session factory
 # expire_on_commit=False prevents SQLAlchemy from expiring objects after commit,

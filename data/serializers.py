@@ -8,7 +8,7 @@ JSON structure as the original raw SQL implementation for backward compatibility
 from typing import Dict, Any, List
 from datetime import datetime
 
-from models import (
+from .models import (
     Recipe, Ingredient, FoodItem, Meal, Category, UnitType,
     RecipeIngredient, RecipeInstruction, MealFoodItem
 )

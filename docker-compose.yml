@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: recipefirst-postgres
+    environment:
+      POSTGRES_USER: recipefirst
+      POSTGRES_PASSWORD: recipefirst123
+      POSTGRES_DB: recipefirst
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - recipefirst
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U recipefirst -d recipefirst"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  # FastAPI Backend
+  fastapi:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: recipefirst-fastapi
+    environment:
+      # PostgreSQL connection string
+      DATABASE_URL: postgresql+asyncpg://recipefirst:recipefirst123@postgres:5432/recipefirst
+      # CORS origins (allow localhost and container network)
+      CORS_ORIGINS: '["http://localhost", "http://localhost:80"]'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - recipefirst
+    ports:
+      - "8000:8000"  # Expose for debugging (optional in production)
+    restart: unless-stopped
+
+  # Vue.js Frontend with Nginx
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: recipefirst-nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - fastapi
+    networks:
+      - recipefirst
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  recipefirst:
+    driver: bridge
