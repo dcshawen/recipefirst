@@ -3,9 +3,10 @@
 # Usage: start-dev --server <fastapi|vuejs>
 
 SERVER=""
-VENV_PATH="/home/recipefirst/recipefirst/venv"
-FASTAPI_BIN="/home/recipefirst/recipefirst/venv/bin/fastapi"
-NPM_BIN="/usr/bin/npm"
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
+VENV_PATH="$PROJECT_ROOT/venv"
+NPM_BIN="npm"
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
@@ -25,12 +26,12 @@ fi
 
 if [[ "$SERVER" == "fastapi" ]]; then
     echo "🚀 Starting FastAPI server (accessible externally)..."
-    cd /home/recipefirst/recipefirst/data/
-    "$FASTAPI_BIN" dev server.py --host 0.0.0.0 --port 8000
+    cd "$PROJECT_ROOT/data/"
+    python -m uvicorn server:app --reload --host 0.0.0.0 --port 8000
 
 elif [[ "$SERVER" == "vuejs" ]]; then
     echo "🌐 Starting Vue.js dev server (accessible externally)..."
-    cd /home/recipefirst/recipefirst/www/
+    cd "$PROJECT_ROOT/www/"
     "$NPM_BIN" run dev -- --host 0.0.0.0 --port 5173
 
 else
