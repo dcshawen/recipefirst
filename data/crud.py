@@ -22,7 +22,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional, Dict, Any
 import logging
 
-from models import (
+from .models import (
     Recipe, Ingredient, FoodItem, Meal, Category, UnitType,
     RecipeIngredient, RecipeInstruction, MealFoodItem,
     RecipeCategory, IngredientCategory, MealCategory
@@ -435,7 +435,9 @@ async def create_food_item(db: AsyncSession, food_item_data: Dict[str, Any]) -> 
     db.add(food_item)
     await db.commit()
     await db.refresh(food_item)
-    return food_item
+
+    # Reload with relationships to prevent lazy loading issues
+    return await get_food_item_by_id(db, food_item.fooditem_id)
 
 
 async def update_food_item(db: AsyncSession, fooditem_id: int, food_item_data: Dict[str, Any]) -> Optional[FoodItem]:
@@ -450,7 +452,9 @@ async def update_food_item(db: AsyncSession, fooditem_id: int, food_item_data: D
 
     await db.commit()
     await db.refresh(food_item)
-    return food_item
+
+    # Reload with relationships to prevent lazy loading issues
+    return await get_food_item_by_id(db, fooditem_id)
 
 
 async def delete_food_item(db: AsyncSession, fooditem_id: int) -> bool:
@@ -685,6 +689,7 @@ async def search_food_items(db: AsyncSession, q: str) -> List[FoodItem]:
                 FoodItem.fooditem_description.like(f"%{q}%")
             )
         )
+        .options(selectinload(FoodItem.recipes))
     )
     result = await db.execute(stmt)
     return result.scalars().all()
