@@ -18,19 +18,20 @@ export default defineConfig({
     },
   },
   server: {
+    host: '0.0.0.0',
     allowedHosts: [
       "ec2-99-79-147-109.ca-central-1.compute.amazonaws.com"
     ],
-		watch: {
-			usePolling: true
-		},
-      proxy: {
-        '/api': {
-          target: 'http://localhost:8000',
-          changeOrigin: true,
-          secure: false,
-          rewrite: (path) => path.replace(/^\/api/, '')
-        }
-      },
+    watch: {
+      usePolling: true
+    },
+    proxy: {
+      '/api': {
+        target: 'http://fastapi:8000',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    },
   }
 })
