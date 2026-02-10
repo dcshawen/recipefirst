@@ -1,6 +1,6 @@
 <template>
   <div class="p-6">
-    <v-breadcrumbs :items="breadcrumbs" divider="›" class="px-0"></v-breadcrumbs>
+    <v-breadcrumbs :items="breadcrumbs" divider="›" class="px-0"></v-breadcrumbs>MEAL
 
     <MealForm
       :loading="loading"

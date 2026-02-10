@@ -32,6 +32,8 @@ services:
       DATABASE_URL: postgresql+asyncpg://recipefirst:recipefirst123@postgres:5432/recipefirst
       # CORS origins (allow localhost and container network)
       CORS_ORIGINS: '["http://localhost", "http://localhost:80"]'
+      # Enable hot reload in development
+      RELOAD: "true"
     depends_on:
       postgres:
         condition: service_healthy
@@ -39,6 +41,13 @@ services:
       - recipefirst
     ports:
       - "8000:8000"  # Expose for debugging (optional in production)
+    volumes:
+      # Mount code for hot reloading
+      - ./data:/app/data
+      - ./alembic:/app/alembic
+      - ./alembic.ini:/app/alembic.ini
+      - ./seed_data.py:/app/seed_data.py
+      - ./migrate_data.py:/app/migrate_data.py
     restart: unless-stopped
 
   # Vue.js Frontend with Nginx
