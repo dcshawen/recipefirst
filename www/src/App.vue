@@ -28,6 +28,7 @@ function updateLoading(loading) {
       @updateLoading="updateLoading"
     />
     <router-view
+			class="w-[60%] p-4"
       :itemData="itemData" />
     <div v-if="isLoading" class="loading-overlay">
       <div class="spinner"></div>

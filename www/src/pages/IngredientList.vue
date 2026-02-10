@@ -1,9 +1,23 @@
 <template>
-	<GenericList :config="ingredientConfig" />
+	<div>
+		<GenericList :config="ingredientConfig" />
+		<v-btn
+			color="primary"
+			icon="mdi-plus"
+			size="large"
+			position="fixed"
+			location="bottom right"
+			class="mb-16 mr-4"
+			@click="navigateToCreate"
+		></v-btn>
+	</div>
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
 import GenericList from '../components/GenericList.vue'
+
+const router = useRouter()
 
 const ingredientConfig = {
 	endpoint: '/ingredients',
@@ -24,6 +38,10 @@ const ingredientConfig = {
 			type: 'date'
 		}
 	]
+}
+
+const navigateToCreate = () => {
+	router.push('/ingredients/create')
 }
 </script>
 
