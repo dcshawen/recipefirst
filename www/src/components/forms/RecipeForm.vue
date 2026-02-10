@@ -1,7 +1,7 @@
 <template>
   <v-card class="mx-auto" max-width="1000">
     <v-card-title class="text-h5 py-4">
-      Create New Recipe
+      {{ isEditMode ? 'Edit' : 'Create New' }} Recipe
     </v-card-title>
 
     <v-divider></v-divider>
@@ -184,7 +184,7 @@
       </v-btn>
       <v-spacer></v-spacer>
       <v-btn color="primary" variant="elevated" @click="handleSubmit" :loading="loading">
-        Create Recipe
+        {{ isEditMode ? 'Update' : 'Create' }} Recipe
       </v-btn>
     </v-card-actions>
 
@@ -251,23 +251,29 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 
 const props = defineProps({
   loading: Boolean,
-  error: String
+  error: String,
+  initialData: {
+    type: Object,
+    default: null
+  }
 })
 
 const emit = defineEmits(['submit', 'cancel'])
+
+const isEditMode = computed(() => !!props.initialData)
 
 const API_BASE = import.meta.env.VITE_API_BASE || '/api'
 
 const formRef = ref(null)
 const formData = ref({
-  name: '',
-  description: '',
-  fooditem_id: null,
-  category_id: []
+  name: props.initialData?.name || '',
+  description: props.initialData?.description || '',
+  fooditem_id: props.initialData?.fooditem_id || null,
+  category_id: props.initialData?.category_id || []
 })
 
 // Data lists
@@ -282,19 +288,67 @@ const loadingIngredients = ref(false)
 const loadingUnitTypes = ref(false)
 const loadingCategories = ref(false)
 
-// Ingredients section
-const ingredients = ref([
-  {
-    source: null, // Will be {id, name, type}
-    ri_quantity: null,
-    ri_unit_type_id: null
+// Helper function to initialize ingredients from initialData
+const initializeIngredients = () => {
+  if (props.initialData?.ingredients && Array.isArray(props.initialData.ingredients)) {
+    return props.initialData.ingredients.map(ing => {
+      // Determine if it's an ingredient or food item
+      if (ing.ri_ingredient_id) {
+        return {
+          source: {
+            id: `ingredient_${ing.ri_ingredient_id}`,
+            name: `${ing.ingredient_name || 'Unknown'} (ingredient)`,
+            type: 'ingredient',
+            originalId: ing.ri_ingredient_id
+          },
+          ri_quantity: ing.ri_quantity,
+          ri_unit_type_id: ing.ri_unit_type_id
+        }
+      } else if (ing.ri_fooditem_id) {
+        return {
+          source: {
+            id: `fooditem_${ing.ri_fooditem_id}`,
+            name: `${ing.fooditem_name || 'Unknown'} (food item)`,
+            type: 'fooditem',
+            originalId: ing.ri_fooditem_id
+          },
+          ri_quantity: ing.ri_quantity,
+          ri_unit_type_id: ing.ri_unit_type_id
+        }
+      }
+      // Fallback for malformed data
+      return {
+        source: null,
+        ri_quantity: ing.ri_quantity || null,
+        ri_unit_type_id: ing.ri_unit_type_id || null
+      }
+    })
   }
-])
+  return [
+    {
+      source: null,
+      ri_quantity: null,
+      ri_unit_type_id: null
+    }
+  ]
+}
+
+// Helper function to initialize instructions from initialData
+const initializeInstructions = () => {
+  if (props.initialData?.instructions && Array.isArray(props.initialData.instructions)) {
+    return props.initialData.instructions.map(inst => ({
+      step_number: inst.step_number,
+      instruction_text: inst.instruction_text || ''
+    }))
+  }
+  return [{ step_number: 1, instruction_text: '' }]
+}
+
+// Ingredients section
+const ingredients = ref(initializeIngredients())
 
 // Instructions section
-const instructions = ref([
-  { step_number: 1, instruction_text: '' }
-])
+const instructions = ref(initializeInstructions())
 
 // Inline creation dialogs
 const showCreateFoodItemDialog = ref(false)
@@ -530,4 +584,58 @@ onMounted(() => {
   loadUnitTypes()
   loadCategories()
 })
+
+// Watch for initialData changes (handles async loading)
+watch(() => props.initialData, (newData) => {
+  if (newData) {
+    formData.value = {
+      name: newData.name || '',
+      description: newData.description || '',
+      fooditem_id: newData.fooditem_id || null,
+      category_id: newData.category_id || []
+    }
+
+    // Update ingredients from the new data
+    if (newData.ingredients && Array.isArray(newData.ingredients)) {
+      ingredients.value = newData.ingredients.map(ing => {
+        if (ing.ri_ingredient_id) {
+          return {
+            source: {
+              id: `ingredient_${ing.ri_ingredient_id}`,
+              name: `${ing.ingredient_name || 'Unknown'} (ingredient)`,
+              type: 'ingredient',
+              originalId: ing.ri_ingredient_id
+            },
+            ri_quantity: ing.ri_quantity,
+            ri_unit_type_id: ing.ri_unit_type_id
+          }
+        } else if (ing.ri_fooditem_id) {
+          return {
+            source: {
+              id: `fooditem_${ing.ri_fooditem_id}`,
+              name: `${ing.fooditem_name || 'Unknown'} (food item)`,
+              type: 'fooditem',
+              originalId: ing.ri_fooditem_id
+            },
+            ri_quantity: ing.ri_quantity,
+            ri_unit_type_id: ing.ri_unit_type_id
+          }
+        }
+        return {
+          source: null,
+          ri_quantity: ing.ri_quantity || null,
+          ri_unit_type_id: ing.ri_unit_type_id || null
+        }
+      })
+    }
+
+    // Update instructions from the new data
+    if (newData.instructions && Array.isArray(newData.instructions)) {
+      instructions.value = newData.instructions.map(inst => ({
+        step_number: inst.step_number,
+        instruction_text: inst.instruction_text || ''
+      }))
+    }
+  }
+}, { immediate: true })
 </script>

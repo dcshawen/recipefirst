@@ -1,7 +1,7 @@
 <template>
   <v-card class="mx-auto" max-width="800">
     <v-card-title class="text-h5 py-4">
-      Create New Category
+      {{ isEditMode ? 'Edit' : 'Create New' }} Category
     </v-card-title>
 
     <v-divider></v-divider>
@@ -46,7 +46,7 @@
       </v-btn>
       <v-spacer></v-spacer>
       <v-btn color="primary" variant="elevated" @click="handleSubmit" :loading="loading">
-        Create Category
+        {{ isEditMode ? 'Update' : 'Create' }} Category
       </v-btn>
     </v-card-actions>
 
@@ -57,26 +57,43 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 
 const props = defineProps({
   loading: Boolean,
-  error: String
+  error: String,
+  initialData: {
+    type: Object,
+    default: null
+  }
 })
 
 const emit = defineEmits(['submit', 'cancel'])
+
+const isEditMode = computed(() => !!props.initialData)
 
 const API_BASE = import.meta.env.VITE_API_BASE || '/api'
 
 const formRef = ref(null)
 const formData = ref({
-  category_name: '',
-  category_description: '',
-  parent_category_id: null
+  category_name: props.initialData?.category_name || '',
+  category_description: props.initialData?.category_description || '',
+  parent_category_id: props.initialData?.parent_category_id || null
 })
 
 const categories = ref([])
 const loadingCategories = ref(false)
+
+// Watch for initialData changes
+watch(() => props.initialData, (newData) => {
+  if (newData) {
+    formData.value = {
+      category_name: newData.category_name || '',
+      category_description: newData.category_description || '',
+      parent_category_id: newData.parent_category_id || null
+    }
+  }
+}, { immediate: true })
 
 const loadCategories = async () => {
   loadingCategories.value = true

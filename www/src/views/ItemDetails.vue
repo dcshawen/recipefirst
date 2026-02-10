@@ -1,7 +1,15 @@
 <template>
   <div v-if="active.item" class="p-4 m-6 bg-gray-100 rounded h-fit w-[90%]">
-    <!-- Delete Button -->
-    <div class="flex justify-end mb-4">
+    <!-- Action Buttons -->
+    <div class="flex justify-end gap-2 mb-4">
+      <v-btn
+        color="primary"
+        variant="elevated"
+        @click="navigateToEdit"
+        prepend-icon="mdi-pencil"
+      >
+        Edit
+      </v-btn>
       <v-btn
         color="error"
         variant="elevated"
@@ -347,6 +355,30 @@ function goToFoodItem(id) {
 
 function goToIngredient(id) {
   router.push(`/ingredients/${id}`)
+}
+
+// Navigate to edit page
+function navigateToEdit() {
+  const id = route.params.id
+  const prefix = resolveTypeToApiPrefix()
+
+  if (!prefix || !id) {
+    console.error('Cannot determine entity type or ID for editing')
+    return
+  }
+
+  // Map frontend routes to edit routes
+  const routeMap = {
+    'ingredients': '/ingredients',
+    'recipes': '/recipes',
+    'meals': '/meals',
+    'food-items': '/fooditems',
+    'unit-types': '/unittypes',
+    'categories': '/categories'
+  }
+
+  const basePath = routeMap[prefix] || `/${prefix}`
+  router.push(`${basePath}/${id}/edit`)
 }
 
 // Delete the current item

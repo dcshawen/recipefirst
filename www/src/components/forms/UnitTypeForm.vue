@@ -1,7 +1,7 @@
 <template>
   <v-card class="mx-auto" max-width="800">
     <v-card-title class="text-h5 py-4">
-      Create New Unit Type
+      {{ isEditMode ? 'Edit' : 'Create New' }} Unit Type
     </v-card-title>
 
     <v-divider></v-divider>
@@ -43,7 +43,7 @@
         @click="handleSubmit"
         :loading="loading"
       >
-        Create Unit Type
+        {{ isEditMode ? 'Update' : 'Create' }} Unit Type
       </v-btn>
     </v-card-actions>
 
@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, computed } from 'vue'
 
 const props = defineProps({
   loading: {
@@ -70,15 +70,30 @@ const props = defineProps({
   error: {
     type: String,
     default: null
+  },
+  initialData: {
+    type: Object,
+    default: null
   }
 })
 
 const emit = defineEmits(['submit', 'cancel'])
 
+const isEditMode = computed(() => !!props.initialData)
+
 const formRef = ref(null)
 const formData = ref({
-  unit_type: ''
+  unit_type: props.initialData?.unit_type || ''
 })
+
+// Watch for initialData changes
+watch(() => props.initialData, (newData) => {
+  if (newData) {
+    formData.value = {
+      unit_type: newData.unit_type || ''
+    }
+  }
+}, { immediate: true })
 
 const handleSubmit = async () => {
   const { valid } = await formRef.value.validate()
