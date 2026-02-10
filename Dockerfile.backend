@@ -1,0 +1,45 @@
+FROM python:3.10-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies and build tools
+RUN apt-get update && apt-get install -y \
+    curl \
+    gcc \
+    g++ \
+    python3-dev \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy Alembic configuration
+COPY alembic.ini .
+COPY alembic/ ./alembic/
+
+# Copy application code
+COPY data/ ./data/
+
+# Copy utility scripts
+COPY seed_data.py .
+COPY migrate_data.py .
+
+# Expose API port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Run migrations, seed data, and start server
+# Note: In production, you might want to run migrations separately
+CMD alembic upgrade head && \
+    python seed_data.py && \
+    if [ "$RELOAD" = "true" ]; then \
+        uvicorn data.server:app --host 0.0.0.0 --port 8000 --reload; \
+    else \
+        uvicorn data.server:app --host 0.0.0.0 --port 8000; \
+    fi
