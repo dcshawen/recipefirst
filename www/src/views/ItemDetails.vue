@@ -1,5 +1,5 @@
 <template>
-  <div v-if="active.item" class="p-4 m-6 bg-gray-100 rounded h-fit w-[90%]">
+  <div v-if="active.item" class="p-4 m-6 bg-gray-100 rounded w-[70%]">
     <!-- Action Buttons -->
     <div class="flex justify-end gap-2 mb-4">
       <v-btn
