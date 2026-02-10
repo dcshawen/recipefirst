@@ -38,4 +38,8 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 # Note: In production, you might want to run migrations separately
 CMD alembic upgrade head && \
     python seed_data.py && \
-    uvicorn data.server:app --host 0.0.0.0 --port 8000
+    if [ "$RELOAD" = "true" ]; then \
+        uvicorn data.server:app --host 0.0.0.0 --port 8000 --reload; \
+    else \
+        uvicorn data.server:app --host 0.0.0.0 --port 8000; \
+    fi

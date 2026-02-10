@@ -279,16 +279,12 @@ async def create_category(
     session: AsyncSession = Depends(get_db)
 ):
     """Create a new category."""
-    # Map frontend field names to database field names
-    mapped_data = {}
-    if 'name' in category_data:
-        mapped_data['category_name'] = category_data['name']
-    if 'description' in category_data:
-        mapped_data['category_description'] = category_data['description']
-    if 'parent_category_id' in category_data:
-        mapped_data['parent_category_id'] = category_data['parent_category_id']
+    # Frontend already sends correct field names (category_name, category_description, parent_category_id)
+    # No mapping needed
+    if 'category_name' not in category_data or not category_data['category_name']:
+        raise HTTPException(status_code=400, detail="Category name is required")
 
-    category = await crud.create_category(session, mapped_data)
+    category = await crud.create_category(session, category_data)
     return serializers.serialize_category(category)
 
 
@@ -299,16 +295,9 @@ async def update_category(
     session: AsyncSession = Depends(get_db)
 ):
     """Update an existing category."""
-    # Map frontend field names to database field names
-    mapped_data = {}
-    if 'name' in category_data:
-        mapped_data['category_name'] = category_data['name']
-    if 'description' in category_data:
-        mapped_data['category_description'] = category_data['description']
-    if 'parent_category_id' in category_data:
-        mapped_data['parent_category_id'] = category_data['parent_category_id']
-
-    updated = await crud.update_category(session, id, mapped_data)
+    # Frontend already sends correct field names (category_name, category_description, parent_category_id)
+    # No mapping needed
+    updated = await crud.update_category(session, id, category_data)
     if not updated:
         raise HTTPException(status_code=404, detail="Category not found")
     return {"message": "Category updated successfully"}
@@ -434,20 +423,12 @@ async def create_meal(
     session: AsyncSession = Depends(get_db)
 ):
     """Create a new meal."""
-    # Map frontend field names to database field names
-    mapped_data = {}
-    if 'name' in meal_data:
-        mapped_data['meal_name'] = meal_data['name']
-    if 'description' in meal_data:
-        mapped_data['meal_description'] = meal_data['description']
+    # Frontend already sends correct field names (meal_name, meal_description, fooditem_ids, category_ids)
+    # No mapping needed
+    if 'meal_name' not in meal_data or not meal_data['meal_name']:
+        raise HTTPException(status_code=400, detail="Meal name is required")
 
-    # Pass through nested data as-is
-    if 'fooditem_ids' in meal_data:
-        mapped_data['fooditem_ids'] = meal_data['fooditem_ids']
-    if 'category_ids' in meal_data:
-        mapped_data['category_ids'] = meal_data['category_ids']
-
-    meal = await crud.create_meal(session, mapped_data)
+    meal = await crud.create_meal(session, meal_data)
     return serializers.serialize_meal(meal)
 
 
@@ -458,20 +439,9 @@ async def update_meal(
     session: AsyncSession = Depends(get_db)
 ):
     """Update an existing meal."""
-    # Map frontend field names to database field names
-    mapped_data = {}
-    if 'name' in meal_data:
-        mapped_data['meal_name'] = meal_data['name']
-    if 'description' in meal_data:
-        mapped_data['meal_description'] = meal_data['description']
-
-    # Pass through nested data as-is
-    if 'fooditem_ids' in meal_data:
-        mapped_data['fooditem_ids'] = meal_data['fooditem_ids']
-    if 'category_ids' in meal_data:
-        mapped_data['category_ids'] = meal_data['category_ids']
-
-    updated = await crud.update_meal(session, id, mapped_data)
+    # Frontend already sends correct field names (meal_name, meal_description, fooditem_ids, category_ids)
+    # No mapping needed
+    updated = await crud.update_meal(session, id, meal_data)
     if not updated:
         raise HTTPException(status_code=404, detail="Meal not found")
     return {"message": "Meal updated successfully"}
