@@ -209,6 +209,24 @@ async def search_recipes(
 ):
     return {"results": db.search_recipes(q)}
 
+@router.get("/search")
+async def omni_search(
+    q: str = Query(..., description="Search query", min_length=1, max_length=100)
+):
+    """
+    Unified search across all entity types.
+    Returns results grouped by type with limit per type.
+    """
+    return {
+        "query": q,
+        "results": {
+            "recipes": db.search_recipes(q)[:5],
+            "meals": db.search_meals(q)[:5],
+            "food_items": db.search_food_items(q)[:5],
+            "ingredients": db.search_ingredients(q)[:5]
+        }
+    }
+
 @router.get("/recipes/category/{category_id}")
 async def get_recipes_by_category(category_id: int = Path(..., gt=0)):
     return {"recipes": db.get_recipes_by_category(category_id)}

@@ -786,6 +786,27 @@ def search_recipes(q):
         rows = conn.execute("SELECT * FROM Recipe WHERE recipe_name LIKE ?", (f"%{q}%",)).fetchall()
         return [dict(row) for row in rows]
 
+def search_meals(q):
+    db_path = _get_db_path()
+    with sqlite3.connect(db_path) as conn:
+        conn.row_factory = sqlite3.Row
+        rows = conn.execute("SELECT * FROM Meal WHERE meal_name LIKE ? OR meal_description LIKE ?", (f"%{q}%", f"%{q}%")).fetchall()
+        return [dict(row) for row in rows]
+
+def search_food_items(q):
+    db_path = _get_db_path()
+    with sqlite3.connect(db_path) as conn:
+        conn.row_factory = sqlite3.Row
+        rows = conn.execute("SELECT * FROM FoodItem WHERE fooditem_name LIKE ? OR fooditem_description LIKE ?", (f"%{q}%", f"%{q}%")).fetchall()
+        return [dict(row) for row in rows]
+
+def search_ingredients(q):
+    db_path = _get_db_path()
+    with sqlite3.connect(db_path) as conn:
+        conn.row_factory = sqlite3.Row
+        rows = conn.execute("SELECT * FROM Ingredient WHERE ingredient_name LIKE ? OR ingredient_description LIKE ?", (f"%{q}%", f"%{q}%")).fetchall()
+        return [dict(row) for row in rows]
+
 def get_recipes_by_category(category_id):
     db_path = _get_db_path()
     with sqlite3.connect(db_path) as conn:
