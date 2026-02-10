@@ -31,7 +31,7 @@ services:
       # PostgreSQL connection string
       DATABASE_URL: postgresql+asyncpg://recipefirst:recipefirst123@postgres:5432/recipefirst
       # CORS origins (allow localhost and container network)
-      CORS_ORIGINS: '["http://localhost", "http://localhost:80"]'
+      CORS_ORIGINS: '["http://localhost:5173", "http://localhost"]'
       # Enable hot reload in development
       RELOAD: "true"
     depends_on:
@@ -50,18 +50,26 @@ services:
       - ./migrate_data.py:/app/migrate_data.py
     restart: unless-stopped
 
-  # Vue.js Frontend with Nginx
-  nginx:
+  # Vue.js Frontend with Vite Dev Server
+  frontend:
     build:
       context: .
-      dockerfile: Dockerfile.frontend
-    container_name: recipefirst-nginx
+      dockerfile: Dockerfile.frontend.dev
+    container_name: recipefirst-frontend
     ports:
-      - "80:80"
+      - "5173:5173"
     depends_on:
       - fastapi
     networks:
       - recipefirst
+    volumes:
+      # Mount source code for hot reloading
+      - ./www/src:/app/src
+      - ./www/public:/app/public
+      - ./www/index.html:/app/index.html
+      - ./www/vite.config.js:/app/vite.config.js
+    environment:
+      - VITE_API_URL=http://localhost:8000
     restart: unless-stopped
 
 volumes:

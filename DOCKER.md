@@ -1,9 +1,9 @@
-# RecipeFirst Docker Deployment Guide
+# RecipeFirst Docker Development Guide
 
 This guide explains how to run RecipeFirst using Docker Compose with a 3-container architecture:
-- **PostgreSQL** - Production database
-- **FastAPI** - Backend API server
-- **Nginx** - Frontend web server serving Vue.js SPA and proxying API requests
+- **PostgreSQL** - Development database
+- **FastAPI** - Backend API server with hot-reload
+- **Frontend** - Vite dev server with hot-reload (HMR)
 
 ## Prerequisites
 
@@ -27,8 +27,8 @@ This will:
 2. Build and start FastAPI container (waits for PostgreSQL to be healthy)
 3. Run Alembic migrations automatically
 4. Seed database with starter data (units, categories, ingredients)
-5. Start the FastAPI server
-6. Build and start Nginx container serving the Vue.js frontend
+5. Start the FastAPI server with hot-reload
+6. Build and start frontend container with Vite dev server (hot-reload enabled)
 
 **First-time startup includes:**
 - 21 measurement units (cup, tablespoon, gram, etc.)
@@ -39,9 +39,9 @@ The database is automatically initialized and ready to use!
 
 ### 2. Access the Application
 
-- **Frontend**: http://localhost
-- **API**: http://localhost/api (proxied to FastAPI)
-- **API Direct**: http://localhost:8000 (FastAPI container, for debugging)
+- **Frontend**: http://localhost:5173 (Vite dev server with hot-reload)
+- **Backend API**: http://localhost:8000
+- **API Docs**: http://localhost:8000/docs
 
 ### 3. View Logs
 
@@ -50,9 +50,9 @@ The database is automatically initialized and ready to use!
 docker-compose logs -f
 
 # View specific service logs
+docker-compose logs -f frontend
 docker-compose logs -f fastapi
 docker-compose logs -f postgres
-docker-compose logs -f nginx
 ```
 
 ### 4. Stop Containers
@@ -81,6 +81,36 @@ docker-compose up --build -d
 ```
 
 **Note:** The database seed data is idempotent - it will only add starter data if the database is empty. Rebuilding containers without removing volumes (`-v`) will keep your existing data.
+
+## Hot Reload Development
+
+Both the backend and frontend support hot-reload for rapid development:
+
+### Frontend (Vite)
+- Edit files in `www/src/`
+- Browser automatically updates thanks to Vite's Hot Module Replacement (HMR)
+- Source files are mounted as volumes, so changes reflect immediately
+
+### Backend (FastAPI)
+- Edit files in `data/`
+- FastAPI automatically restarts when Python files change
+- Source files are mounted as volumes
+
+### Clearing Browser Cache
+
+If you see old content after stopping containers (this indicates browser cache, not actual running services):
+1. Hard refresh: `Ctrl+Shift+R` (Windows/Linux) or `Cmd+Shift+R` (Mac)
+2. Clear cache in browser dev tools (F12 → Application → Clear storage)
+3. Or use incognito/private browsing mode
+
+**To verify nothing is running:**
+```bash
+# Check Docker containers
+docker ps -a
+
+# Check ports (should show nothing on 5173 or 8000)
+netstat -an | grep -E ":(5173|8000)" | grep LISTEN
+```
 
 ## Data Migration from SQLite
 
@@ -119,9 +149,10 @@ Access the application at http://localhost and verify your data is present.
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  Nginx (Port 80)                                    │
-│  - Serves Vue.js SPA                                │
+│  Frontend (Port 5173)                               │
+│  - Vite dev server with HMR                         │
 │  - Proxies /api/* to FastAPI:8000                   │
+│  - Source mounted for hot-reload                    │
 └─────────────────┬───────────────────────────────────┘
                   │
                   ▼
@@ -130,6 +161,7 @@ Access the application at http://localhost and verify your data is present.
 │  - REST API endpoints                               │
 │  - SQLAlchemy ORM + async                           │
 │  - Auto-runs Alembic migrations on startup          │
+│  - Source mounted for hot-reload                    │
 └─────────────────┬───────────────────────────────────┘
                   │
                   ▼
@@ -252,9 +284,10 @@ docker-compose exec fastapi alembic history
 
 ### Frontend Can't Reach API
 
-1. Check nginx configuration: `nginx.conf`
+1. Check Vite proxy configuration in `www/vite.config.js`
 2. Verify API is running: `curl http://localhost:8000/health`
-3. Check nginx logs: `docker-compose logs nginx`
+3. Check frontend logs: `docker-compose logs frontend`
+4. Ensure containers are on same network: `docker network inspect recipefirst_recipefirst`
 
 ### Reset Everything
 
@@ -266,31 +299,35 @@ docker-compose down -v --rmi all
 docker-compose up --build
 ```
 
-## Scaling
+## Production Deployment
 
-### Horizontal Scaling (Multiple FastAPI Containers)
+This setup is for **development only**. For production:
 
-```bash
-# Start 3 FastAPI containers
-docker-compose up -d --scale fastapi=3
+- Use `Dockerfile.frontend` (builds static files served by nginx)
+- Create a separate `docker-compose.prod.yml`  
+- Remove volume mounts for source code
+- Disable hot-reload on backend (`RELOAD: "false"`)
+- Set appropriate CORS origins
+- Enable HTTPS/SSL
+- Use environment-specific configuration
 
-# Update nginx.conf to use upstream load balancing:
-upstream fastapi_backend {
-    server fastapi:8000;
-}
-```
-
-Note: Requires nginx configuration changes for proper load balancing.
+Production would use a multi-stage build that compiles Vue.js to static files and serves them via nginx on port 80.
 
 ## Health Checks
 
-All containers include health checks:
+Containers include health checks:
 
 - **PostgreSQL**: `pg_isready` every 10s
-- **FastAPI**: `curl http://localhost:8000/health` every 30s
-- **Nginx**: Built-in nginx health check
+- **FastAPI**: Application startup validation
+- **Frontend**: Vite dev server (auto-restarts on failure)
 
-View health status:
+View container status:
+
+- **PostgreSQL**: `pg_isready` every 10s
+- **FastAPI**: Application health endpoint
+- **Frontend**: Vite dev server (no health check needed in dev)
+
+View container status:
 ```bash
 docker-compose ps
 ```
