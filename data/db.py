@@ -183,6 +183,9 @@ def create_recipe(recipe_data):
     # Map incoming keys to DB columns
     mapped_data = {}
     category_ids = None
+    ingredients = None
+    instructions = None
+
     # recipe_fooditem_id is required and must be unique
     for k, v in recipe_data.items():
         if k == "name":
@@ -193,11 +196,17 @@ def create_recipe(recipe_data):
             mapped_data["recipe_fooditem_id"] = v
         elif k == "category_id":
             category_ids = v
+        elif k == "ingredients":
+            ingredients = v
+        elif k == "instructions":
+            instructions = v
         else:
             mapped_data[k] = v
+
     # Ensure required fields are present
     if "recipe_name" not in mapped_data or "recipe_fooditem_id" not in mapped_data:
         raise ValueError("Missing required fields: recipe_name and recipe_fooditem_id")
+
     with sqlite3.connect(db_path) as conn:
         columns = ', '.join(mapped_data.keys())
         placeholders = ', '.join(['?'] * len(mapped_data))
@@ -205,6 +214,7 @@ def create_recipe(recipe_data):
         cur = conn.execute(sql, tuple(mapped_data.values()))
         conn.commit()
         recipe_id = cur.lastrowid
+
         # Handle category_id(s)
         if category_ids is not None:
             if isinstance(category_ids, (list, tuple)):
@@ -217,6 +227,35 @@ def create_recipe(recipe_data):
                     (recipe_id, cid)
                 )
             conn.commit()
+
+        # Handle ingredients
+        if ingredients is not None and isinstance(ingredients, list):
+            for ingredient in ingredients:
+                conn.execute(
+                    """INSERT INTO RecipeIngredient
+                       (ri_recipe_id, ri_ingredient_id, ri_fooditem_id, ri_quantity, ri_unit_type_id)
+                       VALUES (?, ?, ?, ?, ?)""",
+                    (recipe_id,
+                     ingredient.get('ri_ingredient_id'),
+                     ingredient.get('ri_fooditem_id'),
+                     ingredient.get('ri_quantity'),
+                     ingredient.get('ri_unit_type_id'))
+                )
+            conn.commit()
+
+        # Handle instructions
+        if instructions is not None and isinstance(instructions, list):
+            for instruction in instructions:
+                conn.execute(
+                    """INSERT INTO RecipeInstruction
+                       (recipe_id, step_number, instruction_text)
+                       VALUES (?, ?, ?)""",
+                    (recipe_id,
+                     instruction.get('step_number'),
+                     instruction.get('instruction_text'))
+                )
+            conn.commit()
+
         return get_recipe_by_id(recipe_id)
 
 def update_recipe(recipe_id, recipe_data):
@@ -522,13 +561,42 @@ def create_meal(meal_data):
     # meal_name is required
     if "meal_name" not in meal_data:
         raise ValueError("Missing required field: meal_name")
+
+    # Extract fooditem_ids and category_ids
+    fooditem_ids = meal_data.pop('fooditem_ids', None)
+    category_ids = meal_data.pop('category_ids', None)
+
     with sqlite3.connect(db_path) as conn:
         columns = ', '.join(meal_data.keys())
         placeholders = ', '.join(['?'] * len(meal_data))
         sql = f"INSERT INTO Meal ({columns}) VALUES ({placeholders})"
         cur = conn.execute(sql, tuple(meal_data.values()))
         conn.commit()
-        return get_meal_by_id(cur.lastrowid)
+        meal_id = cur.lastrowid
+
+        # Handle food items
+        if fooditem_ids is not None and isinstance(fooditem_ids, list):
+            for fooditem_id in fooditem_ids:
+                conn.execute(
+                    """INSERT INTO MealFoodItem (mf_meal_id, mf_fooditem_id)
+                       VALUES (?, ?)""",
+                    (meal_id, fooditem_id)
+                )
+            conn.commit()
+
+        # Handle categories
+        if category_ids is not None:
+            if not isinstance(category_ids, list):
+                category_ids = [category_ids]
+            for category_id in category_ids:
+                conn.execute(
+                    """INSERT INTO MealCategory (meal_id, category_id)
+                       VALUES (?, ?)""",
+                    (meal_id, category_id)
+                )
+            conn.commit()
+
+        return get_meal_by_id(meal_id)
 
 def update_meal(meal_id, meal_data):
     db_path = _get_db_path()
