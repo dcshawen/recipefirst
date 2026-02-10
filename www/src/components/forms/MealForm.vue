@@ -1,7 +1,7 @@
 <template>
   <v-card class="mx-auto" width="100%">
     <v-card-title class="text-h5 py-4">
-      Create New Meal
+      {{ isEditMode ? 'Edit' : 'Create New' }} Meal
     </v-card-title>
 
     <v-divider></v-divider>
@@ -94,7 +94,7 @@
       </v-btn>
       <v-spacer></v-spacer>
       <v-btn color="primary" variant="elevated" @click="handleSubmit" :loading="loading">
-        Create Meal
+        {{ isEditMode ? 'Update' : 'Create' }} Meal
       </v-btn>
     </v-card-actions>
 
@@ -105,32 +105,70 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 
 const props = defineProps({
   loading: Boolean,
-  error: String
+  error: String,
+  initialData: {
+    type: Object,
+    default: null
+  }
 })
 
 const emit = defineEmits(['submit', 'cancel'])
+
+const isEditMode = computed(() => !!props.initialData)
 
 const API_BASE = import.meta.env.VITE_API_BASE || '/api'
 
 const formRef = ref(null)
 const formData = ref({
-  meal_name: '',
-  meal_description: '',
-  category_ids: []
+  meal_name: props.initialData?.meal_name || '',
+  meal_description: props.initialData?.meal_description || '',
+  category_ids: props.initialData?.category_ids || []
 })
 
-const selectedFoodItems = ref([
-  { fooditem_id: null }
-])
+// Initialize selectedFoodItems from initialData if available
+const initializeSelectedFoodItems = () => {
+  if (props.initialData?.fooditems && Array.isArray(props.initialData.fooditems)) {
+    // If we have full fooditem objects
+    return props.initialData.fooditems.map(item => ({
+      fooditem_id: item.fooditem_id
+    }))
+  } else if (props.initialData?.fooditem_ids && Array.isArray(props.initialData.fooditem_ids)) {
+    // If we just have IDs
+    return props.initialData.fooditem_ids.map(id => ({ fooditem_id: id }))
+  }
+  return [{ fooditem_id: null }]
+}
+
+const selectedFoodItems = ref(initializeSelectedFoodItems())
 
 const foodItems = ref([])
 const categories = ref([])
 const loadingFoodItems = ref(false)
 const loadingCategories = ref(false)
+
+// Watch for initialData changes (handles async loading)
+watch(() => props.initialData, (newData) => {
+  if (newData) {
+    formData.value = {
+      meal_name: newData.meal_name || '',
+      meal_description: newData.meal_description || '',
+      category_ids: newData.category_ids || []
+    }
+
+    // Update selectedFoodItems from the new data
+    if (newData.fooditems && Array.isArray(newData.fooditems)) {
+      selectedFoodItems.value = newData.fooditems.map(item => ({
+        fooditem_id: item.fooditem_id
+      }))
+    } else if (newData.fooditem_ids && Array.isArray(newData.fooditem_ids)) {
+      selectedFoodItems.value = newData.fooditem_ids.map(id => ({ fooditem_id: id }))
+    }
+  }
+}, { immediate: true })
 
 const loadFoodItems = async () => {
   loadingFoodItems.value = true

@@ -1,7 +1,7 @@
 <template>
   <v-card class="mx-auto" max-width="800">
     <v-card-title class="text-h5 py-4">
-      Create New Food Item
+      {{ isEditMode ? 'Edit' : 'Create New' }} Food Item
     </v-card-title>
 
     <v-divider></v-divider>
@@ -39,7 +39,7 @@
       </v-btn>
       <v-spacer></v-spacer>
       <v-btn color="primary" variant="elevated" @click="handleSubmit" :loading="loading">
-        Create Food Item
+        {{ isEditMode ? 'Update' : 'Create' }} Food Item
       </v-btn>
     </v-card-actions>
 
@@ -50,20 +50,36 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, computed } from 'vue'
 
 const props = defineProps({
   loading: Boolean,
-  error: String
+  error: String,
+  initialData: {
+    type: Object,
+    default: null
+  }
 })
 
 const emit = defineEmits(['submit', 'cancel'])
 
+const isEditMode = computed(() => !!props.initialData)
+
 const formRef = ref(null)
 const formData = ref({
-  fooditem_name: '',
-  fooditem_description: ''
+  fooditem_name: props.initialData?.fooditem_name || '',
+  fooditem_description: props.initialData?.fooditem_description || ''
 })
+
+// Watch for initialData changes
+watch(() => props.initialData, (newData) => {
+  if (newData) {
+    formData.value = {
+      fooditem_name: newData.fooditem_name || '',
+      fooditem_description: newData.fooditem_description || ''
+    }
+  }
+}, { immediate: true })
 
 const handleSubmit = async () => {
   const { valid } = await formRef.value.validate()
