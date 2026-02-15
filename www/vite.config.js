@@ -20,7 +20,8 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     allowedHosts: [
-      "ec2-16-52-119-18.ca-central-1.compute.amazonaws.com"
+      "ec2-16-52-119-18.ca-central-1.compute.amazonaws.com",
+			"16.52.119.18"
     ],
     watch: {
       usePolling: true
