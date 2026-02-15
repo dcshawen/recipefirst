@@ -3,30 +3,31 @@
 		<div v-if="isLoading" class="loading-overlay">
 			<div class="spinner"></div>
 		</div>
-		<v-table v-else theme="light" class="w-full">
+		<table v-else class="w-full bg-white border-collapse">
 			<thead>
-				<tr>
+				<tr class="border-b border-gray-200">
 					<th
 						v-for="column in columns" :key="column.key"
-						class="text-h6 pa-2 sortable-header"
+						class="text-left text-sm font-semibold text-gray-700 px-4 py-3 cursor-pointer select-none hover:bg-gray-50 transition-colors"
 						@click="toggleSort(column)"
 					>
-						<span class="header-content">
+						<span class="inline-flex items-center gap-1">
 							{{ column.label }}
-							<span class="sort-icon">
-								<v-icon v-if="sortBy === column.field && sortOrder === 'asc'" size="small">mdi-arrow-up</v-icon>
-								<v-icon v-else-if="sortBy === column.field && sortOrder === 'desc'" size="small">mdi-arrow-down</v-icon>
-								<v-icon v-else size="small" class="sort-inactive">mdi-unfold-more-horizontal</v-icon>
-							</span>
+							<i v-if="sortBy === column.field && sortOrder === 'asc'" class="mdi mdi-arrow-up text-sm"></i>
+							<i v-else-if="sortBy === column.field && sortOrder === 'desc'" class="mdi mdi-arrow-down text-sm"></i>
+							<i v-else class="mdi mdi-unfold-more-horizontal text-sm opacity-30"></i>
 						</span>
 					</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="item in pagedItems" :key="item[config.idField]">
-					<td v-for="column in columns" :key="column.key" >
+				<tr v-for="item in pagedItems" :key="item[config.idField]" class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+					<td v-for="column in columns" :key="column.key" class="px-4 py-3 text-sm">
 						<template v-if="column.type === 'link'">
-							<router-link :to="{ path: `/${config.routePrefix}/${item[config.idField]}` }">
+							<router-link
+								:to="{ path: `/${config.routePrefix}/${item[config.idField]}` }"
+								class="text-blue-600 hover:text-blue-800 hover:underline"
+							>
 								{{ getFieldValue(item, column.field) }}
 							</router-link>
 						</template>
@@ -45,18 +46,46 @@
 					</td>
 				</tr>
 			</tbody>
-		</v-table>
-		<div class="d-flex justify-center mt-4">
-			<v-pagination
-				v-model="page"
-				:length="pageCount"
-				:total-visible="4"
-				color="primary"
-				rounded
-				show-first-last-page
-				prev-icon="mdi-chevron-left"
-				next-icon="mdi-chevron-right"
-			/>
+		</table>
+		<!-- Pagination -->
+		<div v-if="pageCount > 1" class="flex justify-center items-center gap-1 mt-4">
+			<button
+				class="px-2 py-1 rounded text-sm hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed"
+				:disabled="page === 1"
+				@click="page = 1"
+			>
+				<i class="mdi mdi-chevron-double-left"></i>
+			</button>
+			<button
+				class="px-2 py-1 rounded text-sm hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed"
+				:disabled="page === 1"
+				@click="page = page - 1"
+			>
+				<i class="mdi mdi-chevron-left"></i>
+			</button>
+			<button
+				v-for="p in visiblePages"
+				:key="p"
+				class="w-8 h-8 rounded text-sm transition-colors"
+				:class="p === page ? 'bg-blue-600 text-white' : 'hover:bg-gray-100 text-gray-700'"
+				@click="page = p"
+			>
+				{{ p }}
+			</button>
+			<button
+				class="px-2 py-1 rounded text-sm hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed"
+				:disabled="page === pageCount"
+				@click="page = page + 1"
+			>
+				<i class="mdi mdi-chevron-right"></i>
+			</button>
+			<button
+				class="px-2 py-1 rounded text-sm hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed"
+				:disabled="page === pageCount"
+				@click="page = pageCount"
+			>
+				<i class="mdi mdi-chevron-double-right"></i>
+			</button>
 		</div>
 	</div>
 </template>
@@ -131,6 +160,22 @@ const pagedItems = computed(() => {
 	return sortedItems.value.slice(start, start + itemsPerPage.value)
 })
 
+const visiblePages = computed(() => {
+	const total = pageCount.value
+	const current = page.value
+	const maxVisible = 5
+	let start = Math.max(1, current - Math.floor(maxVisible / 2))
+	let end = Math.min(total, start + maxVisible - 1)
+	if (end - start + 1 < maxVisible) {
+		start = Math.max(1, end - maxVisible + 1)
+	}
+	const pages = []
+	for (let i = start; i <= end; i++) {
+		pages.push(i)
+	}
+	return pages
+})
+
 function getFieldValue(item, field) {
 	return item[field] || ''
 }
@@ -178,31 +223,6 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   z-index: 9999;
-}
-
-.sortable-header {
-  cursor: pointer;
-  user-select: none;
-  transition: background-color 0.2s;
-}
-
-.sortable-header:hover {
-  background-color: rgba(0, 0, 0, 0.04);
-}
-
-.header-content {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.sort-icon {
-  display: inline-flex;
-  align-items: center;
-}
-
-.sort-inactive {
-  opacity: 0.3;
 }
 
 .spinner {

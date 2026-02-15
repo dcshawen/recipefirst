@@ -1,42 +1,36 @@
 <template>
-	<nav class="flex flex-col space-y-4 p-2 in-h-screen">
-<!-- 		<button @click="router.push('/')">Home</button>
-		<button @click="router.push('/ingredients')">Ingredient Details</button>
-		<button @click="router.push('/recipes')">Recipe Details</button>
-		<button @click="router.push('/meals')">Meal Details</button>
-		<button @click="router.push('/fooditems')">Food Item Details</button>
-		<button @click="router.push('/unittypes')">Unit Types</button>
-		<button @click="router.push('/categories')">Categories</button> -->
-
-		<v-list
-			class="pt-10"
-			:lines="false"
-			density="compact"
-			nav
-		>
-			<v-list-subheader>Main Menu</v-list-subheader>
-			<v-list-item
-				v-for="item in [
-					{ text: 'Home', path: '/' },
-					{ text: 'Ingredients', path: '/ingredients' },
-					{ text: 'Recipes', path: '/recipes' },
-					{ text: 'Meals', path: '/meals' },
-					{ text: 'Food Items', path: '/fooditems' },
-					{ text: 'Units', path: '/unittypes' },
-					{ text: 'Categories', path: '/categories' }
-				]"
-				:key="item.path"
-				@click="router.push(item.path)"
-			>
-				{{ item.text }}
-			</v-list-item>
-		</v-list>
+	<nav class="flex flex-col p-2 min-h-screen">
+		<div class="pt-10">
+			<p class="px-3 py-1 text-xs font-semibold uppercase tracking-wider text-gray-500">Main Menu</p>
+			<ul class="mt-1 space-y-0.5">
+				<li
+					v-for="item in [
+						{ text: 'Home', path: '/' },
+						{ text: 'Ingredients', path: '/ingredients' },
+						{ text: 'Recipes', path: '/recipes' },
+						{ text: 'Meals', path: '/meals' },
+						{ text: 'Food Items', path: '/fooditems' },
+						{ text: 'Units', path: '/unittypes' },
+						{ text: 'Categories', path: '/categories' }
+					]"
+					:key="item.path"
+				>
+					<button
+						class="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-gray-100 transition-colors"
+						:class="{ 'bg-blue-50 text-blue-700 font-medium': route.path === item.path }"
+						@click="router.push(item.path)"
+					>
+						{{ item.text }}
+					</button>
+				</li>
+			</ul>
+		</div>
 	</nav>
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
-
+const route = useRoute()
 </script>

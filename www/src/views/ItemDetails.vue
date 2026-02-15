@@ -2,22 +2,20 @@
   <div v-if="active.item" class="p-4 m-6 bg-gray-100 rounded w-[70%]">
     <!-- Action Buttons -->
     <div class="flex justify-end gap-2 mb-4">
-      <v-btn
-        color="primary"
-        variant="elevated"
+      <button
+        class="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm"
         @click="navigateToEdit"
-        prepend-icon="mdi-pencil"
       >
+        <i class="mdi mdi-pencil"></i>
         Edit
-      </v-btn>
-      <v-btn
-        color="error"
-        variant="elevated"
+      </button>
+      <button
+        class="inline-flex items-center gap-1.5 px-4 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 transition-colors shadow-sm"
         @click="showDeleteDialog = true"
-        prepend-icon="mdi-delete"
       >
+        <i class="mdi mdi-delete"></i>
         Delete
-      </v-btn>
+      </button>
     </div>
 
     <div class="pb-3" v-for="col in active.columns" :key="col.field">
@@ -210,36 +208,34 @@
       </ul>
     </div>
 
-    <!-- Delete Confirmation Dialog -->
-    <v-dialog v-model="showDeleteDialog" max-width="500">
-      <v-card>
-        <v-card-title class="text-h5 bg-error text-white">
-          Confirm Deletion
-        </v-card-title>
-        <v-card-text class="pt-4">
+    <!-- Delete Confirmation Modal -->
+    <div v-if="showDeleteDialog" class="fixed inset-0 z-50 flex items-center justify-center">
+      <div class="fixed inset-0 bg-black/50" @click="showDeleteDialog = false"></div>
+      <div class="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+        <div class="bg-red-600 text-white px-6 py-4 rounded-t-lg">
+          <h3 class="text-lg font-semibold">Confirm Deletion</h3>
+        </div>
+        <div class="px-6 py-4">
           <p class="mb-2">Are you sure you want to delete this item?</p>
           <p class="text-red-700 font-semibold">Warning: This action cannot be undone.</p>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="grey"
-            variant="text"
+        </div>
+        <div class="flex justify-end gap-2 px-6 py-4 border-t border-gray-200">
+          <button
+            class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
             @click="showDeleteDialog = false"
           >
             No
-          </v-btn>
-          <v-btn
-            color="error"
-            variant="elevated"
+          </button>
+          <button
+            class="px-4 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 transition-colors disabled:opacity-50"
             @click="confirmDelete"
-            :loading="deleting"
+            :disabled="deleting"
           >
-            Yes
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+            {{ deleting ? 'Deleting...' : 'Yes' }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
   <div v-else class="loading-overlay">
     <div class="spinner"></div>

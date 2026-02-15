@@ -1,15 +1,12 @@
 <template>
 	<div>
 		<GenericList :config="unitTypeConfig" />
-		<v-btn
-			color="primary"
-			icon="mdi-plus"
-			size="large"
-			position="fixed"
-			location="bottom right"
-			class="mb-16 mr-4"
+		<button
+			class="fixed bottom-20 right-4 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 flex items-center justify-center text-2xl transition-colors"
 			@click="navigateToCreate"
-		></v-btn>
+		>
+			<i class="mdi mdi-plus"></i>
+		</button>
 	</div>
 </template>
 
