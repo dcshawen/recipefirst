@@ -1,20 +1,25 @@
 <template>
   <div v-if="active.item" class="page-container max-w-4xl">
     <div class="card">
-      <!-- Action Buttons -->
-      <div class="flex justify-end gap-2 p-4 border-b border-gray-100">
-        <button class="btn btn-primary btn-sm" @click="navigateToEdit">
-          <i class="mdi mdi-pencil"></i> Edit
-        </button>
-        <button class="btn btn-danger btn-sm" @click="showDeleteDialog = true">
-          <i class="mdi mdi-delete"></i> Delete
-        </button>
+
+      <!-- Header: Title + Action Buttons -->
+      <div class="flex items-center justify-between gap-4 p-4 border-b border-gray-100">
+        <span v-if="active.columns.length && active.item" class="block text-2xl font-bold text-gray-900">
+          {{ active.item[active.columns[0].field] }}
+        </span>
+        <div class="flex gap-2">
+          <button class="btn btn-primary btn-sm" @click="navigateToEdit">
+            <i class="mdi mdi-pencil"></i> Edit
+          </button>
+          <button class="btn btn-danger btn-sm" @click="showDeleteDialog = true">
+            <i class="mdi mdi-delete"></i> Delete
+          </button>
+        </div>
       </div>
 
       <div class="p-5 space-y-4">
         <div v-for="col in active.columns" :key="col.field">
-          <span v-if="col === active.columns[0]" class="block text-2xl font-bold text-gray-900">{{ active.item[col.field] }}</span>
-          <div v-else>
+          <div v-if="col !== active.columns[0]">
             <span class="form-label">{{ col.label }}</span>
             <template v-if="Array.isArray(active.item[col.field])">
               <!-- Special handling for instructions -->
