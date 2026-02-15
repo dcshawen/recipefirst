@@ -1,35 +1,33 @@
 <template>
-	<div class="flex flex-col w-full">
-		<h1 class="text-2xl px-2">{{ formattedType }}</h1>
-		<div class="flex flex-col w-full my-4">
-			<div class="flex bg-gray-100 font-bold">
-				<div
-					v-for="(column, idx) in itemData.columns"
-					:key="idx"
-					class="flex-1 px-2 py-2"
-				>
-					{{ column.label }}
-				</div>
-			</div>
-			<div
-				v-for="(item, index) in itemData.items"
-				:key="getItemId(item) || index"
-				:class="['flex bg-white transition-colors', linkactive ? 'hover:bg-gray-50 cursor-pointer' : '']"
-				@click="linkactive && navigateToItem(item)"
-			>
-				<div
-					v-for="(column, idx) in itemData.columns"
-					:key="idx"
-					class="flex-1 px-2 py-2"
-				>
-					<template v-if="Array.isArray(item[column.field])">
-						{{ item[column.field].join(' ') }}
-					</template>
-					<template v-else>
-						{{ item[column.field] }}
-					</template>
-				</div>
-			</div>
+	<div class="page-container">
+		<h1 class="text-2xl font-semibold text-gray-900 mb-4">{{ formattedType }}</h1>
+		<div class="card overflow-hidden">
+			<table class="data-table">
+				<thead>
+					<tr>
+						<th v-for="(column, idx) in itemData.columns" :key="idx">
+							{{ column.label }}
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr
+						v-for="(item, index) in itemData.items"
+						:key="getItemId(item) || index"
+						:class="linkactive ? 'cursor-pointer' : ''"
+						@click="linkactive && navigateToItem(item)"
+					>
+						<td v-for="(column, idx) in itemData.columns" :key="idx">
+							<template v-if="Array.isArray(item[column.field])">
+								{{ item[column.field].join(' ') }}
+							</template>
+							<template v-else>
+								{{ item[column.field] }}
+							</template>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 </template>

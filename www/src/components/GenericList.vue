@@ -1,89 +1,81 @@
 <template>
-	<div class="p-4 w-full">
+	<div class="page-container">
 		<div v-if="isLoading" class="loading-overlay">
 			<div class="spinner"></div>
 		</div>
-		<table v-else class="w-full bg-white border-collapse">
-			<thead>
-				<tr class="border-b border-gray-200">
-					<th
-						v-for="column in columns" :key="column.key"
-						class="text-left text-sm font-semibold text-gray-700 px-4 py-3 cursor-pointer select-none hover:bg-gray-50 transition-colors"
-						@click="toggleSort(column)"
-					>
-						<span class="inline-flex items-center gap-1">
-							{{ column.label }}
-							<i v-if="sortBy === column.field && sortOrder === 'asc'" class="mdi mdi-arrow-up text-sm"></i>
-							<i v-else-if="sortBy === column.field && sortOrder === 'desc'" class="mdi mdi-arrow-down text-sm"></i>
-							<i v-else class="mdi mdi-unfold-more-horizontal text-sm opacity-30"></i>
-						</span>
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr v-for="item in pagedItems" :key="item[config.idField]" class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-					<td v-for="column in columns" :key="column.key" class="px-4 py-3 text-sm">
-						<template v-if="column.type === 'link'">
-							<router-link
-								:to="{ path: `/${config.routePrefix}/${item[config.idField]}` }"
-								class="text-blue-600 hover:text-blue-800 hover:underline"
-							>
-								{{ getFieldValue(item, column.field) }}
-							</router-link>
-						</template>
-						<template v-else-if="column.type === 'date'">
-							{{ new Date(getFieldValue(item, column.field)).toLocaleDateString() }}
-						</template>
-						<template v-else-if="column.type === 'categories'">
-							<span v-if="item[column.field] && item[column.field].length > 0">
-								{{ item[column.field].map(cat => cat.category_name || cat.name || cat).join(', ') }}
+
+		<div v-else-if="pagedItems.length === 0" class="empty-state">
+			<i class="mdi mdi-magnify"></i>
+			<p class="text-sm">No items found.</p>
+		</div>
+
+		<div v-else class="card overflow-hidden">
+			<table class="data-table">
+				<thead>
+					<tr>
+						<th
+							v-for="column in columns" :key="column.key"
+							@click="toggleSort(column)"
+						>
+							<span class="inline-flex items-center gap-1">
+								{{ column.label }}
+								<i v-if="sortBy === column.field && sortOrder === 'asc'" class="mdi mdi-arrow-up text-xs"></i>
+								<i v-else-if="sortBy === column.field && sortOrder === 'desc'" class="mdi mdi-arrow-down text-xs"></i>
+								<i v-else class="mdi mdi-unfold-more-horizontal text-xs opacity-30"></i>
 							</span>
-							<span v-else class="text-gray-500"></span>
-						</template>
-						<template v-else>
-							{{ getFieldValue(item, column.field) }}
-						</template>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="item in pagedItems" :key="item[config.idField]">
+						<td v-for="column in columns" :key="column.key">
+							<template v-if="column.type === 'link'">
+								<router-link
+									:to="{ path: `/${config.routePrefix}/${item[config.idField]}` }"
+									class="text-brand-600 hover:text-brand-800 font-medium hover:underline"
+								>
+									{{ getFieldValue(item, column.field) }}
+								</router-link>
+							</template>
+							<template v-else-if="column.type === 'date'">
+								<span class="text-gray-500">{{ new Date(getFieldValue(item, column.field)).toLocaleDateString() }}</span>
+							</template>
+							<template v-else-if="column.type === 'categories'">
+								<span v-if="item[column.field] && item[column.field].length > 0" class="flex flex-wrap gap-1">
+									<span v-for="cat in item[column.field]" :key="cat.category_name || cat" class="chip">{{ cat.category_name || cat.name || cat }}</span>
+								</span>
+								<span v-else class="text-gray-400">&mdash;</span>
+							</template>
+							<template v-else>
+								{{ getFieldValue(item, column.field) }}
+							</template>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
 		<!-- Pagination -->
-		<div v-if="pageCount > 1" class="flex justify-center items-center gap-1 mt-4">
-			<button
-				class="px-2 py-1 rounded text-sm hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed"
-				:disabled="page === 1"
-				@click="page = 1"
-			>
+		<div v-if="pageCount > 1" class="pagination">
+			<button class="page-btn" :disabled="page === 1" @click="page = 1">
 				<i class="mdi mdi-chevron-double-left"></i>
 			</button>
-			<button
-				class="px-2 py-1 rounded text-sm hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed"
-				:disabled="page === 1"
-				@click="page = page - 1"
-			>
+			<button class="page-btn" :disabled="page === 1" @click="page = page - 1">
 				<i class="mdi mdi-chevron-left"></i>
 			</button>
 			<button
 				v-for="p in visiblePages"
 				:key="p"
-				class="w-8 h-8 rounded text-sm transition-colors"
-				:class="p === page ? 'bg-blue-600 text-white' : 'hover:bg-gray-100 text-gray-700'"
+				class="page-btn"
+				:class="{ 'is-active': p === page }"
 				@click="page = p"
 			>
 				{{ p }}
 			</button>
-			<button
-				class="px-2 py-1 rounded text-sm hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed"
-				:disabled="page === pageCount"
-				@click="page = page + 1"
-			>
+			<button class="page-btn" :disabled="page === pageCount" @click="page = page + 1">
 				<i class="mdi mdi-chevron-right"></i>
 			</button>
-			<button
-				class="px-2 py-1 rounded text-sm hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed"
-				:disabled="page === pageCount"
-				@click="page = pageCount"
-			>
+			<button class="page-btn" :disabled="page === pageCount" @click="page = pageCount">
 				<i class="mdi mdi-chevron-double-right"></i>
 			</button>
 		</div>
@@ -211,30 +203,4 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(255,255,255,0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
 
-.spinner {
-  width: 48px;
-  height: 48px;
-  border: 6px solid #ccc;
-  border-top: 6px solid #3498db;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-</style>
