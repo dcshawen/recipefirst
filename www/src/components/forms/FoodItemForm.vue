@@ -1,52 +1,53 @@
 <template>
-  <v-card class="mx-auto" max-width="800">
-    <v-card-title class="text-h5 py-4">
-      {{ isEditMode ? 'Edit' : 'Create New' }} Food Item
-    </v-card-title>
+  <div class="mx-auto max-w-3xl card">
+    <div class="card-header">
+      <h2 class="text-xl font-semibold text-gray-900">{{ isEditMode ? 'Edit' : 'Create New' }} Food Item</h2>
+    </div>
 
-    <v-divider></v-divider>
+    <div class="card-body">
+      <div class="alert alert-info mb-5">
+        <span>Recipes that produce this food item can be linked when creating or editing recipes.</span>
+      </div>
 
-    <v-card-text>
-      <v-alert type="info" variant="tonal" class="mb-4">
-        Recipes that produce this food item can be linked when creating or editing recipes.
-      </v-alert>
+      <form @submit.prevent="handleSubmit">
+        <div class="mb-5">
+          <label class="form-label">Food Item Name *</label>
+          <input
+            v-model="formData.fooditem_name"
+            type="text"
+            class="form-input"
+            :class="{ 'is-error': errors.fooditem_name }"
+          />
+          <p v-if="errors.fooditem_name" class="form-error">{{ errors.fooditem_name }}</p>
+          <p v-else class="form-hint">e.g., Bread, Pasta, Chicken Breast</p>
+        </div>
 
-      <v-form ref="formRef" @submit.prevent="handleSubmit">
-        <v-text-field
-          v-model="formData.fooditem_name"
-          label="Food Item Name *"
-          :rules="[(v) => !!v || 'Name is required']"
-          hint="e.g., Bread, Pasta, Chicken Breast"
-          persistent-hint
-          class="mb-4"
-        ></v-text-field>
+        <div class="mb-5">
+          <label class="form-label">Description</label>
+          <textarea
+            v-model="formData.fooditem_description"
+            rows="3"
+            class="form-input"
+          ></textarea>
+          <p class="form-hint">Optional description</p>
+        </div>
+      </form>
+    </div>
 
-        <v-textarea
-          v-model="formData.fooditem_description"
-          label="Description"
-          rows="3"
-          hint="Optional description"
-          persistent-hint
-        ></v-textarea>
-      </v-form>
-    </v-card-text>
-
-    <v-divider></v-divider>
-
-    <v-card-actions class="pa-4">
-      <v-btn color="grey" variant="text" @click="$emit('cancel')" :disabled="loading">
+    <div class="card-footer flex justify-between items-center">
+      <button type="button" class="btn btn-ghost" :disabled="loading" @click="$emit('cancel')">
         Cancel
-      </v-btn>
-      <v-spacer></v-spacer>
-      <v-btn color="primary" variant="elevated" @click="handleSubmit" :loading="loading">
-        {{ isEditMode ? 'Update' : 'Create' }} Food Item
-      </v-btn>
-    </v-card-actions>
+      </button>
+      <button type="button" class="btn btn-primary" :disabled="loading" @click="handleSubmit">
+        {{ loading ? 'Saving...' : (isEditMode ? 'Update' : 'Create') + ' Food Item' }}
+      </button>
+    </div>
 
-    <v-alert v-if="error" type="error" class="ma-4" closable @click:close="error = null">
-      {{ error }}
-    </v-alert>
-  </v-card>
+    <div v-if="error" class="mx-4 mb-4 alert alert-error">
+      <span>{{ error }}</span>
+      <button @click="error = null" class="text-danger-500 hover:text-danger-700"><i class="mdi mdi-close"></i></button>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -65,7 +66,7 @@ const emit = defineEmits(['submit', 'cancel'])
 
 const isEditMode = computed(() => !!props.initialData)
 
-const formRef = ref(null)
+const errors = ref({})
 const formData = ref({
   fooditem_name: props.initialData?.fooditem_name || '',
   fooditem_description: props.initialData?.fooditem_description || ''
@@ -81,9 +82,16 @@ watch(() => props.initialData, (newData) => {
   }
 }, { immediate: true })
 
+function validate() {
+  errors.value = {}
+  if (!formData.value.fooditem_name) {
+    errors.value.fooditem_name = 'Name is required'
+  }
+  return Object.keys(errors.value).length === 0
+}
+
 const handleSubmit = async () => {
-  const { valid } = await formRef.value.validate()
-  if (valid) {
+  if (validate()) {
     emit('submit', formData.value)
   }
 }

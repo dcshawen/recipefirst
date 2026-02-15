@@ -1,6 +1,12 @@
 <template>
   <div class="p-6">
-    <v-breadcrumbs :items="breadcrumbs" divider="›" class="px-0"></v-breadcrumbs>
+    <nav class="flex items-center gap-1 text-sm text-gray-500 mb-4">
+      <template v-for="(item, index) in breadcrumbs" :key="index">
+        <span v-if="index > 0" class="mx-1">›</span>
+        <router-link v-if="item.to && !item.disabled" :to="item.to" class="text-blue-600 hover:text-blue-800 hover:underline">{{ item.title }}</router-link>
+        <span v-else class="text-gray-800">{{ item.title }}</span>
+      </template>
+    </nav>
 
     <RecipeForm
       :loading="loading"
@@ -9,14 +15,14 @@
       @cancel="cancel"
     />
 
-    <v-snackbar v-model="showSuccess" color="success" timeout="3000" location="top">
+    <div v-if="showSuccess" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-green-600 text-white px-6 py-3 rounded-md shadow-lg text-sm">
       Recipe created successfully!
-    </v-snackbar>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import RecipeForm from '../components/forms/RecipeForm.vue'
 import { useEntityCreate } from '../composables/useEntityCreate'
 
@@ -31,6 +37,7 @@ const { loading, error, createEntity, cancel } = useEntityCreate('recipes', {
 })
 
 const showSuccess = ref(false)
+watch(showSuccess, (val) => { if (val) setTimeout(() => { showSuccess.value = false }, 3000) })
 
 const handleCreate = async (data) => {
   try {

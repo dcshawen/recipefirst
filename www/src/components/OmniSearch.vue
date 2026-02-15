@@ -1,124 +1,115 @@
 <template>
-  <div class="omni-search-wrapper">
-    <v-menu
-      v-model="isMenuOpen"
-      :close-on-content-click="false"
-      location="bottom"
-      offset="4"
-      max-width="600"
-      max-height="500"
+  <div class="relative w-full max-w-[400px]" ref="wrapperRef">
+    <!-- Search Input -->
+    <div class="relative">
+      <i class="mdi mdi-magnify absolute left-3 top-1/2 -translate-y-1/2 text-white/50"></i>
+      <input
+        v-model="searchQuery"
+        type="text"
+        placeholder="Search everything…"
+        class="w-full pl-9 pr-8 py-2 rounded-lg text-sm bg-white/15 text-white placeholder-white/50 border border-white/20 focus:outline-none focus:bg-white/25 focus:border-white/40 transition-colors"
+      />
+      <button
+        v-if="searchQuery"
+        @click="handleClear"
+        class="absolute right-2 top-1/2 -translate-y-1/2 text-white/50 hover:text-white"
+        aria-label="Clear search"
+      >
+        <i class="mdi mdi-close text-sm"></i>
+      </button>
+    </div>
+
+    <!-- Loading indicator -->
+    <div v-if="isSearching && searchQuery" class="dropdown p-3 text-sm text-gray-500">
+      <span class="inline-flex items-center gap-2"><i class="mdi mdi-loading mdi-spin"></i> Searching…</span>
+    </div>
+
+    <!-- Results Dropdown -->
+    <div
+      v-if="isMenuOpen && showResults && !isSearching"
+      class="dropdown max-h-[480px]"
     >
-      <template v-slot:activator="{ props }">
-        <v-text-field
-          v-model="searchQuery"
-          v-bind="props"
-          placeholder="Search recipes, meals, food items, ingredients..."
-          prepend-inner-icon="mdi-magnify"
-          variant="outlined"
-          density="compact"
-          hide-details
-          clearable
-          @click:clear="handleClear"
-          :loading="isSearching"
-          class="omni-search-field"
-        ></v-text-field>
+      <!-- No results message -->
+      <div v-if="getTotalResults() === 0 && searchQuery.length > 0" class="px-4 py-3 text-sm text-gray-500">
+        No results found for "{{ searchQuery }}"
+      </div>
+
+      <!-- Recipes -->
+      <template v-if="searchResults.recipes.length > 0">
+        <p class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-gray-400">Recipes</p>
+        <button
+          v-for="recipe in searchResults.recipes"
+          :key="`recipe-${recipe.recipe_id}`"
+          @click="navigateTo('/recipes', recipe.recipe_id)"
+          class="dropdown-item flex items-center gap-3"
+        >
+          <i class="mdi mdi-food text-brand-600"></i>
+          <div>
+            <div class="text-sm font-medium text-gray-900">{{ recipe.recipe_name }}</div>
+            <div v-if="recipe.recipe_description" class="text-xs text-gray-500">{{ truncate(recipe.recipe_description, 80) }}</div>
+          </div>
+        </button>
       </template>
 
-      <v-card v-if="showResults" max-height="480" class="overflow-y-auto">
-        <v-list>
-          <!-- No results message -->
-          <v-list-item v-if="getTotalResults() === 0 && searchQuery.length > 0 && !isSearching">
-            <v-list-item-title class="text-grey">
-              No results found for "{{ searchQuery }}"
-            </v-list-item-title>
-          </v-list-item>
+      <!-- Meals -->
+      <template v-if="searchResults.meals.length > 0">
+        <hr v-if="searchResults.recipes.length > 0" class="border-gray-100" />
+        <p class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-gray-400">Meals</p>
+        <button
+          v-for="meal in searchResults.meals"
+          :key="`meal-${meal.meal_id}`"
+          @click="navigateTo('/meals', meal.meal_id)"
+          class="dropdown-item flex items-center gap-3"
+        >
+          <i class="mdi mdi-silverware-fork-knife text-accent-600"></i>
+          <div>
+            <div class="text-sm font-medium text-gray-900">{{ meal.meal_name }}</div>
+            <div v-if="meal.meal_description" class="text-xs text-gray-500">{{ truncate(meal.meal_description, 80) }}</div>
+          </div>
+        </button>
+      </template>
 
-          <!-- Recipes -->
-          <template v-if="searchResults.recipes.length > 0">
-            <v-list-subheader>Recipes</v-list-subheader>
-            <v-list-item
-              v-for="recipe in searchResults.recipes"
-              :key="`recipe-${recipe.recipe_id}`"
-              @click="navigateTo('/recipes', recipe.recipe_id)"
-              class="cursor-pointer"
-            >
-              <template v-slot:prepend>
-                <v-icon color="primary">mdi-food</v-icon>
-              </template>
-              <v-list-item-title>{{ recipe.recipe_name }}</v-list-item-title>
-              <v-list-item-subtitle v-if="recipe.recipe_description">
-                {{ truncate(recipe.recipe_description, 80) }}
-              </v-list-item-subtitle>
-            </v-list-item>
-          </template>
+      <!-- Food Items -->
+      <template v-if="searchResults.food_items.length > 0">
+        <hr v-if="searchResults.recipes.length > 0 || searchResults.meals.length > 0" class="border-gray-100" />
+        <p class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-gray-400">Food Items</p>
+        <button
+          v-for="foodItem in searchResults.food_items"
+          :key="`fooditem-${foodItem.fooditem_id}`"
+          @click="navigateTo('/fooditems', foodItem.fooditem_id)"
+          class="dropdown-item flex items-center gap-3"
+        >
+          <i class="mdi mdi-food-apple text-amber-600"></i>
+          <div>
+            <div class="text-sm font-medium text-gray-900">{{ foodItem.fooditem_name }}</div>
+            <div v-if="foodItem.fooditem_description" class="text-xs text-gray-500">{{ truncate(foodItem.fooditem_description, 80) }}</div>
+          </div>
+        </button>
+      </template>
 
-          <!-- Meals -->
-          <template v-if="searchResults.meals.length > 0">
-            <v-divider v-if="searchResults.recipes.length > 0"></v-divider>
-            <v-list-subheader>Meals</v-list-subheader>
-            <v-list-item
-              v-for="meal in searchResults.meals"
-              :key="`meal-${meal.meal_id}`"
-              @click="navigateTo('/meals', meal.meal_id)"
-              class="cursor-pointer"
-            >
-              <template v-slot:prepend>
-                <v-icon color="success">mdi-silverware</v-icon>
-              </template>
-              <v-list-item-title>{{ meal.meal_name }}</v-list-item-title>
-              <v-list-item-subtitle v-if="meal.meal_description">
-                {{ truncate(meal.meal_description, 80) }}
-              </v-list-item-subtitle>
-            </v-list-item>
-          </template>
-
-          <!-- Food Items -->
-          <template v-if="searchResults.food_items.length > 0">
-            <v-divider v-if="searchResults.recipes.length > 0 || searchResults.meals.length > 0"></v-divider>
-            <v-list-subheader>Food Items</v-list-subheader>
-            <v-list-item
-              v-for="foodItem in searchResults.food_items"
-              :key="`fooditem-${foodItem.fooditem_id}`"
-              @click="navigateTo('/fooditems', foodItem.fooditem_id)"
-              class="cursor-pointer"
-            >
-              <template v-slot:prepend>
-                <v-icon color="warning">mdi-food-apple</v-icon>
-              </template>
-              <v-list-item-title>{{ foodItem.fooditem_name }}</v-list-item-title>
-              <v-list-item-subtitle v-if="foodItem.fooditem_description">
-                {{ truncate(foodItem.fooditem_description, 80) }}
-              </v-list-item-subtitle>
-            </v-list-item>
-          </template>
-
-          <!-- Ingredients -->
-          <template v-if="searchResults.ingredients.length > 0">
-            <v-divider v-if="getTotalResults() > searchResults.ingredients.length"></v-divider>
-            <v-list-subheader>Ingredients</v-list-subheader>
-            <v-list-item
-              v-for="ingredient in searchResults.ingredients"
-              :key="`ingredient-${ingredient.ingredient_id}`"
-              @click="navigateTo('/ingredients', ingredient.ingredient_id)"
-              class="cursor-pointer"
-            >
-              <template v-slot:prepend>
-                <v-icon color="info">mdi-nutrition</v-icon>
-              </template>
-              <v-list-item-title>{{ ingredient.ingredient_name }}</v-list-item-title>
-              <v-list-item-subtitle v-if="ingredient.ingredient_description">
-                {{ truncate(ingredient.ingredient_description, 80) }}
-              </v-list-item-subtitle>
-            </v-list-item>
-          </template>
-        </v-list>
-      </v-card>
-    </v-menu>
+      <!-- Ingredients -->
+      <template v-if="searchResults.ingredients.length > 0">
+        <hr v-if="getTotalResults() > searchResults.ingredients.length" class="border-gray-100" />
+        <p class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-gray-400">Ingredients</p>
+        <button
+          v-for="ingredient in searchResults.ingredients"
+          :key="`ingredient-${ingredient.ingredient_id}`"
+          @click="navigateTo('/ingredients', ingredient.ingredient_id)"
+          class="dropdown-item flex items-center gap-3"
+        >
+          <i class="mdi mdi-grain text-cyan-600"></i>
+          <div>
+            <div class="text-sm font-medium text-gray-900">{{ ingredient.ingredient_name }}</div>
+            <div v-if="ingredient.ingredient_description" class="text-xs text-gray-500">{{ truncate(ingredient.ingredient_description, 80) }}</div>
+          </div>
+        </button>
+      </template>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSearch } from '../composables/useSearch'
 import { useDebounce } from '../composables/useDebounce'
@@ -129,6 +120,7 @@ const { isSearching, searchResults, search, clearSearch, getTotalResults } = use
 const searchQuery = ref('')
 const debouncedQuery = useDebounce(searchQuery, 300)
 const isMenuOpen = ref(false)
+const wrapperRef = ref(null)
 
 // Show results when there's a query and results available
 const showResults = computed(() => {
@@ -144,6 +136,21 @@ watch(debouncedQuery, async (newQuery) => {
     clearSearch()
     isMenuOpen.value = false
   }
+})
+
+// Close dropdown on click outside
+function handleClickOutside(event) {
+  if (wrapperRef.value && !wrapperRef.value.contains(event.target)) {
+    isMenuOpen.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside)
 })
 
 // Navigate to detail page and close menu
@@ -167,23 +174,3 @@ const truncate = (text, maxLength) => {
   return text.length > maxLength ? text.substring(0, maxLength) + '...' : text
 }
 </script>
-
-<style scoped>
-.omni-search-wrapper {
-  width: 100%;
-  max-width: 400px;
-}
-
-.omni-search-field {
-  background-color: white;
-	color: black;
-}
-
-.cursor-pointer {
-  cursor: pointer;
-}
-
-.cursor-pointer:hover {
-  background-color: rgba(0, 0, 0, 0.04);
-}
-</style>

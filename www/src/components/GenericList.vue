@@ -1,62 +1,83 @@
 <template>
-	<div class="p-4 w-full">
+	<div class="page-container">
 		<div v-if="isLoading" class="loading-overlay">
 			<div class="spinner"></div>
 		</div>
-		<v-table v-else theme="light" class="w-full">
-			<thead>
-				<tr>
-					<th
-						v-for="column in columns" :key="column.key"
-						class="text-h6 pa-2 sortable-header"
-						@click="toggleSort(column)"
-					>
-						<span class="header-content">
-							{{ column.label }}
-							<span class="sort-icon">
-								<v-icon v-if="sortBy === column.field && sortOrder === 'asc'" size="small">mdi-arrow-up</v-icon>
-								<v-icon v-else-if="sortBy === column.field && sortOrder === 'desc'" size="small">mdi-arrow-down</v-icon>
-								<v-icon v-else size="small" class="sort-inactive">mdi-unfold-more-horizontal</v-icon>
+
+		<div v-else-if="pagedItems.length === 0" class="empty-state">
+			<i class="mdi mdi-magnify"></i>
+			<p class="text-sm">No items found.</p>
+		</div>
+
+		<div v-else class="card overflow-hidden">
+			<table class="data-table">
+				<thead>
+					<tr>
+						<th
+							v-for="column in columns" :key="column.key"
+							@click="toggleSort(column)"
+						>
+							<span class="inline-flex items-center gap-1">
+								{{ column.label }}
+								<i v-if="sortBy === column.field && sortOrder === 'asc'" class="mdi mdi-arrow-up text-xs"></i>
+								<i v-else-if="sortBy === column.field && sortOrder === 'desc'" class="mdi mdi-arrow-down text-xs"></i>
+								<i v-else class="mdi mdi-unfold-more-horizontal text-xs opacity-30"></i>
 							</span>
-						</span>
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr v-for="item in pagedItems" :key="item[config.idField]">
-					<td v-for="column in columns" :key="column.key" >
-						<template v-if="column.type === 'link'">
-							<router-link :to="{ path: `/${config.routePrefix}/${item[config.idField]}` }">
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="item in pagedItems" :key="item[config.idField]">
+						<td v-for="column in columns" :key="column.key">
+							<template v-if="column.type === 'link'">
+								<router-link
+									:to="{ path: `/${config.routePrefix}/${item[config.idField]}` }"
+									class="text-brand-600 hover:text-brand-800 font-medium hover:underline"
+								>
+									{{ getFieldValue(item, column.field) }}
+								</router-link>
+							</template>
+							<template v-else-if="column.type === 'date'">
+								<span class="text-gray-500">{{ new Date(getFieldValue(item, column.field)).toLocaleDateString() }}</span>
+							</template>
+							<template v-else-if="column.type === 'categories'">
+								<span v-if="item[column.field] && item[column.field].length > 0" class="flex flex-wrap gap-1">
+									<span v-for="cat in item[column.field]" :key="cat.category_name || cat" class="chip">{{ cat.category_name || cat.name || cat }}</span>
+								</span>
+								<span v-else class="text-gray-400">&mdash;</span>
+							</template>
+							<template v-else>
 								{{ getFieldValue(item, column.field) }}
-							</router-link>
-						</template>
-						<template v-else-if="column.type === 'date'">
-							{{ new Date(getFieldValue(item, column.field)).toLocaleDateString() }}
-						</template>
-						<template v-else-if="column.type === 'categories'">
-							<span v-if="item[column.field] && item[column.field].length > 0">
-								{{ item[column.field].map(cat => cat.category_name || cat.name || cat).join(', ') }}
-							</span>
-							<span v-else class="text-gray-500"></span>
-						</template>
-						<template v-else>
-							{{ getFieldValue(item, column.field) }}
-						</template>
-					</td>
-				</tr>
-			</tbody>
-		</v-table>
-		<div class="d-flex justify-center mt-4">
-			<v-pagination
-				v-model="page"
-				:length="pageCount"
-				:total-visible="4"
-				color="primary"
-				rounded
-				show-first-last-page
-				prev-icon="mdi-chevron-left"
-				next-icon="mdi-chevron-right"
-			/>
+							</template>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<!-- Pagination -->
+		<div v-if="pageCount > 1" class="pagination">
+			<button class="page-btn" :disabled="page === 1" @click="page = 1">
+				<i class="mdi mdi-chevron-double-left"></i>
+			</button>
+			<button class="page-btn" :disabled="page === 1" @click="page = page - 1">
+				<i class="mdi mdi-chevron-left"></i>
+			</button>
+			<button
+				v-for="p in visiblePages"
+				:key="p"
+				class="page-btn"
+				:class="{ 'is-active': p === page }"
+				@click="page = p"
+			>
+				{{ p }}
+			</button>
+			<button class="page-btn" :disabled="page === pageCount" @click="page = page + 1">
+				<i class="mdi mdi-chevron-right"></i>
+			</button>
+			<button class="page-btn" :disabled="page === pageCount" @click="page = pageCount">
+				<i class="mdi mdi-chevron-double-right"></i>
+			</button>
 		</div>
 	</div>
 </template>
@@ -131,6 +152,22 @@ const pagedItems = computed(() => {
 	return sortedItems.value.slice(start, start + itemsPerPage.value)
 })
 
+const visiblePages = computed(() => {
+	const total = pageCount.value
+	const current = page.value
+	const maxVisible = 5
+	let start = Math.max(1, current - Math.floor(maxVisible / 2))
+	let end = Math.min(total, start + maxVisible - 1)
+	if (end - start + 1 < maxVisible) {
+		start = Math.max(1, end - maxVisible + 1)
+	}
+	const pages = []
+	for (let i = start; i <= end; i++) {
+		pages.push(i)
+	}
+	return pages
+})
+
 function getFieldValue(item, field) {
 	return item[field] || ''
 }
@@ -166,55 +203,4 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(255,255,255,0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
 
-.sortable-header {
-  cursor: pointer;
-  user-select: none;
-  transition: background-color 0.2s;
-}
-
-.sortable-header:hover {
-  background-color: rgba(0, 0, 0, 0.04);
-}
-
-.header-content {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.sort-icon {
-  display: inline-flex;
-  align-items: center;
-}
-
-.sort-inactive {
-  opacity: 0.3;
-}
-
-.spinner {
-  width: 48px;
-  height: 48px;
-  border: 6px solid #ccc;
-  border-top: 6px solid #3498db;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-</style>

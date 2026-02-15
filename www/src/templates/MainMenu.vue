@@ -1,42 +1,53 @@
 <template>
-	<nav class="flex flex-col space-y-4 p-2 in-h-screen">
-<!-- 		<button @click="router.push('/')">Home</button>
-		<button @click="router.push('/ingredients')">Ingredient Details</button>
-		<button @click="router.push('/recipes')">Recipe Details</button>
-		<button @click="router.push('/meals')">Meal Details</button>
-		<button @click="router.push('/fooditems')">Food Item Details</button>
-		<button @click="router.push('/unittypes')">Unit Types</button>
-		<button @click="router.push('/categories')">Categories</button> -->
+  <nav class="flex flex-col h-full" aria-label="Main navigation">
+    <!-- Brand area on mobile (shown inside sidebar) -->
+    <div class="flex items-center gap-2 px-5 pt-5 pb-3 lg:pt-6">
+      <i class="mdi mdi-chef-hat text-brand-600 text-xl lg:hidden"></i>
+      <span class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Navigation</span>
+    </div>
 
-		<v-list
-			class="pt-10"
-			:lines="false"
-			density="compact"
-			nav
-		>
-			<v-list-subheader>Main Menu</v-list-subheader>
-			<v-list-item
-				v-for="item in [
-					{ text: 'Home', path: '/' },
-					{ text: 'Ingredients', path: '/ingredients' },
-					{ text: 'Recipes', path: '/recipes' },
-					{ text: 'Meals', path: '/meals' },
-					{ text: 'Food Items', path: '/fooditems' },
-					{ text: 'Units', path: '/unittypes' },
-					{ text: 'Categories', path: '/categories' }
-				]"
-				:key="item.path"
-				@click="router.push(item.path)"
-			>
-				{{ item.text }}
-			</v-list-item>
-		</v-list>
-	</nav>
+    <ul class="flex-1 px-3 space-y-0.5">
+      <li v-for="item in menuItems" :key="item.path">
+        <button
+          class="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-all duration-150"
+          :class="isActive(item.path)
+            ? 'bg-brand-50 text-brand-700 font-semibold shadow-sm'
+            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
+          @click="navigate(item.path)"
+        >
+          <i :class="['mdi', item.icon, 'text-lg', isActive(item.path) ? 'text-brand-600' : 'text-gray-400']"></i>
+          <span>{{ item.text }}</span>
+        </button>
+      </li>
+    </ul>
+  </nav>
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
+
+const emit = defineEmits(['updateItemData', 'updateLoading', 'navigate'])
 
 const router = useRouter()
+const route = useRoute()
 
+const menuItems = [
+  { text: 'Home',        path: '/',             icon: 'mdi-home-outline' },
+  { text: 'Recipes',     path: '/recipes',      icon: 'mdi-food' },
+  { text: 'Meals',       path: '/meals',        icon: 'mdi-silverware-fork-knife' },
+  { text: 'Food Items',  path: '/fooditems',    icon: 'mdi-food-apple-outline' },
+  { text: 'Ingredients', path: '/ingredients',  icon: 'mdi-grain' },
+  { text: 'Categories',  path: '/categories',   icon: 'mdi-tag-outline' },
+  { text: 'Units',       path: '/unittypes',    icon: 'mdi-scale-balance' },
+]
+
+function isActive(path) {
+  if (path === '/') return route.path === '/'
+  return route.path.startsWith(path)
+}
+
+function navigate(path) {
+  router.push(path)
+  emit('navigate')
+}
 </script>

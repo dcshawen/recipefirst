@@ -1,245 +1,224 @@
 <template>
-  <div v-if="active.item" class="p-4 m-6 bg-gray-100 rounded w-[70%]">
-    <!-- Action Buttons -->
-    <div class="flex justify-end gap-2 mb-4">
-      <v-btn
-        color="primary"
-        variant="elevated"
-        @click="navigateToEdit"
-        prepend-icon="mdi-pencil"
-      >
-        Edit
-      </v-btn>
-      <v-btn
-        color="error"
-        variant="elevated"
-        @click="showDeleteDialog = true"
-        prepend-icon="mdi-delete"
-      >
-        Delete
-      </v-btn>
+  <div v-if="active.item" class="page-container max-w-4xl">
+    <div class="card">
+      <!-- Action Buttons -->
+      <div class="flex justify-end gap-2 p-4 border-b border-gray-100">
+        <button class="btn btn-primary btn-sm" @click="navigateToEdit">
+          <i class="mdi mdi-pencil"></i> Edit
+        </button>
+        <button class="btn btn-danger btn-sm" @click="showDeleteDialog = true">
+          <i class="mdi mdi-delete"></i> Delete
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4">
+        <div v-for="col in active.columns" :key="col.field">
+          <span v-if="col === active.columns[0]" class="block text-2xl font-bold text-gray-900">{{ active.item[col.field] }}</span>
+          <div v-else>
+            <span class="form-label">{{ col.label }}</span>
+            <template v-if="Array.isArray(active.item[col.field])">
+              <!-- Special handling for instructions -->
+              <template v-if="col.field.toLowerCase() === 'instructions'">
+                <ol class="ml-6 space-y-1 text-sm text-gray-700">
+                  <li v-for="(instruction, idx) in active.item[col.field]" :key="idx" class="leading-relaxed">
+                    {{ instruction }}
+                  </li>
+                </ol>
+              </template>
+              <!-- Special handling for categories -->
+              <template v-else-if="col.field.toLowerCase() === 'categories'">
+                <div v-if="Array.isArray(active.item[col.field])" class="flex flex-wrap gap-1 mt-1">
+                  <span v-for="cat in active.item[col.field]" :key="typeof cat === 'object' ? (cat.category_name || cat.name) : cat" class="chip">
+                    {{ typeof cat === 'object' ? (cat.category_name || cat.name) : cat }}
+                  </span>
+                </div>
+                <span v-else class="text-sm text-gray-700">{{ active.item[col.field] }}</span>
+              </template>
+              <!-- Special handling for recipes -->
+              <template v-else-if="col.field.toLowerCase() === 'recipes'">
+                <ul class="list-disc ml-6 text-sm">
+                  <li v-for="(recipe, idx) in active.item[col.field]" :key="idx">
+                    <a
+                      @click="goToRecipe(recipe.recipe_id)"
+                      class="text-brand-600 hover:text-brand-800 cursor-pointer hover:underline font-medium"
+                    >
+                      {{ recipe.recipe_name }}
+                    </a>
+                    <span v-if="recipe.recipe_description" class="text-gray-500 ml-2">
+                      — {{ recipe.recipe_description }}
+                    </span>
+                  </li>
+                </ul>
+              </template>
+              <!-- Special handling for ingredients -->
+              <template v-else-if="col.field.toLowerCase() === 'ingredients'">
+                <ul class="list-disc ml-6 text-sm">
+                  <li v-for="(ingredient, idx) in active.item[col.field]" :key="idx">
+                    <span class="text-gray-700">{{ ingredient.ri_quantity }} {{ ingredient.unit_type }}&nbsp;</span>
+                    <a
+                      v-if="ingredient.ri_ingredient_id && ingredient.ingredient_name"
+                      @click="goToIngredient(ingredient.ri_ingredient_id)"
+                      class="text-brand-600 hover:text-brand-800 cursor-pointer hover:underline font-medium"
+                    >
+                      {{ ingredient.ingredient_name }}
+                    </a>
+                    <a
+                      v-else-if="ingredient.ri_fooditem_id && ingredient.fooditem_name"
+                      @click="goToFoodItem(ingredient.ri_fooditem_id)"
+                      class="text-brand-600 hover:text-brand-800 cursor-pointer hover:underline font-medium"
+                    >
+                      {{ ingredient.fooditem_name }}
+                    </a>
+                    <span v-else class="text-gray-700">{{ ingredient.ingredient_name || ingredient.fooditem_name || 'Unknown' }}</span>
+                  </li>
+                </ul>
+              </template>
+              <!-- Special handling for fooditems -->
+              <template v-else-if="col.field.toLowerCase() === 'fooditems'">
+                <ul class="list-disc ml-6 text-sm">
+                  <li v-for="(fooditem, idx) in active.item[col.field]" :key="idx">
+                    <a
+                      @click="goToFoodItem(fooditem.fooditem_id)"
+                      class="text-brand-600 hover:text-brand-800 cursor-pointer hover:underline font-medium"
+                    >
+                      {{ fooditem.fooditem_name }}
+                    </a>
+                    <span v-if="fooditem.fooditem_description" class="text-gray-500 ml-2">
+                      — {{ fooditem.fooditem_description }}
+                    </span>
+                  </li>
+                </ul>
+              </template>
+              <!-- Regular list display -->
+              <template v-else>
+                <ul class="list-disc ml-6 text-sm text-gray-700">
+                  <li v-for="(entry, idx) in active.item[col.field]" :key="idx">
+                    <template v-if="typeof entry === 'object' && entry !== null">
+                      <ul class="list-disc ml-6">
+                        <li v-for="(val, key) in entry" :key="key">
+                          <span class="font-semibold text-gray-600">{{ key }}:</span>
+                          <template v-if="Array.isArray(val)">
+                            <ul class="list-disc ml-6">
+                              <li v-for="(subval, subidx) in val" :key="subidx">
+                                <span v-if="typeof subval === 'object' && subval !== null">
+                                  <ul class="list-disc ml-6">
+                                    <li v-for="(subsubval, subkey) in subval" :key="subkey">
+                                      <span class="font-semibold text-gray-600">{{ subkey }}:</span> {{ subsubval }}
+                                    </li>
+                                  </ul>
+                                </span>
+                                <span v-else>{{ subval }}</span>
+                              </li>
+                            </ul>
+                          </template>
+                          <template v-else-if="typeof val === 'object' && val !== null">
+                            <ul class="list-disc ml-6">
+                              <li v-for="(subval, subkey) in val" :key="subkey">
+                                <span class="font-semibold text-gray-600">{{ subkey }}:</span> {{ subval }}
+                              </li>
+                            </ul>
+                          </template>
+                          <template v-else> {{ val }}</template>
+                        </li>
+                      </ul>
+                    </template>
+                    <template v-else>{{ entry }}</template>
+                  </li>
+                </ul>
+              </template>
+            </template>
+            <template v-else-if="typeof active.item[col.field] === 'object' && active.item[col.field] !== null">
+              <!-- Handle single recipe object -->
+              <template v-if="col.field === 'recipe' && active.item[col.field] && active.item[col.field].recipe_name">
+                <a
+                  @click="goToRecipe(active.item[col.field].recipe_id)"
+                  class="text-brand-600 hover:text-brand-800 cursor-pointer hover:underline font-medium text-sm"
+                >
+                  {{ active.item[col.field].recipe_name }}
+                </a>
+              </template>
+              <!-- Default object handling -->
+              <template v-else>
+                <ul class="list-disc ml-6 text-sm text-gray-700">
+                  <li v-for="(val, key) in active.item[col.field]" :key="key">
+                    <span class="font-semibold text-gray-600">{{ key }}:</span>
+                    <template v-if="Array.isArray(val)">
+                      <ul class="list-disc ml-6">
+                        <li v-for="(subval, subidx) in val" :key="subidx">
+                          <span v-if="typeof subval === 'object' && subval !== null">
+                            <ul class="list-disc ml-6">
+                              <li v-for="(subsubval, subkey) in subval" :key="subkey">
+                                <span class="font-semibold text-gray-600">{{ subkey }}:</span> {{ subsubval }}
+                              </li>
+                            </ul>
+                          </span>
+                          <span v-else>{{ subval }}</span>
+                        </li>
+                      </ul>
+                    </template>
+                    <template v-else-if="typeof val === 'object' && val !== null">
+                      <ul class="list-disc ml-6">
+                        <li v-for="(subval, subkey) in val" :key="subkey">
+                          <span class="font-semibold text-gray-600">{{ subkey }}:</span> {{ subval }}
+                        </li>
+                      </ul>
+                    </template>
+                    <template v-else> {{ val }}</template>
+                  </li>
+                </ul>
+              </template>
+            </template>
+            <template v-else>
+              <!-- Handle reference fields (ending with _id) -->
+              <template v-if="isReferenceField(col.field) && active.item[col.field]">
+                <a
+                  v-if="resolvedReferences[col.field]"
+                  @click="goToReference(col.field, active.item[col.field])"
+                  class="text-brand-600 hover:text-brand-800 cursor-pointer hover:underline font-medium text-sm"
+                >
+                  {{ resolvedReferences[col.field] }}
+                </a>
+                <span v-else class="text-sm text-gray-400">{{ active.item[col.field] }}</span>
+              </template>
+              <template v-else>
+                <span class="text-sm text-gray-700">{{ active.item[col.field] }}</span>
+              </template>
+            </template>
+          </div>
+        </div>
+
+        <!-- Associated Recipes for Food Items -->
+        <div v-if="associatedRecipes.length" class="border-t border-gray-100 pt-4">
+          <h3 class="section-title">Recipes Using This Item</h3>
+          <ul class="divide-y divide-gray-100">
+            <li v-for="r in associatedRecipes" :key="r.id" class="py-3 flex justify-between items-center">
+              <span class="font-medium text-sm text-gray-900">{{ r.name || r.title }}</span>
+              <button @click="goToRecipe(r.id)" class="btn btn-outline btn-sm">View Recipe</button>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
 
-    <div class="pb-3" v-for="col in active.columns" :key="col.field">
-      <span v-if="col === active.columns[0]" class="font-bold text-2xl">{{ active.item[col.field] }}</span>
-      <span v-else>
-        <span class="font-semibold">{{ col.label }}: </span>
-        <template v-if="Array.isArray(active.item[col.field])">
-          <!-- Special handling for instructions (should show as numbered list without bullets) -->
-          <template v-if="col.field.toLowerCase() === 'instructions'">
-            <ol class="ml-6 space-y-1">
-              <li v-for="(instruction, idx) in active.item[col.field]" :key="idx" class="leading-relaxed">
-                {{ instruction }}
-              </li>
-            </ol>
-          </template>
-          <!-- Special handling for categories (show as comma-separated list) -->
-          <template v-else-if="col.field.toLowerCase() === 'categories'">
-            <span v-if="Array.isArray(active.item[col.field])">
-              {{ active.item[col.field].map(cat => typeof cat === 'object' ? (cat.category_name || cat.name) : cat).join(', ') }}
-            </span>
-            <span v-else>{{ active.item[col.field] }}</span>
-          </template>
-          <!-- Special handling for recipes (show as links to each recipe) -->
-          <template v-else-if="col.field.toLowerCase() === 'recipes'">
-            <ul class="list-disc ml-6">
-              <li v-for="(recipe, idx) in active.item[col.field]" :key="idx">
-                <a 
-                  @click="goToRecipe(recipe.recipe_id)"
-                  class="text-blue-600 hover:text-blue-800 cursor-pointer underline"
-                >
-                  {{ recipe.recipe_name }}
-                </a>
-                <span v-if="recipe.recipe_description" class="text-gray-600 ml-2">
-                  - {{ recipe.recipe_description }}
-                </span>
-              </li>
-            </ul>
-          </template>
-          <!-- Special handling for ingredients (show with clickable ingredient names) -->
-          <template v-else-if="col.field.toLowerCase() === 'ingredients'">
-            <ul class="list-disc ml-6">
-              <li v-for="(ingredient, idx) in active.item[col.field]" :key="idx">
-                <span>{{ ingredient.ri_quantity }} {{ ingredient.unit_type }}&nbsp;</span>
-                <a 
-                  v-if="ingredient.ri_ingredient_id && ingredient.ingredient_name"
-                  @click="goToIngredient(ingredient.ri_ingredient_id)"
-                  class="text-blue-600 hover:text-blue-800 cursor-pointer underline"
-                >
-                  {{ ingredient.ingredient_name }}
-                </a>
-                <a 
-                  v-else-if="ingredient.ri_fooditem_id && ingredient.fooditem_name"
-                  @click="goToFoodItem(ingredient.ri_fooditem_id)"
-                  class="text-blue-600 hover:text-blue-800 cursor-pointer underline"
-                >
-                  {{ ingredient.fooditem_name }}
-                </a>
-                <span v-else>{{ ingredient.ingredient_name || ingredient.fooditem_name || 'Unknown' }}</span>
-              </li>
-            </ul>
-          </template>
-          <!-- Special handling for fooditems (show as links to each food item) -->
-          <template v-else-if="col.field.toLowerCase() === 'fooditems'">
-            <ul class="list-disc ml-6">
-              <li v-for="(fooditem, idx) in active.item[col.field]" :key="idx">
-                <a 
-                  @click="goToFoodItem(fooditem.fooditem_id)"
-                  class="text-blue-600 hover:text-blue-800 cursor-pointer underline"
-                >
-                  {{ fooditem.fooditem_name }}
-                </a>
-                <span v-if="fooditem.fooditem_description" class="text-gray-600 ml-2">
-                  - {{ fooditem.fooditem_description }}
-                </span>
-              </li>
-            </ul>
-          </template>
-          <!-- Regular list display for ingredients and other arrays -->
-          <template v-else>
-            <ul class="list-disc ml-6">
-              <li v-for="(entry, idx) in active.item[col.field]" :key="idx">
-                <template v-if="typeof entry === 'object' && entry !== null">
-                  <ul class="list-disc ml-6">
-                    <li v-for="(val, key) in entry" :key="key">
-                      <span class="font-semibold">{{ key }}:</span>
-                      <template v-if="Array.isArray(val)">
-                        <ul class="list-disc ml-6">
-                          <li v-for="(subval, subidx) in val" :key="subidx">
-                            <span v-if="typeof subval === 'object' && subval !== null">
-                              <ul class="list-disc ml-6">
-                                <li v-for="(subsubval, subkey) in subval" :key="subkey">
-                                  <span class="font-semibold">{{ subkey }}:</span> {{ subsubval }}
-                                </li>
-                              </ul>
-                            </span>
-                            <span v-else>{{ subval }}</span>
-                          </li>
-                        </ul>
-                      </template>
-                      <template v-else-if="typeof val === 'object' && val !== null">
-                        <ul class="list-disc ml-6">
-                          <li v-for="(subval, subkey) in val" :key="subkey">
-                            <span class="font-semibold">{{ subkey }}:</span> {{ subval }}
-                          </li>
-                        </ul>
-                      </template>
-                      <template v-else>
-                        {{ val }}
-                      </template>
-                    </li>
-                  </ul>
-                </template>
-                <template v-else>
-                  {{ entry }}
-                </template>
-              </li>
-            </ul>
-          </template>
-        </template>
-        <template v-else-if="typeof active.item[col.field] === 'object' && active.item[col.field] !== null">
-          <!-- Handle single recipe object for backward compatibility -->
-          <template v-if="col.field === 'recipe' && active.item[col.field] && active.item[col.field].recipe_name">
-            <a 
-              @click="goToRecipe(active.item[col.field].recipe_id)"
-              class="text-blue-600 hover:text-blue-800 cursor-pointer underline"
-            >
-              {{ active.item[col.field].recipe_name }}
-            </a>
-          </template>
-          <!-- Default object handling -->
-          <template v-else>
-            <ul class="list-disc ml-6">
-              <li v-for="(val, key) in active.item[col.field]" :key="key">
-                <span class="font-semibold">{{ key }}:</span>
-                <template v-if="Array.isArray(val)">
-                  <ul class="list-disc ml-6">
-                    <li v-for="(subval, subidx) in val" :key="subidx">
-                      <span v-if="typeof subval === 'object' && subval !== null">
-                        <ul class="list-disc ml-6">
-                          <li v-for="(subsubval, subkey) in subval" :key="subkey">
-                            <span class="font-semibold">{{ subkey }}:</span> {{ subsubval }}
-                          </li>
-                        </ul>
-                      </span>
-                      <span v-else>{{ subval }}</span>
-                    </li>
-                  </ul>
-                </template>
-                <template v-else-if="typeof val === 'object' && val !== null">
-                  <ul class="list-disc ml-6">
-                    <li v-for="(subval, subkey) in val" :key="subkey">
-                      <span class="font-semibold">{{ subkey }}:</span> {{ subval }}
-                    </li>
-                  </ul>
-                </template>
-                <template v-else>
-                  {{ val }}
-                </template>
-              </li>
-            </ul>
-          </template>
-        </template>
-        <template v-else>
-          <!-- Handle reference fields (ending with _id) -->
-          <template v-if="isReferenceField(col.field) && active.item[col.field]">
-            <a 
-              v-if="resolvedReferences[col.field]"
-              @click="goToReference(col.field, active.item[col.field])"
-              class="text-blue-600 hover:text-blue-800 cursor-pointer underline"
-            >
-              {{ resolvedReferences[col.field] }}
-            </a>
-            <span v-else class="text-gray-500">{{ active.item[col.field] }}</span>
-          </template>
-          <template v-else>
-            {{ active.item[col.field] }}
-          </template>
-        </template>
-      </span>
+    <!-- Delete Confirmation Modal -->
+    <div v-if="showDeleteDialog" class="modal-backdrop" @click="showDeleteDialog = false"></div>
+    <div v-if="showDeleteDialog" class="modal">
+      <div class="modal-content">
+        <div class="bg-danger-600 text-white px-6 py-4 rounded-t-xl">
+          <h3 class="text-lg font-semibold">Confirm Deletion</h3>
+        </div>
+        <div class="px-6 py-5">
+          <p class="mb-2 text-sm text-gray-700">Are you sure you want to delete this item?</p>
+          <p class="text-sm text-danger-700 font-semibold">Warning: This action cannot be undone.</p>
+        </div>
+        <div class="flex justify-end gap-2 px-6 py-4 border-t border-gray-100">
+          <button class="btn btn-ghost" @click="showDeleteDialog = false">Cancel</button>
+          <button class="btn btn-danger" @click="confirmDelete" :disabled="deleting">
+            {{ deleting ? 'Deleting...' : 'Delete' }}
+          </button>
+        </div>
+      </div>
     </div>
-
-    <!-- Associated Recipes for Food Items -->
-    <div v-if="associatedRecipes.length" class="mt-6 border-t pt-4">
-      <h3 class="text-lg font-semibold mb-3">Recipes Using This Item</h3>
-      <ul class="divide-y">
-        <li v-for="r in associatedRecipes" :key="r.id" class="py-2 flex justify-between items-center">
-          <span class="font-medium">{{ r.name || r.title }}</span>
-          <button @click="goToRecipe(r.id)" class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">View Recipe</button>
-        </li>
-      </ul>
-    </div>
-
-    <!-- Delete Confirmation Dialog -->
-    <v-dialog v-model="showDeleteDialog" max-width="500">
-      <v-card>
-        <v-card-title class="text-h5 bg-error text-white">
-          Confirm Deletion
-        </v-card-title>
-        <v-card-text class="pt-4">
-          <p class="mb-2">Are you sure you want to delete this item?</p>
-          <p class="text-red-700 font-semibold">Warning: This action cannot be undone.</p>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="grey"
-            variant="text"
-            @click="showDeleteDialog = false"
-          >
-            No
-          </v-btn>
-          <v-btn
-            color="error"
-            variant="elevated"
-            @click="confirmDelete"
-            :loading="deleting"
-          >
-            Yes
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </div>
   <div v-else class="loading-overlay">
     <div class="spinner"></div>
@@ -526,29 +505,3 @@ watch(() => route.fullPath, () => {
 })
 </script>
 
-<style scoped>
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(255,255,255,0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-.spinner {
-  width: 48px;
-  height: 48px;
-  border: 6px solid #ccc;
-  border-top: 6px solid #3498db;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-</style>
