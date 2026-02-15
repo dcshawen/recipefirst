@@ -8,9 +8,17 @@
 				<tr>
 					<th
 						v-for="column in columns" :key="column.key"
-						class="text-h6 pa-2"
+						class="text-h6 pa-2 sortable-header"
+						@click="toggleSort(column)"
 					>
-						{{ column.label }}
+						<span class="header-content">
+							{{ column.label }}
+							<span class="sort-icon">
+								<v-icon v-if="sortBy === column.field && sortOrder === 'asc'" size="small">mdi-arrow-up</v-icon>
+								<v-icon v-else-if="sortBy === column.field && sortOrder === 'desc'" size="small">mdi-arrow-down</v-icon>
+								<v-icon v-else size="small" class="sort-inactive">mdi-unfold-more-horizontal</v-icon>
+							</span>
+						</span>
 					</th>
 				</tr>
 			</thead>
@@ -74,14 +82,70 @@ const { fetchJSON } = useNavigation()
 const columns = computed(() => props.config.columns)
 const page = ref(1)
 const itemsPerPage = ref(10)
-const pageCount = computed(() => Math.ceil(items.value.length / itemsPerPage.value))
+const sortBy = ref(null)
+const sortOrder = ref('asc')
+
+const sortedItems = computed(() => {
+	if (!sortBy.value) return items.value
+
+	const sorted = [...items.value].sort((a, b) => {
+		const aVal = getFieldValue(a, sortBy.value)
+		const bVal = getFieldValue(b, sortBy.value)
+		
+		// Handle null/undefined values
+		if (aVal === null || aVal === undefined || aVal === '') return 1
+		if (bVal === null || bVal === undefined || bVal === '') return -1
+		
+		// Try to parse as numbers if possible
+		const aNum = Number(aVal)
+		const bNum = Number(bVal)
+		
+		if (!isNaN(aNum) && !isNaN(bNum)) {
+			return sortOrder.value === 'asc' ? aNum - bNum : bNum - aNum
+		}
+		
+		// Try to parse as dates
+		const aDate = new Date(aVal)
+		const bDate = new Date(bVal)
+		if (!isNaN(aDate.getTime()) && !isNaN(bDate.getTime())) {
+			return sortOrder.value === 'asc' ? aDate - bDate : bDate - aDate
+		}
+		
+		// Default to string comparison
+		const aStr = String(aVal).toLowerCase()
+		const bStr = String(bVal).toLowerCase()
+		
+		if (sortOrder.value === 'asc') {
+			return aStr.localeCompare(bStr)
+		} else {
+			return bStr.localeCompare(aStr)
+		}
+	})
+	
+	return sorted
+})
+
+const pageCount = computed(() => Math.ceil(sortedItems.value.length / itemsPerPage.value))
 const pagedItems = computed(() => {
 	const start = (page.value - 1) * itemsPerPage.value
-	return items.value.slice(start, start + itemsPerPage.value)
+	return sortedItems.value.slice(start, start + itemsPerPage.value)
 })
 
 function getFieldValue(item, field) {
 	return item[field] || ''
+}
+
+function toggleSort(column) {
+	if (sortBy.value === column.field) {
+		// If already sorting by this column, toggle the order
+		sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
+	} else {
+		// New column, default to ascending
+		sortBy.value = column.field
+		sortOrder.value = 'asc'
+	}
+	// Reset to first page when sorting changes
+	page.value = 1
 }
 
 async function fetchData() {
@@ -115,6 +179,32 @@ onMounted(() => {
   justify-content: center;
   z-index: 9999;
 }
+
+.sortable-header {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s;
+}
+
+.sortable-header:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.header-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sort-icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.sort-inactive {
+  opacity: 0.3;
+}
+
 .spinner {
   width: 48px;
   height: 48px;
