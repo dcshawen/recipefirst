@@ -79,7 +79,7 @@
                 </ul>
               </template>
               <!-- Special handling for fooditems -->
-              <template v-else-if="col.field.toLowerCase() === 'fooditems'">
+              <template v-else-if="col.field.toLowerCase() === 'fooditems' || col.field.toLowerCase() === 'food_items'">
                 <ul class="list-disc ml-6 text-sm">
                   <li v-for="(fooditem, idx) in active.item[col.field]" :key="idx">
                     <a
@@ -287,7 +287,7 @@ async function load() {
     // Preserve original nested objects and arrays that should remain as entities
     const originalRecipe = rawItem.recipe
     const originalRecipes = rawItem.recipes
-    const originalFooditems = rawItem.fooditems
+    const originalFooditems = rawItem.fooditems || rawItem.food_items
     const originalIngredients = rawItem.ingredients
     const originalCategories = rawItem.categories
     
@@ -303,7 +303,11 @@ async function load() {
       processedItem.recipes = originalRecipes
     }
     if (originalFooditems) {
-      processedItem.fooditems = originalFooditems
+			if (rawItem.food_items) {
+				processedItem.food_items = originalFooditems
+			} else {
+				processedItem.fooditems = originalFooditems
+			}
     }
     if (originalIngredients) {
       processedItem.ingredients = originalIngredients
