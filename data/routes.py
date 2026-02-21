@@ -6,6 +6,7 @@ exact same API response format for backward compatibility.
 """
 
 from fastapi import APIRouter, HTTPException, Body, Path, Query, Depends
+import logging
 from sqlalchemy.ext.asyncio import AsyncSession
 
 # Import old db module for schema operations (keep for now)
@@ -17,6 +18,8 @@ from . import crud
 from . import serializers
 
 router = APIRouter()
+
+logger = logging.getLogger(__name__)
 
 MAX_RECIPES = 1000
 
@@ -281,10 +284,18 @@ async def create_category(
     """Create a new category."""
     # Frontend already sends correct field names (category_name, category_description, parent_category_id)
     # No mapping needed
+    logger.info("POST /categories payload: %s", category_data)
+
     if 'category_name' not in category_data or not category_data['category_name']:
         raise HTTPException(status_code=400, detail="Category name is required")
 
-    category = await crud.create_category(session, category_data)
+    try:
+        category = await crud.create_category(session, category_data)
+    except Exception as e:
+        logger.exception("Failed to create category")
+        raise HTTPException(status_code=500, detail=str(e))
+
+    logger.info("Created category id=%s", getattr(category, 'category_id', None))
     return serializers.serialize_category(category)
 
 

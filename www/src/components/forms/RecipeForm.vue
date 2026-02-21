@@ -193,9 +193,9 @@
         <!-- Categories Selection -->
         <h3 class="text-lg font-semibold text-gray-900 mb-3">Categories (Optional)</h3>
         <div class="mb-4 relative" ref="recipeCategoryDropdownRef">
-          <div v-if="formData.category_id.length > 0" class="flex flex-wrap gap-1 mb-2">
+          <div v-if="formData.category_ids.length > 0" class="flex flex-wrap gap-1 mb-2">
             <span
-              v-for="catId in formData.category_id"
+              v-for="catId in formData.category_ids"
               :key="catId"
               class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
             >
@@ -219,7 +219,7 @@
               :key="cat.category_id"
               type="button"
               class="w-full text-left px-3 py-2 text-sm hover:bg-blue-50 transition-colors"
-              :class="formData.category_id.includes(cat.category_id) ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700'"
+              :class="formData.category_ids.includes(cat.category_id) ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700'"
               @click="toggleRecipeCategory(cat.category_id)"
             >
               {{ cat.category_name }}
@@ -330,10 +330,10 @@ const API_BASE = import.meta.env.VITE_API_BASE || '/api'
 
 const errors = ref({})
 const formData = ref({
-  name: props.initialData?.name || '',
-  description: props.initialData?.description || '',
-  fooditem_id: props.initialData?.fooditem_id || null,
-  category_id: props.initialData?.category_id || []
+  name: props.initialData?.name || props.initialData?.recipe_name || '',
+  description: props.initialData?.description || props.initialData?.recipe_description || '',
+  fooditem_id: props.initialData?.fooditem_id || props.initialData?.recipe_fooditem_id || null,
+  category_ids: props.initialData?.category_ids || []
 })
 
 // Data lists
@@ -396,17 +396,17 @@ function getRecipeCategoryName(catId) {
 }
 
 function toggleRecipeCategory(catId) {
-  const idx = formData.value.category_id.indexOf(catId)
+  const idx = formData.value.category_ids.indexOf(catId)
   if (idx >= 0) {
-    formData.value.category_id.splice(idx, 1)
+    formData.value.category_ids.splice(idx, 1)
   } else {
-    formData.value.category_id.push(catId)
+    formData.value.category_ids.push(catId)
   }
 }
 
 function removeRecipeCategory(catId) {
-  const idx = formData.value.category_id.indexOf(catId)
-  if (idx >= 0) formData.value.category_id.splice(idx, 1)
+  const idx = formData.value.category_ids.indexOf(catId)
+  if (idx >= 0) formData.value.category_ids.splice(idx, 1)
 }
 
 // Click outside handler for all dropdowns
@@ -740,7 +740,10 @@ const handleSubmit = async () => {
 
   // Build recipe data
   const recipeData = {
-    ...formData.value,
+		name: formData.value.name,
+		description: formData.value.description,
+		fooditem_id: formData.value.fooditem_id,
+		category_ids: formData.value.category_ids,
     ingredients: ingredients.value.map(ing => ({
       ri_ingredient_id: ing.source?.type === 'ingredient' ? ing.source.originalId : null,
       ri_fooditem_id: ing.source?.type === 'fooditem' ? ing.source.originalId : null,
@@ -774,10 +777,10 @@ watch([foodItems, rawIngredients], () => {
 watch(() => props.initialData, (newData) => {
   if (newData) {
     formData.value = {
-      name: newData.name || '',
-      description: newData.description || '',
-      fooditem_id: newData.fooditem_id || null,
-      category_id: newData.category_id || []
+      name: newData.name || newData.recipe_name || '',
+      description: newData.description || newData.recipe_description || '',
+      fooditem_id: newData.fooditem_id || newData.recipe_fooditem_id || null,
+      category_ids: newData.category_ids || []
     }
 
     // Update ingredients from the new data

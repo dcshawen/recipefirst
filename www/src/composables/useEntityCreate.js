@@ -3,7 +3,8 @@ import { useRouter } from 'vue-router'
 
 export function useEntityCreate(entityType, options = {}) {
   const router = useRouter()
-  const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+  // Support both VITE_API_BASE and older VITE_API_URL used in docker-compose
+  const API_BASE = import.meta.env.VITE_API_BASE || import.meta.env.VITE_API_URL || '/api'
 
   const loading = ref(false)
   const error = ref(null)
@@ -30,7 +31,10 @@ export function useEntityCreate(entityType, options = {}) {
     success.value = false
 
     try {
-      const response = await fetch(`${API_BASE}${config.apiEndpoint}`, {
+      const url = `${API_BASE}${config.apiEndpoint}`
+      console.debug('[useEntityCreate] POST', url, data)
+
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -38,12 +42,22 @@ export function useEntityCreate(entityType, options = {}) {
         body: JSON.stringify(data)
       })
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.detail || config.errorMessage)
+      const text = await response.text().catch(() => '')
+      let result
+      try {
+        result = text ? JSON.parse(text) : {}
+      } catch (e) {
+        console.debug('[useEntityCreate] Non-JSON response:', text)
+        result = { raw: text }
       }
 
-      const result = await response.json()
+      if (!response.ok) {
+        const errMsg = result.detail || config.errorMessage || response.statusText
+        console.debug('[useEntityCreate] Error response', response.status, result)
+        throw new Error(errMsg)
+      }
+
+      console.debug('[useEntityCreate] Success response', response.status, result)
       success.value = true
 
       // Call success callback if provided
