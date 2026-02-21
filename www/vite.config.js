@@ -28,7 +28,9 @@ export default defineConfig({
     },
     proxy: {
       '/api': {
-        target: 'http://fastapi:8000',
+        // Use environment variable when set (useful for local dev override),
+        // otherwise default to the Docker Compose service hostname used in containers.
+        target: process.env.VITE_DEV_API_TARGET || 'http://fastapi:8000',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, '')

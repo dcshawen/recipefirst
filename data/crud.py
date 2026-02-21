@@ -371,10 +371,31 @@ async def get_category_by_id(db: AsyncSession, category_id: int) -> Optional[Cat
 
 async def create_category(db: AsyncSession, category_data: Dict[str, Any]) -> Category:
     """Create a new category."""
-    category = Category(**category_data)
+    # Only allow known fields to prevent TypeError from unexpected keys
+    allowed_keys = {'category_name', 'category_description', 'parent_category_id'}
+    cleaned = {k: v for k, v in category_data.items() if k in allowed_keys}
+
+    # Coerce empty strings to None for nullable foreign keys
+    if 'parent_category_id' in cleaned:
+        if cleaned['parent_category_id'] in ('', None):
+            cleaned['parent_category_id'] = None
+        else:
+            try:
+                cleaned['parent_category_id'] = int(cleaned['parent_category_id'])
+            except Exception:
+                # If coercion fails, set to None to avoid DB errors
+                cleaned['parent_category_id'] = None
+
+    category = Category(**cleaned)
     db.add(category)
-    await db.commit()
-    await db.refresh(category)
+    try:
+        await db.commit()
+        await db.refresh(category)
+    except Exception as e:
+        await db.rollback()
+        logger.error(f"Failed to create category: {e}")
+        raise
+
     return category
 
 
