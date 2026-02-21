@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     database_url: str = "sqlite+aiosqlite:///data/instances/recipefirst.db"
 
     # CORS configuration
-    cors_origins: List[str] = ["http://localhost:5173", "http://localhost"]
+	cors_origins: List[str] = ["http://localhost:5173", "http://localhost", "http://16.52.119.18:5173"]
 
     # API configuration
     api_title: str = "RecipeFirst API"
