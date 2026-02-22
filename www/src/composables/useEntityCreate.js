@@ -3,8 +3,11 @@ import { useRouter } from 'vue-router'
 
 export function useEntityCreate(entityType, options = {}) {
   const router = useRouter()
-  // Support both VITE_API_BASE and older VITE_API_URL used in docker-compose
-  const API_BASE = import.meta.env.VITE_API_BASE || import.meta.env.VITE_API_URL || '/api'
+  // Use the same API base fallback as other composables: prefer VITE_API_BASE, then '/api'.
+  // Avoid using VITE_API_URL here to prevent the dev client from calling loopback
+  // (e.g. http://localhost:8000) directly which triggers Private Network Access
+  // restrictions when the page is not a secure context.
+  const API_BASE = import.meta.env.VITE_API_BASE || '/api'
 
   const loading = ref(false)
   const error = ref(null)
