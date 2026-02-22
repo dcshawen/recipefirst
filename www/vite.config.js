@@ -22,7 +22,8 @@ export default defineConfig({
     allowedHosts: [
       "ec2-16-52-119-18.ca-central-1.compute.amazonaws.com",
 			"16.52.119.18",
-			"r3cipe.com"
+			"r3cipe.com",
+			"www.r3cipe.com"
     ],
     watch: {
       usePolling: true
