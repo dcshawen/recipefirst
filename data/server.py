@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.proxy_headers import ProxyHeadersMiddleware
 from .routes import router
 from .config import settings
 
@@ -7,6 +8,8 @@ app = FastAPI(
     title=settings.api_title,
     version=settings.api_version
 )
+
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts=["*"])
 
 # Configure CORS middleware
 app.add_middleware(
