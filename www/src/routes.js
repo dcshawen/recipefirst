@@ -3,12 +3,7 @@ import ItemDetails from './views/ItemDetails.vue';
 import GenericListView from './views/GenericListView.vue';
 import Home from './pages/Home.vue';
 
-import IngredientList from './pages/IngredientList.vue';
-import RecipeList from './pages/RecipeList.vue';
-import MealList from './pages/MealList.vue';
-import FoodItemList from './pages/FoodItemList.vue';
-import UnitTypeList from './pages/UnitTypeList.vue';
-import CategoryList from './pages/CategoryList.vue';
+import ListPage from './pages/ListPage.vue';
 
 import CreateIngredient from './pages/CreateIngredient.vue';
 import CreateFoodItem from './pages/CreateFoodItem.vue';
@@ -26,22 +21,22 @@ import EditMeal from './pages/EditMeal.vue';
 
 const routes = [
     { path: '/', component: Home },
-    { path: '/ingredients', component: IngredientList },
+    { path: '/ingredients', component: ListPage, props: { entity: 'ingredients' } },
     { path: '/ingredients/create', component: CreateIngredient },
     { path: '/ingredients/:id/edit', component: EditIngredient },
-    { path: '/recipes', component: RecipeList },
+    { path: '/recipes', component: ListPage, props: { entity: 'recipes' } },
     { path: '/recipes/create', component: CreateRecipe },
     { path: '/recipes/:id/edit', component: EditRecipe },
-    { path: '/meals', component: MealList },
+    { path: '/meals', component: ListPage, props: { entity: 'meals' } },
     { path: '/meals/create', component: CreateMeal },
     { path: '/meals/:id/edit', component: EditMeal },
-    { path: '/fooditems', component: FoodItemList },
+    { path: '/fooditems', component: ListPage, props: { entity: 'fooditems' } },
     { path: '/fooditems/create', component: CreateFoodItem },
     { path: '/fooditems/:id/edit', component: EditFoodItem },
-    { path: '/unittypes', component: UnitTypeList },
+    { path: '/unittypes', component: ListPage, props: { entity: 'unittypes' } },
     { path: '/unittypes/create', component: CreateUnitType },
     { path: '/unittypes/:id/edit', component: EditUnitType },
-    { path: '/categories', component: CategoryList },
+    { path: '/categories', component: ListPage, props: { entity: 'categories' } },
     { path: '/categories/create', component: CreateCategory },
     { path: '/categories/:id/edit', component: EditCategory },
     { path: '/ingredients/:id', component: ItemDetails, props: true },
