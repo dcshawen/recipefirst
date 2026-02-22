@@ -186,7 +186,7 @@
                 <span v-else class="text-sm text-gray-400">{{ active.item[col.field] }}</span>
               </template>
               <template v-else>
-                <span class="text-sm text-gray-700">{{ active.item[col.field] }}</span>
+                <span class="text-sm text-gray-700">{{ formatValue(col.field, active.item[col.field]) }}</span>
               </template>
             </template>
           </div>
@@ -259,6 +259,22 @@ const associatedRecipes = ref([])
 const resolvedReferences = ref({})
 const showDeleteDialog = ref(false)
 const deleting = ref(false)
+
+const formatValue = (key, value) => {
+	const isDateKey = key.toLowerCase().includes('created') || key.toLowerCase().includes('updated');
+
+	if (isDateKey && value) {
+		const date = new Date(value);
+		// Ensure it's a valid date before formatting
+		if (!isNaN(date.getTime())) {
+			return new Intl.DateTimeFormat('en-US', {
+				dateStyle: 'medium',
+				timeStyle: 'short'
+			}).format(date);
+		}
+	}
+	return value;
+}
 
 function getColumns(obj) {
   return Object.keys(obj).map(key => ({

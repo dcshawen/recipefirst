@@ -83,7 +83,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useNavigation } from '../composables/useNavigation.js'
 
 const props = defineProps({
@@ -201,6 +201,19 @@ async function fetchData() {
 onMounted(() => {
 	fetchData()
 })
+
+// Re-fetch when the passed config changes (e.g. navigating between list pages)
+watch(
+	() => props.config,
+	() => {
+		// reset pagination/sort state when switching lists
+		page.value = 1
+		sortBy.value = null
+		sortOrder.value = 'asc'
+		fetchData()
+	},
+	{ deep: true }
+)
 </script>
 
 
