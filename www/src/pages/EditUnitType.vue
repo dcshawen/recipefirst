@@ -1,13 +1,5 @@
 <template>
   <div class="p-6">
-    <nav class="flex items-center gap-1 text-sm text-gray-500 mb-4">
-      <template v-for="(item, index) in breadcrumbs" :key="index">
-        <span v-if="index > 0" class="mx-1">›</span>
-        <router-link v-if="item.to && !item.disabled" :to="item.to" class="text-blue-600 hover:text-blue-800 hover:underline">{{ item.title }}</router-link>
-        <span v-else class="text-gray-800">{{ item.title }}</span>
-      </template>
-    </nav>
-
     <UnitTypeForm
       :loading="loading"
       :error="error"
@@ -30,12 +22,6 @@ import { useEntityUpdate } from '../composables/useEntityUpdate'
 
 const route = useRoute()
 const id = route.params.id
-
-const breadcrumbs = [
-  { title: 'Home', to: '/' },
-  { title: 'Unit Types', to: '/unittypes' },
-  { title: `Edit Unit Type #${id}`, disabled: true }
-]
 
 const { loading, error, data, fetchEntity, updateEntity, cancel } = useEntityUpdate('unit-types', id, {
   redirectPath: '/unittypes',
