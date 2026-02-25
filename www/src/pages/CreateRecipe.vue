@@ -1,13 +1,5 @@
 <template>
   <div class="p-6">
-    <nav class="flex items-center gap-1 text-sm text-gray-500 mb-4">
-      <template v-for="(item, index) in breadcrumbs" :key="index">
-        <span v-if="index > 0" class="mx-1">›</span>
-        <router-link v-if="item.to && !item.disabled" :to="item.to" class="text-blue-600 hover:text-blue-800 hover:underline">{{ item.title }}</router-link>
-        <span v-else class="text-gray-800">{{ item.title }}</span>
-      </template>
-    </nav>
-
     <RecipeForm
       :loading="loading"
       :error="error"
@@ -25,12 +17,6 @@
 import { ref, watch } from 'vue'
 import RecipeForm from '../components/forms/RecipeForm.vue'
 import { useEntityCreate } from '../composables/useEntityCreate'
-
-const breadcrumbs = [
-  { title: 'Home', to: '/' },
-  { title: 'Recipes', to: '/recipes' },
-  { title: 'Create New', disabled: true }
-]
 
 const { loading, error, createEntity, cancel } = useEntityCreate('recipes', {
   idField: 'recipe_id'
