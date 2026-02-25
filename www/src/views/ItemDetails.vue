@@ -231,9 +231,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useNavigation } from '../composables/useNavigation.js'
+import { useBreadcrumbs } from '../composables/useBreadcrumbs.js'
 
 const props = defineProps({
   itemData: {
@@ -253,6 +254,7 @@ const API_BASE = import.meta.env.VITE_API_BASE || '/api'
 
 // Import the parseItemData and fetchJSON function from our composable
 const { parseItemData, fetchJSON } = useNavigation()
+const { setDynamicTitle } = useBreadcrumbs()
 
 const active = ref({ item: props.itemData?.item || null, columns: props.itemData?.columns || [] })
 const associatedRecipes = ref([])
@@ -333,6 +335,10 @@ async function load() {
     }
     
     active.value = { item: processedItem, columns: getColumns(processedItem).slice(1) }
+    
+    if (processedItem && active.value.columns.length) {
+      setDynamicTitle(processedItem[active.value.columns[0].field])
+    }
 
     // Resolve reference fields to their display names
     resolvedReferences.value = await resolveReferences(processedItem)
@@ -522,7 +528,14 @@ onMounted(async () => {
       active.value.item.categories = originalData.categories
     }
     resolvedReferences.value = await resolveReferences(active.value.item)
+    if (active.value.item && active.value.columns.length) {
+      setDynamicTitle(active.value.item[active.value.columns[0].field])
+    }
   }
+})
+
+onUnmounted(() => {
+  setDynamicTitle('')
 })
 
 watch(() => route.fullPath, () => {
