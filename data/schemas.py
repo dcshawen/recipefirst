@@ -22,6 +22,36 @@ class TimestampSchema(BaseModel):
 
 
 # ============================================================================
+# User Schemas
+# ============================================================================
+
+class UserBase(BaseModel):
+    """Base User schema."""
+    username: str
+    email: str
+    is_active: int = 1
+    is_superuser: int = 0
+
+class UserCreate(UserBase):
+    """Schema for creating a new user."""
+    password: str
+
+class UserUpdate(BaseModel):
+    """Schema for updating a user."""
+    username: Optional[str] = None
+    email: Optional[str] = None
+    password: Optional[str] = None
+    is_active: Optional[int] = None
+    is_superuser: Optional[int] = None
+
+class UserResponse(UserBase, TimestampSchema):
+    """Schema for user responses."""
+    user_id: int
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+# ============================================================================
 # UnitType Schemas
 # ============================================================================
 

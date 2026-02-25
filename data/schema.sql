@@ -2,6 +2,7 @@ PRAGMA foreign_keys = ON;
 
 -- Schema for RecipeFirst application
 -- This schema defines the structure for storing recipes, ingredients, food items, meals, and their relationships.
+DROP TABLE IF EXISTS User;
 DROP TABLE IF EXISTS RecipeIngredient;
 DROP TABLE IF EXISTS MealFoodItem;
 DROP TABLE IF EXISTS Meal;
@@ -14,6 +15,20 @@ DROP TABLE IF EXISTS IngredientCategory;
 DROP TABLE IF EXISTS MealCategory;
 DROP TABLE IF EXISTS RecipeInstruction;
 DROP TABLE IF EXISTS Category;
+
+-- Table: User
+CREATE TABLE User (
+  user_id          INTEGER PRIMARY KEY,
+  username         TEXT    NOT NULL UNIQUE,
+  email            TEXT    NOT NULL UNIQUE,
+  hashed_password  TEXT    NOT NULL,
+  is_active        INTEGER NOT NULL DEFAULT 1,
+  is_superuser     INTEGER NOT NULL DEFAULT 0,
+  created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX idx_user_username ON User(username);
+CREATE INDEX idx_user_email ON User(email);
 
 -- Table: Ingredient
 CREATE TABLE Ingredient (
