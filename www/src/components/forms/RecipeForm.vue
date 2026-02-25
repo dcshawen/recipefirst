@@ -333,7 +333,7 @@ const formData = ref({
   name: props.initialData?.name || props.initialData?.recipe_name || '',
   description: props.initialData?.description || props.initialData?.recipe_description || '',
   fooditem_id: props.initialData?.fooditem_id || props.initialData?.recipe_fooditem_id || null,
-  category_ids: props.initialData?.category_ids || []
+  category_ids: props.initialData?.category_ids || (props.initialData?.categories ? props.initialData.categories.map(c => c.category_id) : [])
 })
 
 // Data lists
@@ -780,7 +780,7 @@ watch(() => props.initialData, (newData) => {
       name: newData.name || newData.recipe_name || '',
       description: newData.description || newData.recipe_description || '',
       fooditem_id: newData.fooditem_id || newData.recipe_fooditem_id || null,
-      category_ids: newData.category_ids || []
+      category_ids: newData.category_ids || (newData.categories ? newData.categories.map(c => c.category_id) : [])
     }
 
     // Update ingredients from the new data

@@ -175,7 +175,7 @@ const errors = ref({})
 const formData = ref({
   meal_name: props.initialData?.meal_name || '',
   meal_description: props.initialData?.meal_description || '',
-  category_ids: props.initialData?.category_ids || []
+  category_ids: props.initialData?.category_ids || (props.initialData?.categories ? props.initialData.categories.map(c => c.category_id) : [])
 })
 
 // Initialize selectedFoodItems from initialData if available
@@ -278,7 +278,7 @@ watch(() => props.initialData, (newData) => {
     formData.value = {
       meal_name: newData.meal_name || '',
       meal_description: newData.meal_description || '',
-      category_ids: newData.category_ids || []
+      category_ids: newData.category_ids || (newData.categories ? newData.categories.map(c => c.category_id) : [])
     }
 
     if (newData.fooditems && Array.isArray(newData.fooditems)) {
