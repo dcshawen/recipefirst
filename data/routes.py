@@ -16,12 +16,30 @@ from . import db
 from .database import get_db
 from . import crud
 from . import serializers
+from .schemas import UserCreate, UserResponse
 
 router = APIRouter()
 
 logger = logging.getLogger(__name__)
 
 MAX_RECIPES = 1000
+
+
+# ============================================================================
+# Auth Endpoints
+# ============================================================================
+
+@router.post("/register", response_model=UserResponse, status_code=201)
+async def register_user(
+    user_data: UserCreate,
+    session: AsyncSession = Depends(get_db)
+):
+    """Register a new user account."""
+    try:
+        user = await crud.create_user(session, user_data.model_dump())
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc))
+    return user
 
 
 @router.get("/")
