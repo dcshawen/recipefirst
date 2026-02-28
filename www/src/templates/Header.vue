@@ -21,19 +21,40 @@
         <div class="flex-1"></div>
 
         <!-- Search -->
-        <OmniSearch />
+        <OmniSearch v-if="isAuthenticated" />
 
-        <!-- Logout -->
-        <button
-          v-if="isAuthenticated"
-          class="ml-2 btn-icon text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 px-2 py-1 text-sm"
-          aria-label="Log out"
-          title="Log out"
-          @click="handleLogout"
-        >
-          <i class="mdi mdi-logout text-lg"></i>
-          <span class="hidden sm:inline">Log out</span>
-        </button>
+        <!-- Auth controls -->
+        <div class="flex items-center gap-1 ml-2">
+          <!-- Unauthenticated -->
+          <template v-if="!isAuthenticated">
+            <router-link
+              to="/login"
+              class="flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+            >
+              <i class="mdi mdi-login text-base"></i>
+              <span class="hidden sm:inline">Sign in</span>
+            </router-link>
+            <router-link
+              to="/register"
+              class="flex items-center gap-1 px-3 py-1.5 text-sm font-medium bg-brand-600 hover:bg-brand-500 text-white rounded-lg transition-colors"
+            >
+              <i class="mdi mdi-account-plus text-base"></i>
+              <span class="hidden sm:inline">Register</span>
+            </router-link>
+          </template>
+
+          <!-- Authenticated -->
+          <button
+            v-else
+            class="flex items-center gap-1 px-2 py-1.5 text-sm text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+            aria-label="Log out"
+            title="Log out"
+            @click="handleLogout"
+          >
+            <i class="mdi mdi-logout text-lg"></i>
+            <span class="hidden sm:inline">Log out</span>
+          </button>
+        </div>
       </div>
     </header>
     <!-- Breadcrumbs -->
