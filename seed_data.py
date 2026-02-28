@@ -12,8 +12,14 @@ Usage:
 """
 
 import asyncio
+import os
 import sys
 from pathlib import Path
+
+# Load .env from the project root before anything else so environment
+# variables (including seed passwords) are available.
+from dotenv import load_dotenv
+load_dotenv(Path(__file__).parent / '.env')
 
 # Add parent directory to path to enable imports
 sys.path.insert(0, str(Path(__file__).parent))
@@ -24,26 +30,27 @@ from data.security import get_password_hash
 
 
 # Seed Accounts
-# Passwords are stored as bcrypt hashes. Change these before deploying to production.
+# Passwords are read from environment variables (see .env / .env.example).
+# Never hard-code credentials here — this file is committed to source control.
 SEED_USERS = [
     {
         "username": "admin",
         "email": "admin@recipefirst.local",
-        "password": "admin",
+        "password": os.getenv("SEED_ADMIN_PASSWORD", ""),
         "is_active": 1,
         "is_superuser": 1,
     },
     {
         "username": "seed",
         "email": "seed@recipefirst.local",
-        "password": "seed",
+        "password": os.getenv("SEED_DEFAULT_PASSWORD", ""),
         "is_active": 1,
         "is_superuser": 0,
     },
     {
         "username": "guest",
         "email": "guest@recipefirst.local",
-        "password": "",
+        "password": os.getenv("SEED_GUEST_PASSWORD", ""),
         "is_active": 1,
         "is_superuser": 0,
     },
