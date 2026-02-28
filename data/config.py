@@ -17,6 +17,10 @@ class Settings(BaseSettings):
     # CORS configuration
     cors_origins: List[str] = ["http://localhost:5173", "http://localhost", "http://16.52.119.18:5173"]
 
+    # JWT / authentication configuration
+    secret_key: str = "change-me-in-production-use-a-long-random-string"
+    algorithm: str = "HS256"
+
     # API configuration
     api_title: str = "RecipeFirst API"
     api_version: str = "1.0.0"
