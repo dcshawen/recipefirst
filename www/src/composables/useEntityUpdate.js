@@ -1,132 +1,132 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { apiFetch } from '../api.js'
 
 export function useEntityUpdate(entityType, entityId, options = {}) {
-  const router = useRouter()
-  const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+	const router = useRouter()
 
-  const loading = ref(false)
-  const error = ref(null)
-  const success = ref(false)
-  const data = ref(null)
+	const API_BASE = import.meta.env.VITE_API_BASE || '/api'
 
-  // Config
-  const config = {
-    apiEndpoint: options.apiEndpoint || `/${entityType}`,
-    redirectPath: options.redirectPath || `/${entityType}`,
-    idField: options.idField || `${entityType}_id`,
-    successMessage: options.successMessage || `${entityType} updated successfully!`,
-    errorMessage: options.errorMessage || `Failed to update ${entityType}`,
-    ...options
-  }
+	const loading = ref(false)
+	const error = ref(null)
+	const success = ref(false)
+	const data = ref(null)
 
-  /**
-   * Fetch existing entity data
-   * @returns {Promise<Object>} The entity data
-   */
-  const fetchEntity = async () => {
-    loading.value = true
-    error.value = null
+	// Config
+	const config = {
+		apiEndpoint: options.apiEndpoint || `/${entityType}`,
+		redirectPath: options.redirectPath || `/${entityType}`,
+		idField: options.idField || `${entityType}_id`,
+		successMessage: options.successMessage || `${entityType} updated successfully!`,
+		errorMessage: options.errorMessage || `Failed to update ${entityType}`,
+		...options
+	}
 
-    try {
-      const response = await fetch(`${API_BASE}${config.apiEndpoint}/${entityId}`)
+	/**
+	 * Fetch existing entity data
+	 * @returns {Promise<Object>} The entity data
+	 */
+	const fetchEntity = async () => {
+		loading.value = true
+		error.value = null
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch entity')
-      }
+		try {
+			const response = await apiFetch(`${API_BASE}${config.apiEndpoint}/${entityId}`)
 
-      const result = await response.json()
-      data.value = result
-      return result
-    } catch (err) {
-      error.value = err.message
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
+			if (!response.ok) {
+				throw new Error('Failed to fetch entity')
+			}
 
-  /**
-   * Update an entity
-   * @param {Object} updateData - The updated entity data
-   * @returns {Promise<Object>} The updated entity
-   */
-  const updateEntity = async (updateData) => {
-    loading.value = true
-    error.value = null
-    success.value = false
+			const result = await response.json()
+			data.value = result
+			return result
+		} catch (err) {
+			error.value = err.message
+			throw err
+		} finally {
+			loading.value = false
+		}
+	}
 
-    try {
-      const response = await fetch(`${API_BASE}${config.apiEndpoint}/${entityId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updateData)
-      })
+	/**
+	 * Update an entity
+	 * @param {Object} updateData - The updated entity data
+	 * @returns {Promise<Object>} The updated entity
+	 */
+	const updateEntity = async (updateData) => {
+		loading.value = true
+		error.value = null
+		success.value = false
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.detail || config.errorMessage)
-      }
+		try {
+			const response = await apiFetch(`${API_BASE}${config.apiEndpoint}/${entityId}`, {
+				method: 'PUT',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(updateData)
+			})
 
-      const result = await response.json()
-      success.value = true
+			if (!response.ok) {
+				const errorData = await response.json().catch(() => ({}))
+				throw new Error(errorData.detail || config.errorMessage)
+			}
 
-      // Call success callback if provided
-      if (config.onSuccess) {
-        config.onSuccess(result)
-      }
+			const result = await response.json()
+			success.value = true
 
-      // Navigate to detail page or custom path
-      if (config.redirectOnSuccess !== false) {
-        const redirectPath = config.getRedirectPath
-          ? config.getRedirectPath(result)
-          : `${config.redirectPath}/${entityId}`
+			// Call success callback if provided
+			if (config.onSuccess) {
+				config.onSuccess(result)
+			}
 
-        router.push(redirectPath)
-      }
+			// Navigate to detail page or custom path
+			if (config.redirectOnSuccess !== false) {
+				const redirectPath = config.getRedirectPath
+					? config.getRedirectPath(result)
+					: `${config.redirectPath}/${entityId}`
 
-      return result
-    } catch (err) {
-      error.value = err.message
-      success.value = false
+				router.push(redirectPath)
+			}
 
-      // Call error callback if provided
-      if (config.onError) {
-        config.onError(err)
-      }
+			return result
+		} catch (err) {
+			error.value = err.message
+			success.value = false
 
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
+			// Call error callback if provided
+			if (config.onError) {
+				config.onError(err)
+			}
 
-  /**
-   * Reset state
-   */
-  const reset = () => {
-    loading.value = false
-    error.value = null
-    success.value = false
-  }
+			throw err
+		} finally {
+			loading.value = false
+		}
+	}
 
-  /**
-   * Navigate back to detail view
-   */
-  const cancel = () => {
-    router.push(`${config.redirectPath}/${entityId}`)
-  }
+	/**
+	 * Reset state
+	 */
+	const reset = () => {
+		loading.value = false
+		error.value = null
+		success.value = false
+	}
 
-  return {
-    loading,
-    error,
-    success,
-    data,
-    fetchEntity,
-    updateEntity,
-    reset,
-    cancel
-  }
+	/**
+	 * Navigate back to detail view
+	 */
+	const cancel = () => {
+		router.push(`${config.redirectPath}/${entityId}`)
+	}
+
+	return {
+		loading,
+		error,
+		success,
+		data,
+		fetchEntity,
+		updateEntity,
+		reset,
+		cancel
+	}
 }

@@ -20,16 +20,53 @@
         </button>
       </li>
     </ul>
+
+    <!-- Auth section -->
+    <div class="px-3 pb-4 pt-2 border-t border-gray-100 mt-2 space-y-0.5">
+      <template v-if="isAuthenticated">
+        <button
+          class="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-all duration-150"
+          @click="handleLogout"
+        >
+          <i class="mdi mdi-logout text-lg text-gray-400"></i>
+          <span>Log out</span>
+        </button>
+      </template>
+      <template v-else>
+        <button
+          class="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-all duration-150"
+          @click="navigate('/login')"
+        >
+          <i class="mdi mdi-login text-lg text-gray-400"></i>
+          <span>Sign in</span>
+        </button>
+        <button
+          class="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-all duration-150"
+          @click="navigate('/register')"
+        >
+          <i class="mdi mdi-account-plus text-lg text-gray-400"></i>
+          <span>Register</span>
+        </button>
+      </template>
+    </div>
   </nav>
 </template>
 
 <script setup>
 import { useRouter, useRoute } from 'vue-router'
+import { useAuth } from '../composables/useAuth.js'
 
 const emit = defineEmits(['updateItemData', 'updateLoading', 'navigate'])
 
 const router = useRouter()
 const route = useRoute()
+const { isAuthenticated, logout } = useAuth()
+
+function handleLogout() {
+  logout()
+  router.push('/login')
+  emit('navigate')
+}
 
 const menuItems = [
   { text: 'Home',        path: '/',             icon: 'mdi-home-outline' },

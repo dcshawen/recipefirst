@@ -1,8 +1,14 @@
 <script setup>
-import { ref, provide } from 'vue'
+import { ref, computed, provide } from 'vue'
+import { useRoute } from 'vue-router'
 import Header from './templates/Header.vue'
 import MainMenu from './templates/MainMenu.vue'
 import Footer from './templates/Footer.vue'
+
+const route = useRoute()
+
+// Show the full app shell only on authenticated/layout routes.
+const showShell = computed(() => route.meta.requiresAuth !== false && route.path !== '/login' && route.path !== '/register')
 
 const itemData = ref({
   item: null,
@@ -33,7 +39,11 @@ provide('closeSidebar', closeSidebar)
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col bg-gray-50">
+  <!-- Public (login) layout -->
+  <router-view v-if="!showShell" />
+
+  <!-- Full app shell for authenticated views -->
+  <div v-else class="min-h-screen flex flex-col bg-gray-50">
     <Header @toggle-sidebar="toggleSidebar" />
 
     <div class="flex flex-1 overflow-hidden">

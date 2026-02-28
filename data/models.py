@@ -34,6 +34,21 @@ class TimestampMixin:
 # Core Entity Models
 # ============================================================================
 
+class User(Base, TimestampMixin):
+    """User account model for authentication and authorization."""
+    __tablename__ = 'User'
+
+    user_id = Column(Integer, primary_key=True)
+    username = Column(String(50), unique=True, index=True, nullable=False)
+    email = Column(String(255), unique=True, index=True, nullable=False)
+    hashed_password = Column(String(255), nullable=False)
+    is_active = Column(Integer, default=1, nullable=False)
+    is_superuser = Column(Integer, default=0, nullable=False)
+
+    def __repr__(self):
+        return f"<User(id={self.user_id}, username='{self.username}')>"
+
+
 class UnitType(Base, TimestampMixin):
     """Measurement units for recipe ingredients (cup, tablespoon, gram, etc.)."""
     __tablename__ = 'UnitType'
