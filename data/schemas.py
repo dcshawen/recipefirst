@@ -51,6 +51,18 @@ class UserResponse(UserBase, TimestampSchema):
     model_config = ConfigDict(from_attributes=True)
 
 
+class LoginRequest(BaseModel):
+    """Schema for login credentials."""
+    username: str
+    password: str
+
+
+class Token(BaseModel):
+    """Schema for authentication token response."""
+    access_token: str
+    token_type: str = "bearer"
+
+
 # ============================================================================
 # UnitType Schemas
 # ============================================================================

@@ -16,7 +16,8 @@ from . import db
 from .database import get_db
 from . import crud
 from . import serializers
-from .schemas import UserCreate, UserResponse
+from .schemas import UserCreate, UserResponse, LoginRequest, Token
+from .security import verify_password, create_access_token
 
 router = APIRouter()
 
@@ -40,6 +41,21 @@ async def register_user(
     except ValueError as exc:
         raise HTTPException(status_code=409, detail=str(exc))
     return user
+
+
+@router.post("/login", response_model=Token)
+async def login(
+    credentials: LoginRequest,
+    session: AsyncSession = Depends(get_db)
+):
+    """Authenticate a user and return a JWT access token."""
+    user = await crud.get_user_by_username(session, credentials.username)
+    if user is None or not verify_password(credentials.password, user.hashed_password):
+        raise HTTPException(status_code=401, detail="Incorrect username or password")
+    if not user.is_active:
+        raise HTTPException(status_code=403, detail="Account is inactive")
+    token = create_access_token(data={"sub": str(user.user_id)})
+    return Token(access_token=token)
 
 
 @router.get("/")
