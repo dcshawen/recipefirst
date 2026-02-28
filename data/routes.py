@@ -18,6 +18,8 @@ from . import crud
 from . import serializers
 from .schemas import UserCreate, UserResponse, LoginRequest, Token
 from .security import verify_password, create_access_token
+from .dependencies import get_current_user
+from .models import User
 
 router = APIRouter()
 
@@ -90,7 +92,8 @@ async def get_recipe(
 @router.post("/recipes")
 async def create_recipe(
     recipe_data = Body(...),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Create a new recipe."""
     # Map frontend field names to database field names
@@ -124,7 +127,8 @@ async def create_recipe(
 async def update_recipe(
     id: int = Path(..., gt=0),
     recipe_data = Body(...),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Update an existing recipe."""
     # Map frontend field names to database field names
@@ -153,7 +157,8 @@ async def update_recipe(
 @router.delete("/recipes/{id}")
 async def delete_recipe(
     id: int = Path(..., gt=0),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Delete a recipe."""
     deleted = await crud.delete_recipe(session, id)
@@ -188,7 +193,8 @@ async def get_ingredient(
 @router.post("/ingredients")
 async def create_ingredient(
     ingredient_data = Body(...),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Create a new ingredient."""
     # Frontend already sends correct field names (ingredient_name, ingredient_description, ingredient_notes)
@@ -204,7 +210,8 @@ async def create_ingredient(
 async def update_ingredient(
     id: int = Path(..., gt=0),
     ingredient_data = Body(...),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Update an existing ingredient."""
     # Frontend already sends correct field names (ingredient_name, ingredient_description, ingredient_notes)
@@ -218,7 +225,8 @@ async def update_ingredient(
 @router.delete("/ingredients/{id}")
 async def delete_ingredient(
     id: int = Path(..., gt=0),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Delete an ingredient."""
     deleted = await crud.delete_ingredient(session, id)
@@ -249,7 +257,8 @@ async def get_recipe_ingredients(
 async def add_recipe_ingredient(
     id: int = Path(..., gt=0),
     ingredient_data = Body(...),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Add an ingredient to a recipe."""
     recipe = await crud.get_recipe_by_id(session, id)
@@ -265,7 +274,8 @@ async def update_recipe_ingredient(
     id: int = Path(..., gt=0),
     ingredient_id: int = Path(..., gt=0),
     update_data = Body(...),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Update a recipe ingredient."""
     updated = await crud.update_recipe_ingredient(session, id, ingredient_id, update_data)
@@ -278,7 +288,8 @@ async def update_recipe_ingredient(
 async def remove_recipe_ingredient(
     id: int = Path(..., gt=0),
     ingredient_id: int = Path(..., gt=0),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Remove an ingredient from a recipe."""
     deleted = await crud.remove_ingredient_from_recipe(session, id, ingredient_id)
@@ -313,7 +324,8 @@ async def get_category(
 @router.post("/categories")
 async def create_category(
     category_data = Body(...),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Create a new category."""
     # Frontend already sends correct field names (category_name, category_description, parent_category_id)
@@ -337,7 +349,8 @@ async def create_category(
 async def update_category(
     id: int = Path(..., gt=0),
     category_data = Body(...),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Update an existing category."""
     # Frontend already sends correct field names (category_name, category_description, parent_category_id)
@@ -351,7 +364,8 @@ async def update_category(
 @router.delete("/categories/{id}")
 async def delete_category(
     id: int = Path(..., gt=0),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Delete a category."""
     deleted = await crud.delete_category(session, id)
@@ -400,7 +414,8 @@ async def get_food_item(
 @router.post("/food-items")
 async def create_food_item(
     food_item_data = Body(...),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Create a new food item."""
     # Frontend already sends correct field names (fooditem_name, fooditem_description)
@@ -416,7 +431,8 @@ async def create_food_item(
 async def update_food_item(
     id: int = Path(..., gt=0),
     food_item_data = Body(...),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Update an existing food item."""
     # Frontend already sends correct field names (fooditem_name, fooditem_description)
@@ -430,7 +446,8 @@ async def update_food_item(
 @router.delete("/food-items/{id}")
 async def delete_food_item(
     id: int = Path(..., gt=0),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Delete a food item."""
     deleted = await crud.delete_food_item(session, id)
@@ -465,7 +482,8 @@ async def get_meal(
 @router.post("/meals")
 async def create_meal(
     meal_data = Body(...),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Create a new meal."""
     # Frontend already sends correct field names (meal_name, meal_description, fooditem_ids, category_ids)
@@ -481,7 +499,8 @@ async def create_meal(
 async def update_meal(
     id: int = Path(..., gt=0),
     meal_data = Body(...),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Update an existing meal."""
     # Frontend already sends correct field names (meal_name, meal_description, fooditem_ids, category_ids)
@@ -495,7 +514,8 @@ async def update_meal(
 @router.delete("/meals/{id}")
 async def delete_meal(
     id: int = Path(..., gt=0),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Delete a meal."""
     deleted = await crud.delete_meal(session, id)
@@ -579,7 +599,8 @@ async def get_unit_type(
 @router.post("/unit-types")
 async def create_unit_type(
     unit_type_data = Body(...),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Create a new unit type."""
     unit_type = await crud.create_unit_type(session, unit_type_data)
@@ -590,7 +611,8 @@ async def create_unit_type(
 async def update_unit_type(
     id: int = Path(..., gt=0),
     unit_type_data = Body(...),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Update an existing unit type."""
     updated = await crud.update_unit_type(session, id, unit_type_data)
@@ -602,7 +624,8 @@ async def update_unit_type(
 @router.delete("/unit-types/{id}")
 async def delete_unit_type(
     id: int = Path(..., gt=0),
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
 ):
     """Delete a unit type."""
     deleted = await crud.delete_unit_type(session, id)
