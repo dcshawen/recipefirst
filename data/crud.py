@@ -5,6 +5,7 @@ This module replaces the raw SQL functions from db.py with SQLAlchemy queries.
 All functions use async/await and proper eager loading to prevent N+1 queries.
 
 Organization:
+- User operations (4 functions)
 - Recipe operations (5 functions)
 - Ingredient operations (5 functions)
 - RecipeIngredient junction operations (4 functions)
@@ -23,12 +24,73 @@ from typing import List, Optional, Dict, Any
 import logging
 
 from .models import (
-    Recipe, Ingredient, FoodItem, Meal, Category, UnitType,
+    Recipe, Ingredient, FoodItem, Meal, Category, UnitType, User,
     RecipeIngredient, RecipeInstruction, MealFoodItem,
     RecipeCategory, IngredientCategory, MealCategory
 )
+from .security import get_password_hash
 
 logger = logging.getLogger(__name__)
+
+
+# ============================================================================
+# User Operations
+# ============================================================================
+
+async def get_user_by_id(db: AsyncSession, user_id: int) -> Optional[User]:
+    """Get a single user by primary key ID."""
+    stmt = select(User).where(User.user_id == user_id)
+    result = await db.execute(stmt)
+    return result.scalar_one_or_none()
+
+
+async def get_user_by_username(db: AsyncSession, username: str) -> Optional[User]:
+    """Get a single user by username (case-sensitive)."""
+    stmt = select(User).where(User.username == username)
+    result = await db.execute(stmt)
+    return result.scalar_one_or_none()
+
+
+async def get_user_by_email(db: AsyncSession, email: str) -> Optional[User]:
+    """Get a single user by email address."""
+    stmt = select(User).where(User.email == email)
+    result = await db.execute(stmt)
+    return result.scalar_one_or_none()
+
+
+async def create_user(db: AsyncSession, user_data: Dict[str, Any]) -> User:
+    """
+    Create a new user, hashing the plain-text password before storage.
+
+    Args:
+        user_data: Dictionary containing:
+            - username: str
+            - email: str
+            - password: str  (plain-text; will be hashed)
+            - is_active: int  (optional, default 1)
+            - is_superuser: int  (optional, default 0)
+
+    Returns:
+        The newly created User ORM instance.
+
+    Raises:
+        ValueError: If a user with the same username or email already exists.
+    """
+    # Check for duplicate username / email before hitting the DB constraint
+    if await get_user_by_username(db, user_data.get('username', '')):
+        raise ValueError(f"Username '{user_data['username']}' is already taken.")
+    if await get_user_by_email(db, user_data.get('email', '')):
+        raise ValueError(f"Email '{user_data['email']}' is already registered.")
+
+    data = dict(user_data)
+    plain_password = data.pop('password')
+    data['hashed_password'] = get_password_hash(plain_password)
+
+    user = User(**data)
+    db.add(user)
+    await db.commit()
+    await db.refresh(user)
+    return user
 
 
 # ============================================================================
