@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import ItemDetails from './views/ItemDetails.vue';
 import GenericListView from './views/GenericListView.vue';
 import Home from './pages/Home.vue';
+import Login from './pages/Login.vue';
 
 import ListPage from './pages/ListPage.vue';
 
@@ -19,37 +20,55 @@ import EditCategory from './pages/EditCategory.vue';
 import EditRecipe from './pages/EditRecipe.vue';
 import EditMeal from './pages/EditMeal.vue';
 
+import { useAuth } from './composables/useAuth.js';
+
 const routes = [
-    { path: '/', component: Home },
-    { path: '/ingredients', component: ListPage, props: { entity: 'ingredients' } },
-    { path: '/ingredients/create', component: CreateIngredient },
-    { path: '/ingredients/:id/edit', component: EditIngredient },
-    { path: '/recipes', component: ListPage, props: { entity: 'recipes' } },
-    { path: '/recipes/create', component: CreateRecipe },
-    { path: '/recipes/:id/edit', component: EditRecipe },
-    { path: '/meals', component: ListPage, props: { entity: 'meals' } },
-    { path: '/meals/create', component: CreateMeal },
-    { path: '/meals/:id/edit', component: EditMeal },
-    { path: '/fooditems', component: ListPage, props: { entity: 'fooditems' } },
-    { path: '/fooditems/create', component: CreateFoodItem },
-    { path: '/fooditems/:id/edit', component: EditFoodItem },
-    { path: '/unittypes', component: ListPage, props: { entity: 'unittypes' } },
-    { path: '/unittypes/create', component: CreateUnitType },
-    { path: '/unittypes/:id/edit', component: EditUnitType },
-    { path: '/categories', component: ListPage, props: { entity: 'categories' } },
-    { path: '/categories/create', component: CreateCategory },
-    { path: '/categories/:id/edit', component: EditCategory },
-    { path: '/ingredients/:id', component: ItemDetails, props: true },
-		{ path: '/recipes/:id', component: ItemDetails, props: true },
-		{ path: '/meals/:id', component: ItemDetails, props: true },
-		{ path: '/fooditems/:id', component: ItemDetails, props: true },
-		{ path: '/unittypes/:id', component: ItemDetails, props: true },
-		{ path: '/categories/:id', component: ItemDetails, props: true }
+	// Public route – no auth required
+	{ path: '/login', component: Login },
+
+	// Protected routes
+	{ path: '/', component: Home, meta: { requiresAuth: true } },
+	{ path: '/ingredients', component: ListPage, props: { entity: 'ingredients' }, meta: { requiresAuth: true } },
+	{ path: '/ingredients/create', component: CreateIngredient, meta: { requiresAuth: true } },
+	{ path: '/ingredients/:id/edit', component: EditIngredient, meta: { requiresAuth: true } },
+	{ path: '/recipes', component: ListPage, props: { entity: 'recipes' }, meta: { requiresAuth: true } },
+	{ path: '/recipes/create', component: CreateRecipe, meta: { requiresAuth: true } },
+	{ path: '/recipes/:id/edit', component: EditRecipe, meta: { requiresAuth: true } },
+	{ path: '/meals', component: ListPage, props: { entity: 'meals' }, meta: { requiresAuth: true } },
+	{ path: '/meals/create', component: CreateMeal, meta: { requiresAuth: true } },
+	{ path: '/meals/:id/edit', component: EditMeal, meta: { requiresAuth: true } },
+	{ path: '/fooditems', component: ListPage, props: { entity: 'fooditems' }, meta: { requiresAuth: true } },
+	{ path: '/fooditems/create', component: CreateFoodItem, meta: { requiresAuth: true } },
+	{ path: '/fooditems/:id/edit', component: EditFoodItem, meta: { requiresAuth: true } },
+	{ path: '/unittypes', component: ListPage, props: { entity: 'unittypes' }, meta: { requiresAuth: true } },
+	{ path: '/unittypes/create', component: CreateUnitType, meta: { requiresAuth: true } },
+	{ path: '/unittypes/:id/edit', component: EditUnitType, meta: { requiresAuth: true } },
+	{ path: '/categories', component: ListPage, props: { entity: 'categories' }, meta: { requiresAuth: true } },
+	{ path: '/categories/create', component: CreateCategory, meta: { requiresAuth: true } },
+	{ path: '/categories/:id/edit', component: EditCategory, meta: { requiresAuth: true } },
+	{ path: '/ingredients/:id', component: ItemDetails, props: true, meta: { requiresAuth: true } },
+	{ path: '/recipes/:id', component: ItemDetails, props: true, meta: { requiresAuth: true } },
+	{ path: '/meals/:id', component: ItemDetails, props: true, meta: { requiresAuth: true } },
+	{ path: '/fooditems/:id', component: ItemDetails, props: true, meta: { requiresAuth: true } },
+	{ path: '/unittypes/:id', component: ItemDetails, props: true, meta: { requiresAuth: true } },
+	{ path: '/categories/:id', component: ItemDetails, props: true, meta: { requiresAuth: true } }
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes
+	history: createWebHistory(),
+	routes
+});
+
+// Navigation guard – redirect unauthenticated users to /login
+router.beforeEach((to) => {
+	const { isAuthenticated } = useAuth();
+	if (to.meta.requiresAuth && !isAuthenticated.value) {
+		return { path: '/login', query: { redirect: to.fullPath } };
+	}
+	// If already authenticated, don't show the login page again
+	if (to.path === '/login' && isAuthenticated.value) {
+		return { path: '/' };
+	}
 });
 
 export default router;

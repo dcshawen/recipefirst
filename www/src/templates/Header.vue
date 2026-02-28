@@ -22,6 +22,18 @@
 
         <!-- Search -->
         <OmniSearch />
+
+        <!-- Logout -->
+        <button
+          v-if="isAuthenticated"
+          class="ml-2 btn-icon text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1 px-2 py-1 text-sm"
+          aria-label="Log out"
+          title="Log out"
+          @click="handleLogout"
+        >
+          <i class="mdi mdi-logout text-lg"></i>
+          <span class="hidden sm:inline">Log out</span>
+        </button>
       </div>
     </header>
     <!-- Breadcrumbs -->
@@ -32,8 +44,18 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
 import OmniSearch from '../components/OmniSearch.vue'
 import Breadcrumbs from '../components/Breadcrumbs.vue'
+import { useAuth } from '../composables/useAuth.js'
+
+const router = useRouter()
+const { isAuthenticated, logout } = useAuth()
+
+function handleLogout() {
+  logout()
+  router.push('/login')
+}
 
 defineEmits(['toggle-sidebar'])
 </script>

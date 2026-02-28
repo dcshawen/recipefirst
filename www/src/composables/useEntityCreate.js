@@ -1,121 +1,121 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { apiFetch } from '../api.js'
 
 export function useEntityCreate(entityType, options = {}) {
-  const router = useRouter()
-  // Use the same API base fallback as other composables: prefer VITE_API_BASE, then '/api'.
-  // Avoid using VITE_API_URL here to prevent the dev client from calling loopback
-  // (e.g. http://localhost:8000) directly which triggers Private Network Access
-  // restrictions when the page is not a secure context.
-  const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+	const router = useRouter()
 
-  const loading = ref(false)
-  const error = ref(null)
-  const success = ref(false)
+	// Use the same API base fallback as other composables: prefer VITE_API_BASE, then '/api'.
+	// Avoid using VITE_API_URL here to prevent the dev client from calling loopback
+	// (e.g. http://localhost:8000) directly which triggers Private Network Access
+	// restrictions when the page is not a secure context.
+	const API_BASE = import.meta.env.VITE_API_BASE || '/api'
 
-  // Config
-  const config = {
-    apiEndpoint: options.apiEndpoint || `/${entityType}`,
-    redirectPath: options.redirectPath || `/${entityType}`,
-    idField: options.idField || `${entityType}_id`,
-    successMessage: options.successMessage || `${entityType} created successfully!`,
-    errorMessage: options.errorMessage || `Failed to create ${entityType}`,
-    ...options
-  }
+	const loading = ref(false)
+	const error = ref(null)
+	const success = ref(false)
 
-  /**
-   * Create an entity
-   * @param {Object} data - The entity data to create
-   * @returns {Promise<Object>} The created entity
-   */
-  const createEntity = async (data) => {
-    loading.value = true
-    error.value = null
-    success.value = false
+	// Config
+	const config = {
+		apiEndpoint: options.apiEndpoint || `/${entityType}`,
+		redirectPath: options.redirectPath || `/${entityType}`,
+		idField: options.idField || `${entityType}_id`,
+		successMessage: options.successMessage || `${entityType} created successfully!`,
+		errorMessage: options.errorMessage || `Failed to create ${entityType}`,
+		...options
+	}
 
-    try {
-      const url = `${API_BASE}${config.apiEndpoint}`
-      console.debug('[useEntityCreate] POST', url, data)
+	/**
+	 * Create an entity
+	 * @param {Object} data - The entity data to create
+	 * @returns {Promise<Object>} The created entity
+	 */
+	const createEntity = async (data) => {
+		loading.value = true
+		error.value = null
+		success.value = false
 
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
+		try {
+			const url = `${API_BASE}${config.apiEndpoint}`
+			console.debug('[useEntityCreate] POST', url, data)
 
-      const text = await response.text().catch(() => '')
-      let result
-      try {
-        result = text ? JSON.parse(text) : {}
-      } catch (e) {
-        console.debug('[useEntityCreate] Non-JSON response:', text)
-        result = { raw: text }
-      }
+			const response = await apiFetch(url, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(data)
+			})
 
-      if (!response.ok) {
-        const errMsg = result.detail || config.errorMessage || response.statusText
-        console.debug('[useEntityCreate] Error response', response.status, result)
-        throw new Error(errMsg)
-      }
+			const text = await response.text().catch(() => '')
+			let result
+			try {
+				result = text ? JSON.parse(text) : {}
+			} catch (e) {
+				console.debug('[useEntityCreate] Non-JSON response:', text)
+				result = { raw: text }
+			}
 
-      console.debug('[useEntityCreate] Success response', response.status, result)
-      success.value = true
+			if (!response.ok) {
+				const errMsg = result.detail || config.errorMessage || response.statusText
+				console.debug('[useEntityCreate] Error response', response.status, result)
+				throw new Error(errMsg)
+			}
 
-      // Call success callback if provided
-      if (config.onSuccess) {
-        config.onSuccess(result)
-      }
+			console.debug('[useEntityCreate] Success response', response.status, result)
+			success.value = true
 
-      // Navigate to detail page or custom path
-      if (config.redirectOnSuccess !== false) {
-        const entityId = result[config.idField]
-        const redirectPath = config.getRedirectPath
-          ? config.getRedirectPath(result)
-          : `${config.redirectPath}/${entityId}`
+			// Call success callback if provided
+			if (config.onSuccess) {
+				config.onSuccess(result)
+			}
 
-        router.push(redirectPath)
-      }
+			// Navigate to detail page or custom path
+			if (config.redirectOnSuccess !== false) {
+				const entityId = result[config.idField]
+				const redirectPath = config.getRedirectPath
+					? config.getRedirectPath(result)
+					: `${config.redirectPath}/${entityId}`
 
-      return result
-    } catch (err) {
-      error.value = err.message
-      success.value = false
+				router.push(redirectPath)
+			}
 
-      // Call error callback if provided
-      if (config.onError) {
-        config.onError(err)
-      }
+			return result
+		} catch (err) {
+			error.value = err.message
+			success.value = false
 
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
+			// Call error callback if provided
+			if (config.onError) {
+				config.onError(err)
+			}
 
-  /**
-   * Reset state
-   */
-  const reset = () => {
-    loading.value = false
-    error.value = null
-    success.value = false
-  }
+			throw err
+		} finally {
+			loading.value = false
+		}
+	}
 
-  /**
-   * Navigate back to list
-   */
-  const cancel = () => {
-    router.push(config.redirectPath)
-  }
+	/**
+	 * Reset state
+	 */
+	const reset = () => {
+		loading.value = false
+		error.value = null
+		success.value = false
+	}
 
-  return {
-    loading,
-    error,
-    success,
-    createEntity,
-    reset,
-    cancel
-  }
+	/**
+	 * Navigate back to list
+	 */
+	const cancel = () => {
+		router.push(config.redirectPath)
+	}
+
+	return {
+		loading,
+		error,
+		success,
+		createEntity,
+		reset,
+		cancel
+	}
 }
