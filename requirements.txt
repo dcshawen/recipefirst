@@ -4,6 +4,7 @@ uvicorn==0.40.0
 pydantic==2.12.5
 pydantic-settings==2.12.0
 passlib[bcrypt]==1.7.4
+bcrypt==4.0.1
 
 # SQLAlchemy and database
 sqlalchemy==2.0.36
