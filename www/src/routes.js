@@ -3,6 +3,7 @@ import ItemDetails from './views/ItemDetails.vue';
 import GenericListView from './views/GenericListView.vue';
 import Home from './pages/Home.vue';
 import Login from './pages/Login.vue';
+import Register from './pages/Register.vue';
 
 import ListPage from './pages/ListPage.vue';
 
@@ -23,8 +24,9 @@ import EditMeal from './pages/EditMeal.vue';
 const TOKEN_KEY = 'recipefirst_token'
 
 const routes = [
-	// Public route – no auth required
+	// Public routes – no auth required
 	{ path: '/login', component: Login },
+	{ path: '/register', component: Register },
 
 	// Protected routes
 	{ path: '/', component: Home, meta: { requiresAuth: true } },
@@ -71,8 +73,8 @@ router.beforeEach((to) => {
 		return { path: '/login', query: { redirect: to.fullPath } };
 	}
 
-	// Prevent authenticated users from reaching the login page.
-	if (to.path === '/login' && isAuthenticated) {
+	// Prevent authenticated users from reaching auth pages.
+	if ((to.path === '/login' || to.path === '/register') && isAuthenticated) {
 		return { path: '/' };
 	}
 });

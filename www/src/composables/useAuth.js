@@ -59,6 +59,26 @@ export function useAuth() {
 	}
 
 	/**
+	 * Register a new user account.
+	 * Does not log the user in — the caller should redirect to /login afterward.
+	 * @param {{ username: string, email: string, password: string }} userData
+	 * @returns {Promise<void>}
+	 * @throws {Error} on validation failure or duplicate username/email (409)
+	 */
+	async function register(userData) {
+		const response = await fetch(`${API_BASE()}/register`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(userData)
+		})
+
+		if (!response.ok) {
+			const body = await response.json().catch(() => ({}))
+			throw new Error(body.detail || 'Registration failed')
+		}
+	}
+
+	/**
 	 * Clear the session token and log the user out.
 	 */
 	function logout() {
@@ -78,6 +98,7 @@ export function useAuth() {
 		token,
 		isAuthenticated,
 		login,
+		register,
 		logout,
 		getAuthHeaders
 	}

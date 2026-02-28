@@ -8,7 +8,7 @@ import Footer from './templates/Footer.vue'
 const route = useRoute()
 
 // Show the full app shell only on authenticated/layout routes.
-const showShell = computed(() => route.meta.requiresAuth !== false && route.path !== '/login')
+const showShell = computed(() => route.meta.requiresAuth !== false && route.path !== '/login' && route.path !== '/register')
 
 const itemData = ref({
   item: null,
