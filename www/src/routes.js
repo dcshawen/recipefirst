@@ -20,7 +20,7 @@ import EditCategory from './pages/EditCategory.vue';
 import EditRecipe from './pages/EditRecipe.vue';
 import EditMeal from './pages/EditMeal.vue';
 
-import { useAuth } from './composables/useAuth.js';
+const TOKEN_KEY = 'recipefirst_token'
 
 const routes = [
 	// Public route – no auth required
@@ -59,14 +59,20 @@ const router = createRouter({
 	routes
 });
 
-// Navigation guard – redirect unauthenticated users to /login
+// Navigation guard – protect routes that require authentication.
+//
+// Reads the token directly from localStorage so the guard is self-contained
+// and does not rely on Vue composition API outside of a component context.
 router.beforeEach((to) => {
-	const { isAuthenticated } = useAuth();
-	if (to.meta.requiresAuth && !isAuthenticated.value) {
+	const isAuthenticated = !!localStorage.getItem(TOKEN_KEY);
+
+	// Redirect unauthenticated users to /login, preserving the intended path.
+	if (to.meta.requiresAuth && !isAuthenticated) {
 		return { path: '/login', query: { redirect: to.fullPath } };
 	}
-	// If already authenticated, don't show the login page again
-	if (to.path === '/login' && isAuthenticated.value) {
+
+	// Prevent authenticated users from reaching the login page.
+	if (to.path === '/login' && isAuthenticated) {
 		return { path: '/' };
 	}
 });
