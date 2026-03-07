@@ -12,15 +12,49 @@ Usage:
 """
 
 import asyncio
+import os
 import sys
 from pathlib import Path
+
+# Load .env from the project root before anything else so environment
+# variables (including seed passwords) are available.
+from dotenv import load_dotenv
+load_dotenv(Path(__file__).parent / '.env')
 
 # Add parent directory to path to enable imports
 sys.path.insert(0, str(Path(__file__).parent))
 
 from data.database import AsyncSessionLocal
-from data.models import UnitType, Category, Ingredient
+from data.models import UnitType, Category, Ingredient, User
+from data.security import get_password_hash
 
+
+# Seed Accounts
+# Passwords are read from environment variables (see .env / .env.example).
+# Never hard-code credentials here — this file is committed to source control.
+SEED_USERS = [
+    {
+        "username": "admin",
+        "email": "admin@recipefirst.local",
+        "password": os.getenv("SEED_ADMIN_PASSWORD", ""),
+        "is_active": 1,
+        "is_superuser": 1,
+    },
+    {
+        "username": "seed",
+        "email": "seed@recipefirst.local",
+        "password": os.getenv("SEED_DEFAULT_PASSWORD", ""),
+        "is_active": 1,
+        "is_superuser": 0,
+    },
+    {
+        "username": "guest",
+        "email": "guest@recipefirst.local",
+        "password": os.getenv("SEED_GUEST_PASSWORD", ""),
+        "is_active": 1,
+        "is_superuser": 0,
+    },
+]
 
 # Measurement Units
 UNITS = [
@@ -153,6 +187,20 @@ async def seed_database():
         print("Seeding Database with Starter Data")
         print("="*60 + "\n")
 
+        print("Adding seed accounts...")
+        for user_data in SEED_USERS:
+            user = User(
+                username=user_data["username"],
+                email=user_data["email"],
+                hashed_password=get_password_hash(user_data["password"]),
+                is_active=user_data["is_active"],
+                is_superuser=user_data["is_superuser"],
+            )
+            session.add(user)
+
+        await session.commit()
+        print(f"✓ Added {len(SEED_USERS)} seed accounts\n")
+
         # 1. Add Unit Types
         print("Adding measurement units...")
         existing_units = set()
@@ -199,6 +247,7 @@ async def seed_database():
         print("Database seeding complete!")
         print("="*60)
         print(f"\nSummary:")
+        print(f"  - {len(SEED_USERS)} Seed Accounts (admin, seed, guest)")
         print(f"  - {len(UNITS)} Unit Types")
         print(f"  - {len(CATEGORIES)} Categories")
         print(f"  - {len(INGREDIENTS)} Ingredients")

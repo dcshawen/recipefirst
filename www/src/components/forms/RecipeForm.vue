@@ -312,6 +312,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue'
+import { apiFetch } from '../../api.js'
 
 const props = defineProps({
   loading: Boolean,
@@ -625,7 +626,7 @@ const createIngredient = async () => {
 
   creatingIngredient.value = true
   try {
-    const response = await fetch(`${API_BASE}/ingredients`, {
+    const response = await apiFetch(`${API_BASE}/ingredients`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newIngredient.value)
@@ -668,7 +669,7 @@ const createFoodItem = async () => {
 
   creatingFoodItem.value = true
   try {
-    const response = await fetch(`${API_BASE}/food-items`, {
+    const response = await apiFetch(`${API_BASE}/food-items`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newFoodItem.value)
