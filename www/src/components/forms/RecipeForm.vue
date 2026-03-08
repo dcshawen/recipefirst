@@ -31,42 +31,12 @@
           ></textarea>
         </div>
 
-        <!-- Produces Food Item Autocomplete -->
-        <div class="mb-4 relative" ref="foodItemDropdownRef">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Produces Food Item *</label>
-          <input
-            v-model="foodItemSearch"
-            type="text"
-            class="w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            :class="errors.fooditem_id ? 'border-red-500' : 'border-gray-300'"
-            placeholder="Search food items..."
-            @focus="foodItemDropdownOpen = true"
-            @input="foodItemDropdownOpen = true"
-          />
-          <div v-if="foodItemDropdownOpen" class="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-48 overflow-y-auto">
-            <button
-              v-for="fi in filteredFoodItemsForRecipe"
-              :key="fi.fooditem_id"
-              type="button"
-              class="w-full text-left px-3 py-2 text-sm hover:bg-blue-50 transition-colors"
-              :class="formData.fooditem_id === fi.fooditem_id ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700'"
-              @click="selectProducesFoodItem(fi)"
-            >
-              {{ fi.fooditem_name }}
-            </button>
-            <div v-if="filteredFoodItemsForRecipe.length === 0 && foodItemSearch" class="px-3 py-2 text-sm text-gray-500">No food items found</div>
-            <hr class="border-gray-200" />
-            <button
-              type="button"
-              class="w-full text-left px-3 py-2 text-sm text-blue-600 hover:bg-blue-50 transition-colors font-medium"
-              @click="showCreateFoodItemDialog = true; foodItemDropdownOpen = false"
-            >
-              <i class="mdi mdi-plus"></i> Create New Food Item
-            </button>
-          </div>
-          <p v-if="errors.fooditem_id" class="mt-1 text-xs text-red-600">{{ errors.fooditem_id }}</p>
-          <p v-else class="mt-1 text-xs text-gray-500">Select the food item this recipe produces</p>
-        </div>
+        <!-- Produces Food Item Field -->
+        <ProducesFoodItemField
+          v-model="producesFoodItemValue"
+          :recipe-name="formData.name"
+          :error="errors.fooditem"
+        />
 
         <hr class="border-gray-200 my-6" />
 
@@ -256,32 +226,6 @@
       <button @click="error = null" class="text-red-400 hover:text-red-600"><i class="mdi mdi-close"></i></button>
     </div>
 
-    <!-- Create Food Item Dialog -->
-    <div v-if="showCreateFoodItemDialog" class="fixed inset-0 z-50 flex items-center justify-center">
-      <div class="fixed inset-0 bg-black/50" @click="showCreateFoodItemDialog = false"></div>
-      <div class="relative bg-white rounded-lg shadow-xl max-w-[600px] w-full mx-4">
-        <div class="px-6 py-4 border-b border-gray-200">
-          <h3 class="text-lg font-semibold text-gray-900">Create New Food Item</h3>
-        </div>
-        <div class="px-6 py-4">
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Food Item Name *</label>
-            <input v-model="newFoodItem.fooditem_name" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-            <textarea v-model="newFoodItem.fooditem_description" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-          </div>
-        </div>
-        <div class="flex justify-between items-center px-6 py-4 border-t border-gray-200">
-          <button type="button" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800" @click="showCreateFoodItemDialog = false">Cancel</button>
-          <button type="button" class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 disabled:opacity-50" :disabled="creatingFoodItem" @click="createFoodItem">
-            {{ creatingFoodItem ? 'Creating...' : 'Create' }}
-          </button>
-        </div>
-      </div>
-    </div>
-
     <!-- Create Ingredient Dialog -->
     <div v-if="showCreateIngredientDialog" class="fixed inset-0 z-50 flex items-center justify-center">
       <div class="fixed inset-0 bg-black/50" @click="showCreateIngredientDialog = false"></div>
@@ -313,6 +257,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue'
 import { apiFetch } from '../../api.js'
+import ProducesFoodItemField from './ProducesFoodItemField.vue'
 
 const props = defineProps({
   loading: Boolean,
@@ -333,9 +278,18 @@ const errors = ref({})
 const formData = ref({
   name: props.initialData?.name || props.initialData?.recipe_name || '',
   description: props.initialData?.description || props.initialData?.recipe_description || '',
-  fooditem_id: props.initialData?.fooditem_id || props.initialData?.recipe_fooditem_id || null,
   category_ids: props.initialData?.category_ids || (props.initialData?.categories ? props.initialData.categories.map(c => c.category_id) : [])
 })
+
+// Produces Food Item field value
+// In create mode: default to 'new' (name will be synced from recipeName by the component)
+// In edit mode: default to 'existing' with the stored fooditem_id
+const initialFoodItemId = props.initialData?.fooditem_id || props.initialData?.recipe_fooditem_id || null
+const producesFoodItemValue = ref(
+  initialFoodItemId
+    ? { mode: 'existing', fooditem_id: initialFoodItemId }
+    : null
+)
 
 // Data lists
 const foodItems = ref([])
@@ -348,22 +302,6 @@ const loadingFoodItems = ref(false)
 const loadingIngredients = ref(false)
 const loadingUnitTypes = ref(false)
 const loadingCategories = ref(false)
-
-// Autocomplete state - Produces Food Item
-const foodItemDropdownRef = ref(null)
-const foodItemDropdownOpen = ref(false)
-const foodItemSearch = ref('')
-
-const filteredFoodItemsForRecipe = computed(() => {
-  const q = foodItemSearch.value.toLowerCase()
-  return foodItems.value.filter(f => f.fooditem_name.toLowerCase().includes(q))
-})
-
-function selectProducesFoodItem(fi) {
-  formData.value.fooditem_id = fi.fooditem_id
-  foodItemSearch.value = fi.fooditem_name
-  foodItemDropdownOpen.value = false
-}
 
 // Autocomplete state - Ingredient sources
 const ingredientDropdownRefs = ref([])
@@ -412,9 +350,6 @@ function removeRecipeCategory(catId) {
 
 // Click outside handler for all dropdowns
 function handleClickOutside(e) {
-  if (foodItemDropdownRef.value && !foodItemDropdownRef.value.contains(e.target)) {
-    foodItemDropdownOpen.value = false
-  }
   if (ingredientDropdownOpenIndex.value !== null) {
     const ref = ingredientDropdownRefs.value[ingredientDropdownOpenIndex.value]
     if (ref && !ref.contains(e.target)) {
@@ -428,11 +363,6 @@ function handleClickOutside(e) {
 
 // Initialize search texts from data
 function initSearchTexts() {
-  // Food item
-  if (formData.value.fooditem_id) {
-    const fi = foodItems.value.find(f => f.fooditem_id === formData.value.fooditem_id)
-    if (fi) foodItemSearch.value = fi.fooditem_name
-  }
   // Ingredients
   ingredientSearches.value = ingredients.value.map(ing => {
     return ing.source ? ing.source.name : ''
@@ -502,16 +432,9 @@ const ingredients = ref(initializeIngredients())
 const instructions = ref(initializeInstructions())
 
 // Inline creation dialogs
-const showCreateFoodItemDialog = ref(false)
 const showCreateIngredientDialog = ref(false)
-const creatingFoodItem = ref(false)
 const creatingIngredient = ref(false)
 const currentIngredientIndex = ref(null)
-
-const newFoodItem = ref({
-  fooditem_name: '',
-  fooditem_description: ''
-})
 
 const newIngredient = ref({
   ingredient_name: '',
@@ -663,40 +586,6 @@ const createIngredient = async () => {
   }
 }
 
-// Food item creation
-const createFoodItem = async () => {
-  if (!newFoodItem.value.fooditem_name) return
-
-  creatingFoodItem.value = true
-  try {
-    const response = await apiFetch(`${API_BASE}/food-items`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newFoodItem.value)
-    })
-
-    if (!response.ok) throw new Error('Failed to create food item')
-
-    const created = await response.json()
-
-    // Add to list
-    foodItems.value.push(created)
-
-    // Select it
-    formData.value.fooditem_id = created.fooditem_id
-    foodItemSearch.value = created.fooditem_name
-
-    // Reset and close
-    newFoodItem.value = { fooditem_name: '', fooditem_description: '' }
-    showCreateFoodItemDialog.value = false
-  } catch (err) {
-    console.error('Failed to create food item:', err)
-    alert('Failed to create food item')
-  } finally {
-    creatingFoodItem.value = false
-  }
-}
-
 // Instruction management
 const addInstruction = () => {
   instructions.value.push({
@@ -721,8 +610,13 @@ function validate() {
   if (!formData.value.name) {
     errors.value.name = 'Recipe name is required'
   }
-  if (!formData.value.fooditem_id) {
-    errors.value.fooditem_id = 'Must select which food item this recipe produces'
+  const fiv = producesFoodItemValue.value
+  if (!fiv) {
+    errors.value.fooditem = 'Must specify which food item this recipe produces'
+  } else if (fiv.mode === 'new' && !fiv.name?.trim()) {
+    errors.value.fooditem = 'Food item name is required'
+  } else if (fiv.mode === 'existing' && !fiv.fooditem_id) {
+    errors.value.fooditem = 'Must select an existing food item'
   }
   const hasValidIngredient = ingredients.value.some(ing => ing.source && ing.ri_quantity > 0 && ing.ri_unit_type_id)
   if (!hasValidIngredient) {
@@ -739,18 +633,47 @@ function validate() {
 const handleSubmit = async () => {
   if (!validate()) return
 
+  // Resolve the food item ID — create it on-the-fly if needed
+  let resolvedFoodItemId = null
+  const fiv = producesFoodItemValue.value
+  if (fiv?.mode === 'existing') {
+    resolvedFoodItemId = fiv.fooditem_id
+  } else if (fiv?.mode === 'new') {
+    try {
+      const res = await apiFetch(`${API_BASE}/food-items`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fooditem_name: fiv.name,
+          fooditem_description: fiv.description || ''
+        })
+      })
+      if (!res.ok) throw new Error('Failed to create food item')
+      const created = await res.json()
+      resolvedFoodItemId = created.fooditem_id
+      // Keep the local list in sync so ingredient sources pick it up
+      foodItems.value.push(created)
+    } catch (err) {
+      console.error('Failed to create food item:', err)
+      errors.value.fooditem = 'Failed to create food item — please try again'
+      return
+    }
+  }
+
   // Build recipe data
   const recipeData = {
 		name: formData.value.name,
 		description: formData.value.description,
-		fooditem_id: formData.value.fooditem_id,
+		fooditem_id: resolvedFoodItemId,
 		category_ids: formData.value.category_ids,
-    ingredients: ingredients.value.map(ing => ({
-      ri_ingredient_id: ing.source?.type === 'ingredient' ? ing.source.originalId : null,
-      ri_fooditem_id: ing.source?.type === 'fooditem' ? ing.source.originalId : null,
-      ri_quantity: ing.ri_quantity,
-      ri_unit_type_id: ing.ri_unit_type_id
-    })),
+    ingredients: ingredients.value
+      .filter(ing => ing.source && ing.ri_quantity > 0 && ing.ri_unit_type_id)
+      .map(ing => ({
+        ri_ingredient_id: ing.source.type === 'ingredient' ? ing.source.originalId : null,
+        ri_fooditem_id: ing.source.type === 'fooditem' ? ing.source.originalId : null,
+        ri_quantity: ing.ri_quantity,
+        ri_unit_type_id: ing.ri_unit_type_id
+      })),
     instructions: instructions.value
   }
 
@@ -780,8 +703,13 @@ watch(() => props.initialData, (newData) => {
     formData.value = {
       name: newData.name || newData.recipe_name || '',
       description: newData.description || newData.recipe_description || '',
-      fooditem_id: newData.fooditem_id || newData.recipe_fooditem_id || null,
       category_ids: newData.category_ids || (newData.categories ? newData.categories.map(c => c.category_id) : [])
+    }
+
+    // Update the produces food item field
+    const editFoodItemId = newData.fooditem_id || newData.recipe_fooditem_id || null
+    if (editFoodItemId) {
+      producesFoodItemValue.value = { mode: 'existing', fooditem_id: editFoodItemId }
     }
 
     // Update ingredients from the new data
