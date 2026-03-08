@@ -72,14 +72,18 @@ const menuItems = [
   { text: 'Home',        path: '/',             icon: 'mdi-home-outline' },
   { text: 'Recipes',     path: '/recipes',      icon: 'mdi-food' },
   { text: 'Meals',       path: '/meals',        icon: 'mdi-silverware-fork-knife' },
-  { text: 'Food Items',  path: '/fooditems',    icon: 'mdi-food-apple-outline' },
-  { text: 'Ingredients', path: '/ingredients',  icon: 'mdi-grain' },
+  { text: 'Pantry',      path: '/pantry',       icon: 'mdi-basket-outline' },
   { text: 'Categories',  path: '/categories',   icon: 'mdi-tag-outline' },
   { text: 'Units',       path: '/unittypes',    icon: 'mdi-scale-balance' },
 ]
 
 function isActive(path) {
   if (path === '/') return route.path === '/'
+  if (path === '/pantry') {
+    return route.path.startsWith('/pantry') ||
+           route.path.startsWith('/ingredients') ||
+           route.path.startsWith('/fooditems')
+  }
   return route.path.startsWith(path)
 }
 

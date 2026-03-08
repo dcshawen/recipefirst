@@ -6,6 +6,7 @@ import Login from './pages/Login.vue';
 import Register from './pages/Register.vue';
 
 import ListPage from './pages/ListPage.vue';
+import Pantry from './pages/Pantry.vue';
 
 import CreateIngredient from './pages/CreateIngredient.vue';
 import CreateFoodItem from './pages/CreateFoodItem.vue';
@@ -30,7 +31,8 @@ const routes = [
 
 	// Protected routes
 	{ path: '/', component: Home, meta: { requiresAuth: true } },
-	{ path: '/ingredients', component: ListPage, props: { entity: 'ingredients' }, meta: { requiresAuth: true } },
+	{ path: '/pantry', component: Pantry, meta: { requiresAuth: true } },
+	{ path: '/ingredients', redirect: '/pantry' },
 	{ path: '/ingredients/create', component: CreateIngredient, meta: { requiresAuth: true } },
 	{ path: '/ingredients/:id/edit', component: EditIngredient, meta: { requiresAuth: true } },
 	{ path: '/recipes', component: ListPage, props: { entity: 'recipes' }, meta: { requiresAuth: true } },
@@ -39,7 +41,7 @@ const routes = [
 	{ path: '/meals', component: ListPage, props: { entity: 'meals' }, meta: { requiresAuth: true } },
 	{ path: '/meals/create', component: CreateMeal, meta: { requiresAuth: true } },
 	{ path: '/meals/:id/edit', component: EditMeal, meta: { requiresAuth: true } },
-	{ path: '/fooditems', component: ListPage, props: { entity: 'fooditems' }, meta: { requiresAuth: true } },
+	{ path: '/fooditems', redirect: '/pantry' },
 	{ path: '/fooditems/create', component: CreateFoodItem, meta: { requiresAuth: true } },
 	{ path: '/fooditems/:id/edit', component: EditFoodItem, meta: { requiresAuth: true } },
 	{ path: '/unittypes', component: ListPage, props: { entity: 'unittypes' }, meta: { requiresAuth: true } },

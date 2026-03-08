@@ -27,12 +27,13 @@ watch(() => route.path, (newPath, oldPath) => {
 })
 
 const entityMap = {
-  ingredients: 'Ingredients',
-  recipes: 'Recipes',
-  meals: 'Meals',
-  fooditems: 'Food Items',
-  unittypes: 'Unit Types',
-  categories: 'Categories'
+  ingredients: { label: 'Pantry', listPath: '/pantry' },
+  fooditems: { label: 'Pantry', listPath: '/pantry' },
+  pantry: { label: 'Pantry', listPath: '/pantry' },
+  recipes: { label: 'Recipes', listPath: '/recipes' },
+  meals: { label: 'Meals', listPath: '/meals' },
+  unittypes: { label: 'Unit Types', listPath: '/unittypes' },
+  categories: { label: 'Categories', listPath: '/categories' }
 }
 
 const breadcrumbs = computed(() => {
@@ -44,15 +45,18 @@ const breadcrumbs = computed(() => {
 
   const crumbs = [{ title: 'Home', to: '/' }]
   const entityKey = segments[0]
-  const entityNamePlural = entityMap[entityKey] || (entityKey.charAt(0).toUpperCase() + entityKey.slice(1))
+  const entityEntry = entityMap[entityKey]
+  const entityNamePlural = entityEntry ? entityEntry.label : (entityKey.charAt(0).toUpperCase() + entityKey.slice(1))
+  const entityListPath = entityEntry ? entityEntry.listPath : `/${entityKey}`
   
   let entityNameSingular = entityNamePlural
   if (entityKey === 'categories') entityNameSingular = 'Category'
+  else if (entityKey === 'unittypes') entityNameSingular = 'Unit Type'
   else if (entityNamePlural.endsWith('s')) entityNameSingular = entityNamePlural.slice(0, -1)
 
   crumbs.push({
     title: entityNamePlural,
-    to: `/${entityKey}`,
+    to: entityListPath,
     disabled: segments.length === 1
   })
 
