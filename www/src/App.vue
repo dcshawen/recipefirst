@@ -43,8 +43,10 @@ provide('closeSidebar', closeSidebar)
   <router-view v-if="!showShell" />
 
   <!-- Full app shell for authenticated views -->
-  <div v-else class="min-h-screen flex flex-col bg-gray-50">
-    <Header @toggle-sidebar="toggleSidebar" />
+  <div v-else class="min-h-screen flex flex-col">
+    <div class="relative z-50">
+      <Header @toggle-sidebar="toggleSidebar" />
+    </div>
 
     <div class="flex flex-1 overflow-hidden">
       <!-- Sidebar overlay for mobile -->

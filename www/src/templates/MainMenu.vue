@@ -11,11 +11,11 @@
         <button
           class="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-all duration-150"
           :class="isActive(item.path)
-            ? 'bg-brand-50 text-brand-700 font-semibold shadow-sm'
+            ? 'bg-brand-50 text-brand-700 font-semibold shadow-sm dark:bg-brand-500/20 dark:text-brand-200'
             : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
           @click="navigate(item.path)"
         >
-          <i :class="['mdi', item.icon, 'text-lg', isActive(item.path) ? 'text-brand-600' : 'text-gray-400']"></i>
+          <i :class="['mdi', item.icon, 'text-lg', isActive(item.path) ? 'text-brand-600 dark:text-brand-300' : 'text-gray-400']"></i>
           <span>{{ item.text }}</span>
         </button>
       </li>

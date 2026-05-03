@@ -23,6 +23,18 @@
         <!-- Search -->
         <OmniSearch v-if="isAuthenticated" />
 
+        <!-- Theme toggle -->
+        <button
+          type="button"
+          class="ml-2 flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white/90 text-xs font-medium transition-colors"
+          :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+          @click="toggleTheme"
+        >
+          <i v-if="isDark" class="mdi mdi-white-balance-sunny text-base"></i>
+          <i v-else class="mdi mdi-moon-waning-crescent text-base"></i>
+          <span class="hidden sm:inline">{{ isDark ? 'Light' : 'Dark' }}</span>
+        </button>
+
         <!-- Auth controls -->
         <div class="flex items-center gap-1 ml-2">
           <!-- Unauthenticated -->
@@ -66,12 +78,15 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import { inject } from 'vue'
 import OmniSearch from '../components/OmniSearch.vue'
 import Breadcrumbs from '../components/Breadcrumbs.vue'
 import { useAuth } from '../composables/useAuth.js'
 
 const router = useRouter()
 const { isAuthenticated, logout } = useAuth()
+const isDark = inject('isDark')
+const toggleTheme = inject('toggleTheme')
 
 function handleLogout() {
   logout()

@@ -4,7 +4,7 @@
 
       <!-- Desktop Add New button -->
       <button
-        class="absolute top-4 right-4 z-10 hidden sm:flex items-center gap-2 bg-blue-600 text-white px-3 py-2 rounded-md shadow hover:bg-blue-700 transition-colors text-sm"
+        class="absolute top-4 right-4 z-10 hidden sm:flex items-center gap-2 btn btn-primary"
         @click="router.push('/ingredients/create')"
       >
         <i class="mdi mdi-plus"></i>
@@ -100,7 +100,7 @@
 
     <!-- Mobile FAB -->
     <button
-      class="fixed bottom-20 right-4 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 flex items-center justify-center text-2xl transition-colors sm:hidden"
+      class="fixed bottom-20 right-4 w-14 h-14 fab sm:hidden"
       title="Add Ingredient"
       @click="router.push('/ingredients/create')"
     >

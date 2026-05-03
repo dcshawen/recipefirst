@@ -1,5 +1,5 @@
-@import '@mdi/font/css/materialdesignicons.css';
 @import "tailwindcss";
+@import '@mdi/font/css/materialdesignicons.css';
 
 /* ============================================================
    Design System — RecipeFirst
@@ -42,6 +42,35 @@
   --spacing-sidebar: 16rem;
 }
 
+:root {
+  --app-bg: #f8fafc;
+  --surface-0: #ffffff;
+  --surface-1: #f9fafb;
+  --surface-2: #f3f4f6;
+  --surface-3: #e5e7eb;
+  --border-color: #e5e7eb;
+  --text-strong: #111827;
+  --text-body: #1f2937;
+  --text-muted: #6b7280;
+  --text-subtle: #9ca3af;
+  --overlay: rgba(255, 255, 255, 0.65);
+}
+
+.dark {
+  --app-bg: #0b1020;
+  --surface-0: #0f172a;
+  --surface-1: #111c32;
+  --surface-2: #18243b;
+  --surface-3: #23324a;
+  --border-color: #243047;
+  --text-strong: #f8fafc;
+  --text-body: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-subtle: #64748b;
+  --overlay: rgba(3, 7, 18, 0.6);
+  color-scheme: dark;
+}
+
 /* ---- Base layer ---- */
 @layer base {
   *,
@@ -60,6 +89,9 @@
     font-family: var(--font-sans);
     line-height: 1.6;
     min-height: 100vh;
+    min-height: 100vh;
+    background: var(--app-bg);
+    color: var(--text-body);
   }
 
   /* Focus-visible ring — global accessibility */
@@ -74,14 +106,42 @@
   }
 }
 
+@layer utilities {
+  .dark .bg-white { background-color: var(--surface-0); }
+  .dark .bg-gray-50 { background-color: var(--surface-1); }
+  .dark .bg-gray-100 { background-color: var(--surface-2); }
+  .dark .bg-gray-200 { background-color: var(--surface-3); }
+  .dark .border-gray-100 { border-color: var(--surface-2); }
+  .dark .border-gray-200 { border-color: var(--border-color); }
+  .dark .border-gray-300 { border-color: var(--border-color); }
+  .dark .text-gray-900 { color: var(--text-strong); }
+  .dark .text-gray-800 { color: var(--text-strong); }
+  .dark .text-gray-700 { color: var(--text-body); }
+  .dark .text-gray-600 { color: var(--text-muted); }
+  .dark .text-gray-500 { color: var(--text-muted); }
+  .dark .text-gray-400 { color: var(--text-subtle); }
+  .dark .shadow-lg { box-shadow: 0 10px 30px rgba(2, 6, 23, 0.6); }
+  .dark .shadow-md { box-shadow: 0 6px 18px rgba(2, 6, 23, 0.5); }
+  .dark .shadow { box-shadow: 0 2px 8px rgba(2, 6, 23, 0.45); }
+}
+
 /* ---- Component classes ---- */
 @layer components {
+  .surface-page {
+    background: var(--app-bg);
+    color: var(--text-body);
+  }
+
+  .surface-panel {
+    background: var(--surface-0);
+    border: 1px solid var(--border-color);
+  }
 
   /* ---------- Loading overlay + spinner ---------- */
   .loading-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(255, 255, 255, 0.65);
+    background: var(--overlay);
     backdrop-filter: blur(2px);
     display: flex;
     align-items: center;
@@ -104,15 +164,15 @@
 
   /* ---------- Card ---------- */
   .card {
-    background: white;
-    border: 1px solid #e5e7eb;
+    background: var(--surface-0);
+    border: 1px solid var(--border-color);
     border-radius: 0.75rem;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
   }
 
   .card-header {
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--border-color);
   }
 
   .card-body {
@@ -121,7 +181,7 @@
 
   .card-footer {
     padding: 1rem 1.5rem;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid var(--border-color);
   }
 
   /* ---------- Buttons ---------- */
@@ -176,11 +236,11 @@
 
   .btn-ghost {
     background: transparent;
-    color: #6b7280;
+    color: var(--text-muted);
   }
   .btn-ghost:hover:not(:disabled) {
-    background: #f3f4f6;
-    color: #374151;
+    background: var(--surface-2);
+    color: var(--text-body);
   }
 
   .btn-sm {
@@ -226,7 +286,7 @@
     display: block;
     font-size: 0.875rem;
     font-weight: 500;
-    color: #374151;
+    color: var(--text-body);
     margin-bottom: 0.25rem;
   }
 
@@ -235,14 +295,14 @@
     padding: 0.5rem 0.75rem;
     font-size: 0.875rem;
     line-height: 1.25rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--border-color);
     border-radius: 0.5rem;
-    background: white;
-    color: #111827;
+    background: var(--surface-0);
+    color: var(--text-strong);
     transition: border-color 150ms ease, box-shadow 150ms ease;
   }
   .form-input::placeholder {
-    color: #9ca3af;
+    color: var(--text-subtle);
   }
   .form-input:focus {
     outline: none;
@@ -259,7 +319,7 @@
   .form-hint {
     margin-top: 0.25rem;
     font-size: 0.75rem;
-    color: #6b7280;
+    color: var(--text-muted);
   }
 
   .form-error {
@@ -280,6 +340,10 @@
     background: var(--color-brand-100);
     color: var(--color-brand-800);
   }
+  .dark .chip {
+    background: rgba(59, 130, 246, 0.18);
+    color: #bfdbfe;
+  }
 
   /* ---------- Breadcrumb ---------- */
   .breadcrumb {
@@ -287,7 +351,7 @@
     align-items: center;
     gap: 0.375rem;
     font-size: 0.875rem;
-    color: #6b7280;
+    color: var(--text-muted);
     margin-bottom: 1.25rem;
   }
   .breadcrumb a {
@@ -300,7 +364,7 @@
     text-decoration: underline;
   }
   .breadcrumb .separator {
-    color: #d1d5db;
+    color: var(--border-color);
     user-select: none;
   }
 
@@ -334,8 +398,8 @@
     z-index: 50;
     width: 100%;
     margin-top: 0.25rem;
-    background: white;
-    border: 1px solid #e5e7eb;
+    background: var(--surface-0);
+    border: 1px solid var(--border-color);
     border-radius: 0.5rem;
     box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     max-height: 15rem;
@@ -351,15 +415,19 @@
     transition: background 100ms;
     border: none;
     background: transparent;
-    color: #374151;
+    color: var(--text-body);
   }
   .dropdown-item:hover {
-    background: #f3f4f6;
+    background: var(--surface-2);
   }
   .dropdown-item.is-active {
     background: var(--color-brand-50);
     color: var(--color-brand-700);
     font-weight: 500;
+  }
+  .dark .dropdown-item.is-active {
+    background: rgba(59, 130, 246, 0.2);
+    color: #bfdbfe;
   }
 
   /* ---------- Page container ---------- */
@@ -373,14 +441,14 @@
   .section-title {
     font-size: 1.125rem;
     font-weight: 600;
-    color: #111827;
+    color: var(--text-strong);
     margin-bottom: 0.75rem;
   }
 
   /* ---------- Divider ---------- */
   .divider {
     border: none;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid var(--border-color);
     margin: 1.5rem 0;
   }
 
@@ -405,7 +473,7 @@
 
   .modal-content {
     position: relative;
-    background: white;
+    background: var(--surface-0);
     border-radius: 0.75rem;
     box-shadow: 0 20px 60px rgba(0,0,0,0.15);
     width: 100%;
@@ -448,7 +516,7 @@
   .data-table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
+    background: var(--surface-0);
   }
   .data-table thead th {
     text-align: left;
@@ -456,27 +524,27 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #6b7280;
+    color: var(--text-muted);
     padding: 0.75rem 1rem;
-    border-bottom: 2px solid #e5e7eb;
+    border-bottom: 2px solid var(--border-color);
     cursor: pointer;
     user-select: none;
     transition: background 100ms;
   }
   .data-table thead th:hover {
-    background: #f9fafb;
+    background: var(--surface-1);
   }
   .data-table tbody td {
     padding: 0.75rem 1rem;
     font-size: 0.875rem;
-    border-bottom: 1px solid #f3f4f6;
+    border-bottom: 1px solid var(--surface-3);
     vertical-align: middle;
   }
   .data-table tbody tr {
     transition: background 100ms;
   }
   .data-table tbody tr:hover {
-    background: #f9fafb;
+    background: var(--surface-1);
   }
   .data-table tbody tr:last-child td {
     border-bottom: none;
@@ -501,11 +569,11 @@
     border: none;
     cursor: pointer;
     background: transparent;
-    color: #374151;
+    color: var(--text-body);
     transition: all 100ms;
   }
   .pagination .page-btn:hover:not(:disabled) {
-    background: #f3f4f6;
+    background: var(--surface-2);
   }
   .pagination .page-btn:disabled {
     opacity: 0.3;
@@ -521,7 +589,7 @@
   .empty-state {
     text-align: center;
     padding: 3rem 1.5rem;
-    color: #9ca3af;
+    color: var(--text-subtle);
   }
   .empty-state i {
     font-size: 2.5rem;

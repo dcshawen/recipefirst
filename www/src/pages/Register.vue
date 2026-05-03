@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-    <div class="w-full max-w-sm bg-white rounded-2xl shadow-lg p-8">
+  <div class="min-h-screen flex items-center justify-center surface-page px-4">
+    <div class="w-full max-w-sm rounded-2xl shadow-lg p-8 surface-panel">
       <!-- Logo -->
       <div class="flex flex-col items-center mb-8">
         <i class="mdi mdi-chef-hat text-5xl text-brand-700 mb-2"></i>
@@ -95,10 +95,10 @@
         </button>
       </form>
 
-      <p class="mt-6 text-center text-sm text-gray-500">
-        Already have an account?
-        <router-link to="/login" class="text-brand-700 font-medium hover:underline">Sign in</router-link>
-      </p>
+        <p class="mt-6 text-center text-sm text-gray-500">
+          Already have an account?
+          <router-link to="/login" class="text-brand-700 font-medium hover:underline">Sign in</router-link>
+        </p>
     </div>
   </div>
 </template>
